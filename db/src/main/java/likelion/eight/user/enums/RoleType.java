@@ -1,19 +1,19 @@
-package likelion.eight.profile.enums;
+package likelion.eight.user.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public enum GenderType {
-    MALE("남성"),
-    FEMALE("여성"),
+public enum RoleType {
+    ADMIN("관리자"),
+    USER("사용자"),
     ;
 
     private String description;
 
     @JsonCreator
-    public static GenderType from(String s) {
-        for (GenderType status : GenderType.values()) {
+    public static RoleType from(String s) {
+        for (RoleType status : RoleType.values()) {
             if (status.name().equalsIgnoreCase(s)) {
                 return status;
             }
