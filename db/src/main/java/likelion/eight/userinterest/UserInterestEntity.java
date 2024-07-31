@@ -2,6 +2,7 @@ package likelion.eight.userinterest;
 
 import jakarta.persistence.*;
 import likelion.eight.BaseTimeEntity;
+import likelion.eight.course.CourseEntity;
 import likelion.eight.user.UserEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -13,7 +14,6 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class UserInterestEntity extends BaseTimeEntity {
 
     @Id

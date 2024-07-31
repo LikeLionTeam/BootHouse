@@ -1,6 +1,6 @@
 package likelion.eight.common.infrastructure;
 
-import com.example.demo.common.service.port.ClockHolder;
+import likelion.eight.common.service.port.ClockHolder;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;

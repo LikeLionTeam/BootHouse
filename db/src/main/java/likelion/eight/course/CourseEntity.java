@@ -2,6 +2,7 @@ package likelion.eight.course;
 
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
+import likelion.eight.BaseTimeEntity;
 import likelion.eight.bootcamp.BootCampEntity;
 import likelion.eight.category.CategoryEntity;
 import lombok.*;
@@ -9,9 +10,9 @@ import lombok.*;
 @Entity
 @Table(name = "courses")
 @Getter @Setter
-@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CourseEntity {
+public class CourseEntity extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "course_id")

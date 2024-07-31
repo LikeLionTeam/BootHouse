@@ -21,4 +21,17 @@ public class UserConverter {
                 .image(user.getImage())
                 .build();
     }
+
+    public static User toUser(UserEntity userEntity){
+        return User.builder()
+                .name(userEntity.getName())
+                .email(userEntity.getEmail())
+                .password(userEntity.getPassword())
+                .nickName(userEntity.getNickName())
+                .phoneNumber(userEntity.getPhoneNumber())
+                .genderType(userEntity.getGenderType())
+                .roleType(userEntity.getRoleType())
+                .image(userEntity.getImage())
+                .build();
+    }
 }

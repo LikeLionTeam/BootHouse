@@ -1,6 +1,6 @@
 package likelion.eight.common.infrastructure;
 
-import com.example.demo.common.service.port.UuidHolder;
+import likelion.eight.common.service.port.UuidHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;

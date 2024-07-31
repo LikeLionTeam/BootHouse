@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import likelion.eight.BaseTimeEntity;
 import likelion.eight.course.CourseEntity;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -12,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "reviews")
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 public class ReviewEntity extends BaseTimeEntity {
 

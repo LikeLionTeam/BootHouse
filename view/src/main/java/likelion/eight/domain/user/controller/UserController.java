@@ -5,8 +5,6 @@ import likelion.eight.user.UserEntity;
 
 public class UserController {
 
-    public static UserEntity toEntity(User user){
 
-    }
 
 }

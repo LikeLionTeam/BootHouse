@@ -1,7 +1,7 @@
 package likelion.eight.common.controller;
 
-import com.example.demo.common.domain.exception.CertificationCodeNotMatchedException;
-import com.example.demo.common.domain.exception.ResourceNotFoundException;
+import likelion.eight.common.domain.exception.CertificationCodeNotMatchedException;
+import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

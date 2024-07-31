@@ -1,16 +1,20 @@
 package likelion.eight.message;
 
 import jakarta.persistence.*;
-import likelion.eight.db.chatroom.ChatroomEntity;
-import likelion.eight.db.user.UserEntity;
-import lombok.Getter;
-import lombok.Setter;
+import likelion.eight.BaseTimeEntity;
+import likelion.eight.chatroom.ChatroomEntity;
+import likelion.eight.user.UserEntity;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 
 @Entity
 @Table(name = "messages")
 @Getter @Setter
-public class MessageEntity {
+@SuperBuilder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(callSuper = true)
+public class MessageEntity extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "message_id")
     private Long id;

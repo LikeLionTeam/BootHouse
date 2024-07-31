@@ -2,8 +2,10 @@ package likelion.eight.bootcamp;
 
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
+import likelion.eight.BaseTimeEntity;
 import likelion.eight.course.CourseEntity;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -12,9 +14,10 @@ import java.util.List;
 @Entity
 @Table(name = "bootcamps")
 @Getter @Setter
+@SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class BootCampEntity {
+public class BootCampEntity extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bootcamp_id")
