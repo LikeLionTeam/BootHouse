@@ -1,4 +1,4 @@
-package likelion.eight.course;
+package likelion.eight.course.ifs;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

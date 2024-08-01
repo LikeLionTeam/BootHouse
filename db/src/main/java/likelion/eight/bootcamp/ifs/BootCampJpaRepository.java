@@ -1,4 +1,4 @@
-package likelion.eight.bootcamp;
+package likelion.eight.bootcamp.ifs;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
