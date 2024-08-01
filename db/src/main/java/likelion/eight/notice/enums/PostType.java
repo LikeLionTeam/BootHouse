@@ -14,10 +14,10 @@ public enum PostType {
     private String description;
 
     @JsonCreator
-    public static GenderType from(String s) {
-        for (GenderType status : GenderType.values()) {
-            if (status.name().equalsIgnoreCase(s)) {
-                return status;
+    public static PostType from(String s) {
+        for (PostType type : PostType.values()) {
+            if (type.name().equalsIgnoreCase(s)) {
+                return type;
             }
         }
         throw new IllegalArgumentException("Invalid PostStatus: " + s);
