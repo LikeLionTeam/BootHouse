@@ -32,10 +32,21 @@ public class NoticeEntity extends BaseTimeEntity {
     @Column(length = 50, nullable = false)
     private String title;
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false,columnDefinition = "TEXT")
     private String content;
 
-    @Lob
-    private byte[] image;
+    @Column
+    private Boolean importance;
+
+
+
+    @Builder
+    public NoticeEntity(PostType postType, String title, String content, Boolean importance) {
+        this.postType = postType;
+        this.title = title;
+        this.content = content;
+        this.importance = importance;
+    }
+
+
 }
