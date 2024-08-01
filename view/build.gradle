@@ -54,6 +54,9 @@ dependencies {
     //jwt
     implementation 'com.auth0:java-jwt:4.0.0'
 
+    //markdown
+    implementation 'com.vladsch.flexmark:flexmark-all:0.62.2'
+
     implementation project(':db')
 }
 
