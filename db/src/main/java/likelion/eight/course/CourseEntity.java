@@ -71,12 +71,25 @@ public class CourseEntity extends BaseTimeEntity {
     private ParticipationTime participationTime; // 참여시간
 
     @Column(name = "max_participants", nullable = false)
-    private int maxParticipants; // 모집정원
+    private int maxParticipants; // 모집정원 :: -1 값이면, 모집정원 없음
 
     @Column(precision = 3, scale = 2) // 가능값 : 9.99, 0.01, 불가능값: 10.00
     private BigDecimal averageRating; // 해당 프로그램 평균 평점
 
     @Column(nullable = false, name = "view_counts")
     private int viewCounts; // 해당 프로그램 조회수 (정렬을 위해)
+
+    // 모집정원이 있는지 없는지 판단로직
+    public boolean hasNoLimit(){
+        return maxParticipants == -1;
+    }
+
+    // 모집정원을 가져올 때, -1인 경우를 처리하는 getter
+    public int getMaxParticipants(){
+        if (maxParticipants == -1){
+            return Integer.MAX_VALUE; // 정원이 없는경우, 최대값 반환
+        }
+        return maxParticipants;
+    }
 }
 
