@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import likelion.eight.BaseTimeEntity;
 import likelion.eight.user.enums.GenderType;
 import likelion.eight.user.enums.RoleType;
+import likelion.eight.user.enums.UserStatus;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -20,9 +21,6 @@ public class UserEntity extends BaseTimeEntity {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(length = 50, nullable = false)
-    private String name;
-
     @Column(length = 50, nullable = false, unique = true)
     private String email; //TODO 패턴 검증필요
 
@@ -30,10 +28,16 @@ public class UserEntity extends BaseTimeEntity {
     private String password;
 
     @Column(length = 50, nullable = false)
+    private String name;
+
+    @Column(length = 255, nullable = false)
+    private String address;
+
+    @Column(length = 50, nullable = false)
     private String nickName;
 
     @Column(nullable = false, unique = true)
-    private String phoneNumber; //TODO 패턴 검증필요
+    private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -42,6 +46,16 @@ public class UserEntity extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RoleType roleType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserStatus userStatus;
+
+    @Column(name = "last_login_at")
+    private Long lastLoginAt;
+
+    @Column(name = "certification_code")
+    private String certificationCode;
 
     @Lob
     private byte[] image;
