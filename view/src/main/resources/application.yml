@@ -12,6 +12,8 @@ spring:
         default_batch_fetch_size: 100
         spring:
 
+
+
   datasource:
     url: jdbc:postgresql://localhost:5432/boothouse?sslmode=disable&charSet=UTF-8
     driver-class-name: org.postgresql.Driver
