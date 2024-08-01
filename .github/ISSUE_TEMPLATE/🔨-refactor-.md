@@ -1,5 +1,5 @@
 ---
-name: refactor template
+name: "\U0001F528[refactor]"
 about: 리팩토링용 탬플릿 입니다.
 title: ''
 labels: ''
