@@ -1,4 +1,4 @@
-package likelion.eight.domain.notice.model;
+package likelion.eight.domain.notice.model.request;
 
 import lombok.Getter;
 
