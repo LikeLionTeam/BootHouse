@@ -1,36 +1,45 @@
 package likelion.eight.domain.course.service;
 
-import likelion.eight.course.CourseEntity;
+import likelion.eight.common.domain.exception.ResourceNotFoundException;
+import likelion.eight.domain.course.controller.model.CourseFilter;
+import likelion.eight.domain.course.model.Course;
 import likelion.eight.domain.course.service.port.CourseRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CourseService {
     private final CourseRepository courseRepository;
 
-    @Transactional(readOnly = true)
-    public List<CourseEntity> findAllCourses() {
-        return courseRepository.findAll();
+    public List<Course> getOpenCourses(){
+        LocalDateTime now = LocalDateTime.now();
+        List<Course> courses = courseRepository.findByClosingDateAfter(now);
+        return Optional.ofNullable(courses)
+                .filter(c -> !c.isEmpty())
+                .orElseThrow(() -> new ResourceNotFoundException("No open courses found."));
     }
 
-    @Transactional(readOnly = true)
-    public CourseEntity findCourseById(Long id) {
-        return courseRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Course not found: " + id));
+    public List<Course> findByOpenCoursesByCategory(Long categoryId){
+        List<Course> courses = courseRepository.findByOpenCoursesByCategory(categoryId);
+        return Optional.ofNullable(courses)
+                .filter(c -> !c.isEmpty())
+                .orElseThrow(() -> new ResourceNotFoundException("No open courses found for category ID: " + categoryId));
     }
 
-    @Transactional
-    public CourseEntity saveCourse(CourseEntity courseEntity) {
-        return courseRepository.save(courseEntity);
-    }
-
-    @Transactional
-    public void deleteCourse(Long id) {
-        courseRepository.deleteById(id);
+    public List<Course> findCoursesByFilters(
+            Long categoryId,
+            CourseFilter courseFilter,
+            String sort
+    ){
+        List<Course> coursesByFilters = courseRepository.findCoursesByFilters(categoryId, courseFilter, sort);
+        return Optional.ofNullable(coursesByFilters)
+                .filter(c -> !c.isEmpty())
+                .orElseThrow(() -> new ResourceNotFoundException("No course exist by that filter"));
     }
 }
