@@ -14,20 +14,12 @@
     <tr>
         <th>Title</th>
         <th>One Line Review</th>
-        <th>Advantages</th>
-        <th>Disadvantages</th>
-        <th>Instructor Evaluation</th>
-        <th>Rating</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="review : ${reviews}">
-        <td th:text="${review.title}">Title</td>
+        <td><a th:href="@{/reviews/{id}(id=${review.id})}" th:text="${review.title}">Title</a></td>
         <td th:text="${review.oneLineReview}">One Line Review</td>
-        <td th:text="${review.advantages}">Advantages</td>
-        <td th:text="${review.disadvantages}">Disadvantages</td>
-        <td th:text="${review.instructorEvaluation}">Instructor Evaluation</td>
-        <td th:text="${review.rating}">Rating</td>
     </tr>
     </tbody>
 </table>
