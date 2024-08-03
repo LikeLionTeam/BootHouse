@@ -1,20 +1,20 @@
-package likelion.eight.notice.enums;
+package likelion.eight.certificationirequest.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public enum PostType {
+public enum AuthRequestType {
 
-    NOTICE("공지사항"),
-    EVENT("이벤트"),
+    BOOTCAMP("부트캠프인증요청"),
+    COMPANY("회사인증요청"),
     ;
 
     private String description;
 
     @JsonCreator
-    public static PostType from(String s) {
-        for (PostType status : PostType.values()) {
+    public static AuthRequestType from(String s) {
+        for (AuthRequestType status : AuthRequestType.values()) {
             if (status.name().equalsIgnoreCase(s)) {
                 return status;
             }

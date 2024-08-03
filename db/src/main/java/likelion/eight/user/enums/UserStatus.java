@@ -13,8 +13,8 @@ public enum UserStatus {
     private String description;
 
     @JsonCreator
-    public static GenderType from(String s) {
-        for (GenderType status : GenderType.values()) {
+    public static UserStatus from(String s) {
+        for (UserStatus status : UserStatus.values()) {
             if (status.name().equalsIgnoreCase(s)) {
                 return status;
             }
