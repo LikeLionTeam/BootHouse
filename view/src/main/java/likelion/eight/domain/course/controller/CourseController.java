@@ -32,13 +32,13 @@ public class CourseController {
             Model model,
             @RequestParam(required = false, name = "categories") Long categoryId,
             @ModelAttribute CourseFilter courseFilter,
-            @RequestParam(required = false, name = "sort") String sort){
+            @RequestParam(required = false, name = "sort") String sort,
+            @RequestParam(required = false, name = "search") String search){
         List<Course> courses;
         List<Category> categories = categoryService.findAll();
 
         // 모집중인 코스를 기준으로 필터링 (모집중 고려 O, 카테고리 고려 전, 필터링 기준 고려 O)
-        log.info("sort :: {}", sort);
-        courses = courseService.findCoursesByFilters(categoryId, courseFilter, sort);
+        courses = courseService.findCoursesByFilters(categoryId, courseFilter, sort, search);
 
         // 카테고리 조건 추가 (모집중 고려 O, 카테고리 고려 O, 필터링 기준 고려 O)
         if (categoryId != null){

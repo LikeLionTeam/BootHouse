@@ -35,9 +35,10 @@ public class CourseService {
     public List<Course> findCoursesByFilters(
             Long categoryId,
             CourseFilter courseFilter,
-            String sort
+            String sort,
+            String search
     ){
-        List<Course> coursesByFilters = courseRepository.findCoursesByFilters(categoryId, courseFilter, sort);
+        List<Course> coursesByFilters = courseRepository.findCoursesByFilters(categoryId, courseFilter, sort, search);
         return Optional.ofNullable(coursesByFilters)
                 .filter(c -> !c.isEmpty())
                 .orElseThrow(() -> new ResourceNotFoundException("No course exist by that filter"));

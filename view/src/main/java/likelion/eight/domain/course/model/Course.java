@@ -1,9 +1,11 @@
 package likelion.eight.domain.course.model;
 
-import likelion.eight.SubCourseEntity.SubCourseEntity;
+
 import likelion.eight.bootcamp.BootCampEntity;
-import likelion.eight.category.CategoryEntity;
 import likelion.eight.course.ParticipationTime;
+import likelion.eight.domain.category.model.Category;
+import likelion.eight.domain.subcourse.model.SubCourse;
+import likelion.eight.domain.bootcamp.model.Bootcamp;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -16,11 +18,11 @@ public class Course {
 
     private final Long id;
 
-    private final BootCampEntity bootcampEntity; // 훈련과정을 주관하는 교육기관 매핑
+    private final Bootcamp bootcamp; // 훈련과정을 주관하는 교육기관 매핑
 
-    private final CategoryEntity categoryEntity; // 훈련과정 카테고리 -- UX/UI 디자인, 백엔드/자바
+    private final Category category; // 훈련과정 카테고리 -- UX/UI 디자인, 백엔드/자바
 
-    private final SubCourseEntity subCourseEntity; // 각 코스가 어떤 subCategory에 속할지 추가
+    private final SubCourse subCourse; // 각 코스가 어떤 subCategory에 속할지 추가
 
     private final String name; // 프로그램 이름
 
@@ -54,11 +56,11 @@ public class Course {
     private final RecruitmentStatus recruitmentStatus; // 모집 상태
 
     @Builder
-    public Course(Long id, BootCampEntity bootcampEntity, CategoryEntity categoryEntity, SubCourseEntity subCourseEntity, String name, LocalDate startDate, LocalDate endDate, LocalDateTime closingDate, boolean codingTestExempt, boolean cardRequirement, boolean onlineOffline, String location, String tuitionType, String summary, ParticipationTime participationTime, int maxParticipants, BigDecimal averageRating, int viewCounts) {
+    public Course(Long id, Bootcamp bootcamp, Category category, SubCourse subCourse, String name, LocalDate startDate, LocalDate endDate, LocalDateTime closingDate, boolean codingTestExempt, boolean cardRequirement, boolean onlineOffline, String location, String tuitionType, String summary, ParticipationTime participationTime, int maxParticipants, BigDecimal averageRating, int viewCounts) {
         this.id = id;
-        this.bootcampEntity = bootcampEntity;
-        this.categoryEntity = categoryEntity;
-        this.subCourseEntity = subCourseEntity;
+        this.bootcamp = bootcamp;
+        this.category = category;
+        this.subCourse = subCourse;
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;

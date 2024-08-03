@@ -197,7 +197,8 @@
             participationTime: 'all',
             selectionProcedure: 'all',
             subCourse: 'all',
-            sort: 'default' // 추가된 정렬옵션
+            sort: 'default', // 정렬옵션 추가
+            search: '' // 검색어 필터 추가
         };
 
         function updateCourses() {
@@ -209,6 +210,7 @@
             filters.selectionProcedure = document.querySelector('select[name="selection-procedure"]').value;
             filters.subCourse = document.querySelector('select[name="subcourse"]').value;
             filters.sort = document.querySelector('select[name="sort"]').value;
+            filters.search = document.querySelector('input[name="search"]').value;
 
             // 쿼리 파라미터 문자열 생성
             let queryParams = new URLSearchParams(window.location.search); // 기존 URL의 쿼리 파라미터를 가져옴
@@ -234,6 +236,9 @@
 
             if (filters.sort !== 'default') queryParams.set('sort', filters.sort);
             else queryParams.delete('sort');
+
+            if (filters.search !== '') queryParams.set('search', filters.search);
+            else queryParams.delete('search');
 
             // 필터링된 URL로 페이지 이동
             window.location.href = '/boothouse/camps?' + queryParams.toString();
@@ -270,6 +275,10 @@
             if (urlParams.has('sort')) {
                 filters.sort = urlParams.get('sort');
                 document.querySelector('select[name="sort"]').value = filters.sort;
+            }
+            if (urlParams.has('search')) {
+                filters.search = urlParams.get('search');
+                document.querySelector('input[name="search"]').value = filters.search;
             }
         }
     </script>
@@ -374,8 +383,8 @@
             <option value="shortDuration">짧은 기간순</option>
             <option value="longDuration">긴 기간순</option>
         </select>
-        <input type="text" placeholder="부트캠프 검색" />
-        <button type="button">검색</button>
+        <input type="text" placeholder="부트캠프 검색" name="search"/>
+        <button type="button" onclick="updateCourses()">검색</button>
     </div>
 <div>
 
@@ -396,7 +405,7 @@
     <tbody>
     <tr th:each="course : ${courses}">
         <td th:text="${course.name}">교육과정명</td>
-        <td class="subcourse" th:text="${course.subCourseEntity != null ? course.subCourseEntity.name : '프로그램 과정명 없음'}">프로그램 과정명</td>
+        <td class="subcourse" th:text="${course.subCourse != null ? course.subCourse.name : '프로그램 과정명 없음'}">프로그램 과정명</td>
         <td class="recruitment-status">
             <div th:text="${course.recruitmentStatus.description}">모집상태</div>
             <div th:text="'~' + ${#temporals.format(course.closingDate, 'yy.MM.dd')}">마감날</div>

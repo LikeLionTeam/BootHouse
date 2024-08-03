@@ -1,6 +1,7 @@
 package likelion.eight.domain.subcourse.converter;
 
 import likelion.eight.SubCourseEntity.SubCourseEntity;
+import likelion.eight.domain.category.converter.CategoryConverter;
 import likelion.eight.domain.subcourse.model.SubCourse;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public class SubCourseConverter {
         return SubCourseEntity.builder()
                 .id(subCourse.getId())
                 .name(subCourse.getName())
-                .categoryEntity(subCourse.getCategoryEntity())
+                .categoryEntity(CategoryConverter.toEntity(subCourse.getCategory()))
                 .build();
     }
 
@@ -19,7 +20,7 @@ public class SubCourseConverter {
         return SubCourse.builder()
                 .id(subCourseEntity.getId())
                 .name(subCourseEntity.getName())
-                .categoryEntity(subCourseEntity.getCategoryEntity())
+                .category(CategoryConverter.toCategory(subCourseEntity.getCategoryEntity()))
                 .build();
     }
 

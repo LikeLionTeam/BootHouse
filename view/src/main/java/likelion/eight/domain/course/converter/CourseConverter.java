@@ -1,7 +1,10 @@
 package likelion.eight.domain.course.converter;
 
 import likelion.eight.course.CourseEntity;
+import likelion.eight.domain.bootcamp.converter.BootcampConverter;
+import likelion.eight.domain.category.converter.CategoryConverter;
 import likelion.eight.domain.course.model.Course;
+import likelion.eight.domain.subcourse.converter.SubCourseConverter;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,9 +13,9 @@ public class CourseConverter {
     public static CourseEntity toEntity(Course course){
         return CourseEntity.builder()
                 .id(course.getId())
-                .bootcampEntity(course.getBootcampEntity())
-                .categoryEntity(course.getCategoryEntity())
-                .subCourseEntity(course.getSubCourseEntity())
+                .bootcampEntity(BootcampConverter.toEntity(course.getBootcamp()))
+                .categoryEntity(CategoryConverter.toEntity(course.getCategory()))
+                .subCourseEntity(SubCourseConverter.toEntity(course.getSubCourse()))
                 .name(course.getName())
                 .startDate(course.getStartDate())
                 .endDate(course.getEndDate())
@@ -33,9 +36,9 @@ public class CourseConverter {
     public static Course toCourse(CourseEntity courseEntity){
         return Course.builder()
                 .id(courseEntity.getId())
-                .bootcampEntity(courseEntity.getBootcampEntity())
-                .categoryEntity(courseEntity.getCategoryEntity())
-                .subCourseEntity(courseEntity.getSubCourseEntity())
+                .bootcamp(BootcampConverter.toBootcamp(courseEntity.getBootcampEntity()))
+                .category(CategoryConverter.toCategory(courseEntity.getCategoryEntity()))
+                .subCourse(SubCourseConverter.toSubcourse(courseEntity.getSubCourseEntity()))
                 .name(courseEntity.getName())
                 .startDate(courseEntity.getStartDate())
                 .endDate(courseEntity.getEndDate())

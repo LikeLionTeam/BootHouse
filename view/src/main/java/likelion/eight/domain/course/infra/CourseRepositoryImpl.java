@@ -42,7 +42,7 @@ public class CourseRepositoryImpl implements CourseRepository {
     // TODO:: 우선은 CriteriaAPI를 사용했는데, 후에 QueryDSL로 동적쿼리 적용해볼 것
     // 필터조건에 맞는 코스 리스트 반환
     @Override
-    public List<Course> findCoursesByFilters(Long categoryId, CourseFilter courseFilter, String sort) {
+    public List<Course> findCoursesByFilters(Long categoryId, CourseFilter courseFilter, String sort, String search) {
         String onlineOffline = courseFilter.getOnlineOffline();
         String location = mapLocation(courseFilter.getLocation());
         String cost = courseFilter.getCost();
@@ -102,6 +102,11 @@ public class CourseRepositoryImpl implements CourseRepository {
             // subCourse 필터
             if (subCourseId != null){
                 predicates.add(criteriaBuilder.equal(root.get("subCourseEntity").get("id"), subCourseId));
+            }
+
+            // 검색어 필터
+            if (search != null){
+                predicates.add(criteriaBuilder.like(root.get("name"), "%" + search + "%"));
             }
 
             query.where(predicates.toArray(new Predicate[0])); // 생성한 필터링조건들을 모두 연결

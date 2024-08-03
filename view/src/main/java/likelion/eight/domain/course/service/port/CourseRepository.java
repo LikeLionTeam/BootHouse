@@ -15,6 +15,7 @@ public interface CourseRepository {
     List<Course> findCoursesByFilters(
             Long categoryId,
             CourseFilter courseFilter,
-            String sort
+            String sort,
+            String search
     );
 }
