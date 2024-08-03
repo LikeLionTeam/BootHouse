@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>사용자 인증 정보 생성</title>
+</head>
+<body>
+
+<h2>사용자 인증 정보 생성</h2>
+
+<form th:action="@{/{clientId}/upload(clientId=${id})}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="clientId" th:value="${id}">
+
+    <div>
+        <label for="image">이미지:</label>
+        <input type="file" id="image" name="image" accept="image/*">
+    </div>
+
+    <button type="submit">제출</button>
+</form>
+
+</body>
+</html>
