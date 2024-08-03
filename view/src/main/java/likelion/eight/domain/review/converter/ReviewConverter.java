@@ -1,11 +1,9 @@
 package likelion.eight.domain.review.converter;
 
-import jakarta.persistence.metamodel.IdentifiableType;
 import likelion.eight.course.CourseEntity;
+import likelion.eight.domain.review.controller.model.ReviewCreateRequest;
 import likelion.eight.domain.review.model.Review;
-import likelion.eight.domain.user.model.User;
 import likelion.eight.review.ReviewEntity;
-import likelion.eight.user.UserEntity;
 
 public class ReviewConverter {
 
@@ -23,7 +21,7 @@ public class ReviewConverter {
                 .build();
     }
 
-    public static Review toReview(ReviewEntity reviewEntity) {
+    public static Review toDto(ReviewEntity reviewEntity) {
         return Review.builder()
                 .id(reviewEntity.getId())
                 .courseId(reviewEntity.getCourseEntity().getId())
@@ -33,6 +31,17 @@ public class ReviewConverter {
                 .disadvantages(reviewEntity.getDisadvantages())
                 .instructorEvaluation(reviewEntity.getInstructorEvaluation())
                 .rating(reviewEntity.getRating())
+                .build();
+    }
+
+    public static Review toReview(ReviewCreateRequest request) {
+        return Review.builder()
+                .title(request.getTitle())
+                .oneLineReview(request.getOneLineReview())
+                .advantages(request.getAdvantages())
+                .disadvantages(request.getDisadvantages())
+                .instructorEvaluation(request.getInstructorEvaluation())
+                .rating(request.getRating())
                 .build();
     }
 

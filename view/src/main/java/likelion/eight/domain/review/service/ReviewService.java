@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,13 +32,17 @@ public class ReviewService {
 
     @Transactional
     public void saveReview(Review review) {
-        CourseEntity courseEntity = courseRepository.findById(review.getCourseId())
-                .orElseThrow(() -> new IllegalArgumentException("Review Not Found"));
+
+        /*CourseEntity courseEntity = courseRepository.findById(review.getCourseId())
+                .orElseThrow(() -> new IllegalArgumentException("Course Not Found"));*/
+
+        CourseEntity courseEntity = courseRepository.findById(review.getCourseId())  // 임시로 course_id를 1로 설정
+                .orElseThrow(() -> new IllegalArgumentException("Course not found: " + review.getCourseId()));
 
         ReviewEntity reviewEntity = ReviewConverter.toReviewEntity(review, courseEntity);
-        Review review2 = ReviewConverter.toReview(reviewEntity);
+        Review review2 = ReviewConverter.toDto(reviewEntity);
 
-        reviewRepository.save(review2);
+        reviewRepository.save(review2, courseEntity);
 
     }
 
