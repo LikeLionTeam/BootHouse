@@ -7,6 +7,7 @@ import likelion.eight.review.ReviewEntity;
 
 public class ReviewConverter {
 
+    // 모델(DTO)을 -> 엔티티로 변경
     public static ReviewEntity toReviewEntity(Review review, CourseEntity courseEntity) {
 
         return ReviewEntity.builder()
@@ -18,9 +19,13 @@ public class ReviewConverter {
                 .disadvantages(review.getDisadvantages())
                 .instructorEvaluation(review.getInstructorEvaluation())
                 .rating(review.getRating())
+                .viewCount(review.getViewCount())
+                .registrationDate(review.getRegistrationDate())
+                .lastModifiedDate(review.getLastModifiedDate())
                 .build();
     }
 
+    // 엔티티를 모델(DTO)로 변경
     public static Review toDto(ReviewEntity reviewEntity) {
         return Review.builder()
                 .id(reviewEntity.getId())
@@ -31,19 +36,9 @@ public class ReviewConverter {
                 .disadvantages(reviewEntity.getDisadvantages())
                 .instructorEvaluation(reviewEntity.getInstructorEvaluation())
                 .rating(reviewEntity.getRating())
+                .viewCount(reviewEntity.getViewCount())
                 .registrationDate(reviewEntity.getRegistrationDate())
                 .lastModifiedDate(reviewEntity.getLastModifiedDate())
-                .build();
-    }
-
-    public static Review toReview(ReviewCreateRequest request) {
-        return Review.builder()
-                .title(request.getTitle())
-                .oneLineReview(request.getOneLineReview())
-                .advantages(request.getAdvantages())
-                .disadvantages(request.getDisadvantages())
-                .instructorEvaluation(request.getInstructorEvaluation())
-                .rating(request.getRating())
                 .build();
     }
 

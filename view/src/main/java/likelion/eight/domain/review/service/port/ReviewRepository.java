@@ -1,6 +1,7 @@
 package likelion.eight.domain.review.service.port;
 
 import likelion.eight.course.CourseEntity;
+import likelion.eight.domain.review.controller.model.ReviewUpdateRequest;
 import likelion.eight.domain.review.model.Review;
 
 import java.util.List;
@@ -8,7 +9,6 @@ import java.util.Optional;
 
 public interface ReviewRepository {
     Review save(Review review, CourseEntity courseEntity);
-
 
     Review getById(Long id);
 
@@ -23,3 +23,4 @@ public interface ReviewRepository {
 
 
 }
+

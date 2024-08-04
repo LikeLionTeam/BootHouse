@@ -1,6 +1,7 @@
 package likelion.eight.domain.review.controller;
 
 import likelion.eight.domain.review.controller.model.ReviewCreateRequest;
+import likelion.eight.domain.review.controller.model.ReviewUpdateRequest;
 import likelion.eight.domain.review.model.Review;
 import likelion.eight.domain.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +58,7 @@ public class ReviewController {
         return "redirect:/reviews";
     }
 
- /*   @GetMapping("review/{id}/edit")
+    @GetMapping("review/{id}/edit")
     public String editReviewForm(@PathVariable Long id, Model model) {
         Review review = reviewService.findReviewById(id);
         model.addAttribute("review", review);
@@ -65,9 +66,9 @@ public class ReviewController {
     }
 
     @PostMapping("review/{id}/edit")
-    public String editReview(@PathVariable Long id, @ModelAttribute Review review) {
-        review.setCourseId(1L);  // 임시로 course_id를 1로 설정
-        reviewService.updateReview(id, review);
+    public String editReview(@PathVariable Long id, @ModelAttribute ReviewUpdateRequest reviewUpdateRequest) {
+
+        reviewService.updateReview(id, reviewUpdateRequest);
         return "redirect:/reviews";
     }
 
@@ -75,6 +76,6 @@ public class ReviewController {
     public String deleteReview(@PathVariable Long id) {
         reviewService.deleteReview(id);
         return "redirect:/reviews";
-    }*/
+    }
 
 }

@@ -1,6 +1,7 @@
 package likelion.eight.domain.review.infra;
 
 import likelion.eight.course.CourseEntity;
+import likelion.eight.domain.review.controller.model.ReviewUpdateRequest;
 import likelion.eight.domain.review.converter.ReviewConverter;
 import likelion.eight.domain.review.model.Review;
 import likelion.eight.domain.review.service.port.ReviewRepository;
@@ -15,9 +16,10 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Repository
+// 리뷰 리포지토리(인터페이스) 상속
 public class ReviewRepositoryImpl implements ReviewRepository {
 
-    private final ReviewJpaRepository reviewJpaRepository;
+    private final ReviewJpaRepository reviewJpaRepository; //JPA 리포지토리 사용
 
     @Override
     public Review save(Review review, CourseEntity courseEntity) {
@@ -56,4 +58,5 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     public void deleteById(Long id) {
         reviewJpaRepository.deleteById(id);
     }
+
 }

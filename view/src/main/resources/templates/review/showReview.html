@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
+ <head>
     <meta charset="UTF-8">
     <title>Review Details</title>
 </head>
@@ -32,11 +31,11 @@
         <th>Rating</th>
         <td th:text="${review.rating}">Rating</td>
     </tr>
-<!--    <tr>-->
-<!--        <th>View Count</th>-->
-<!--        <td th:text="${review.viewCount}">View Count</td>-->
-<!--    </tr>-->
-<!--    <tr>-->
+    <tr>
+        <th>View Count</th>
+        <td th:text="${review.viewCount}">View Count</td>
+    </tr>
+    <tr>
 <!--        <th>Course</th>-->
 <!--        <td th:text="${review.courseId}">Course Name</td>-->
 <!--    </tr>-->
@@ -51,6 +50,10 @@
 </table>
 
 <a href="/reviews">Back to All Reviews</a>
+<a th:href="@{/review/{id}/edit(id=${review.id})}">Edit Review</a>
+<form th:action="@{/review/{id}/delete(id=${review.id})}" method="post" style="display:inline;">
+    <button type="submit">Delete Review</button>
+</form>
 
 </body>
 </html>

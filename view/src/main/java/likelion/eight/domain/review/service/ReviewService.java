@@ -2,6 +2,7 @@ package likelion.eight.domain.review.service;
 
 import likelion.eight.course.CourseEntity;
 import likelion.eight.domain.course.service.port.CourseRepository;
+import likelion.eight.domain.review.controller.model.ReviewUpdateRequest;
 import likelion.eight.domain.review.converter.ReviewConverter;
 import likelion.eight.domain.review.model.Review;
 import likelion.eight.domain.review.service.port.ReviewRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +26,7 @@ public class ReviewService {
 
         return reviewRepository.findAll();
     }
+
     @Transactional(readOnly = true)
     public Review findReviewById(Long id) {
         return reviewRepository.findById(id)
@@ -33,16 +36,23 @@ public class ReviewService {
     @Transactional
     public void saveReview(Review review) {
 
-        /*CourseEntity courseEntity = courseRepository.findById(review.getCourseId())
-                .orElseThrow(() -> new IllegalArgumentException("Course Not Found"));*/
-
-        CourseEntity courseEntity = courseRepository.findById(review.getCourseId())  // 임시로 course_id를 1로 설정
+        CourseEntity courseEntity = courseRepository.findById(review.getCourseId())
                 .orElseThrow(() -> new IllegalArgumentException("Course not found: " + review.getCourseId()));
 
-        ReviewEntity reviewEntity = ReviewConverter.toReviewEntity(review, courseEntity);
-        Review review2 = ReviewConverter.toDto(reviewEntity);
+        reviewRepository.save(review, courseEntity);
 
-        reviewRepository.save(review2, courseEntity);
+    }
+
+    public void updateReview(Long id, ReviewUpdateRequest reviewUpdateRequest) {
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Review not found "));
+
+        CourseEntity courseEntity = courseRepository.findById(review.getCourseId())
+                .orElseThrow(() -> new IllegalArgumentException("Coruse not found"));
+
+        review.update(reviewUpdateRequest);
+
+        reviewRepository.save(review, courseEntity);
 
     }
 

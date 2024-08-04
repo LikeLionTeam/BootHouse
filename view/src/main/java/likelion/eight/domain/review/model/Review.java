@@ -1,5 +1,6 @@
 package likelion.eight.domain.review.model;
 
+import likelion.eight.domain.review.controller.model.ReviewUpdateRequest;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -19,8 +20,31 @@ public class Review {
     private String instructorEvaluation;
     private Integer rating;
 
+    private Integer viewCount;
     private LocalDateTime registrationDate;
     private LocalDateTime lastModifiedDate;
 
 
+
+    public void update(ReviewUpdateRequest reviewUpdateRequest) {
+        if (reviewUpdateRequest.getTitle() != null) {
+            this.title = reviewUpdateRequest.getTitle();
+        }
+        if (reviewUpdateRequest.getOneLineReview() != null) {
+            this.oneLineReview = reviewUpdateRequest.getOneLineReview();
+        }
+        if (reviewUpdateRequest.getAdvantages() != null) {
+            this.advantages = reviewUpdateRequest.getAdvantages();
+        }
+        if (reviewUpdateRequest.getDisadvantages() != null) {
+            this.disadvantages = reviewUpdateRequest.getDisadvantages();
+        }
+        if (reviewUpdateRequest.getInstructorEvaluation() != null) {
+            this.instructorEvaluation = reviewUpdateRequest.getInstructorEvaluation();
+        }
+        if (reviewUpdateRequest.getRating() != null) {
+            this.rating = reviewUpdateRequest.getRating();
+        }
+        this.lastModifiedDate = LocalDateTime.now();
+    }
 }
