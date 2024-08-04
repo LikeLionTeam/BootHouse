@@ -31,6 +31,8 @@ public class ReviewConverter {
                 .disadvantages(reviewEntity.getDisadvantages())
                 .instructorEvaluation(reviewEntity.getInstructorEvaluation())
                 .rating(reviewEntity.getRating())
+                .registrationDate(reviewEntity.getRegistrationDate())
+                .lastModifiedDate(reviewEntity.getLastModifiedDate())
                 .build();
     }
 

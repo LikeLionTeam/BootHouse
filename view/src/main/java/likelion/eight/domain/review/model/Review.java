@@ -3,6 +3,9 @@ package likelion.eight.domain.review.model;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 @Builder
 @Getter
 public class Review {
@@ -15,5 +18,9 @@ public class Review {
     private String disadvantages;
     private String instructorEvaluation;
     private Integer rating;
+
+    private LocalDateTime registrationDate;
+    private LocalDateTime lastModifiedDate;
+
 
 }

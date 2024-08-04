@@ -40,14 +40,14 @@
 <!--        <th>Course</th>-->
 <!--        <td th:text="${review.courseId}">Course Name</td>-->
 <!--    </tr>-->
-<!--    <tr>-->
-<!--        <th>Created Date</th>-->
-<!--        <td th:text="${#dates.format(review.registrationDate, 'yyyy-MM-dd HH:mm:ss')}">Created Date</td>-->
-<!--    </tr>-->
-<!--    <tr>-->
-<!--        <th>Last Modified Date</th>-->
-<!--        <td th:text="${#dates.format(review.lastModifiedDate, 'yyyy-MM-dd HH:mm:ss')}">Last Modified Date</td>-->
-<!--    </tr>-->
+    <tr>
+        <th>Created Date</th>
+        <td th:text="${#temporals.format(review.registrationDate, 'yyyy-MM-dd HH:mm:ss')}">Created Date</td>
+    </tr>
+    <tr>
+        <th>Last Modified Date</th>
+        <td th:text="${#temporals.format(review.lastModifiedDate, 'yyyy-MM-dd HH:mm:ss')}">Last Modified Date</td>
+    </tr>
 </table>
 
 <a href="/reviews">Back to All Reviews</a>
