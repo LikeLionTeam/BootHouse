@@ -5,7 +5,6 @@ import likelion.eight.domain.course.controller.model.CourseFilter;
 import likelion.eight.domain.course.model.Course;
 import likelion.eight.domain.course.service.port.CourseRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -42,5 +41,10 @@ public class CourseService {
         return Optional.ofNullable(coursesByFilters)
                 .filter(c -> !c.isEmpty())
                 .orElseThrow(() -> new ResourceNotFoundException("No course exist by that filter"));
+    }
+
+    public Course findCourseById(Long courseId){
+        return courseRepository.findCourseById(courseId)
+                .orElseThrow(() -> new ResourceNotFoundException("course", courseId));
     }
 }

@@ -157,6 +157,11 @@
             display: block;
             margin-bottom: 5px;
         }
+
+        td a {
+            text-decoration-line: none;
+            color: black;
+        }
     </style>
 
     <script>
@@ -404,8 +409,10 @@
     </thead>
     <tbody>
     <tr th:each="course : ${courses}">
-        <td th:text="${course.name}">교육과정명</td>
-        <td class="subcourse" th:text="${course.subCourse != null ? course.subCourse.name : '프로그램 과정명 없음'}">프로그램 과정명</td>
+        <td>
+            <a th:href="@{'/course/' + ${course.id}}" th:text="${course.name}"></a></td>
+        <td class="subcourse" th:text="${course.subCourse != null ? course.subCourse.name : '프로그램 과정명 없음'}">
+            프로그램 과정명</td>
         <td class="recruitment-status">
             <div th:text="${course.recruitmentStatus.description}">모집상태</div>
             <div th:text="'~' + ${#temporals.format(course.closingDate, 'yy.MM.dd')}">마감날</div>

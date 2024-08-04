@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -161,4 +162,9 @@ public class CourseRepositoryImpl implements CourseRepository {
         return null;
     }
 
+    @Override
+    public Optional<Course> findCourseById(Long courseId) {
+        Optional<CourseEntity> courseEntity = courseJpaRepository.findById(courseId);
+        return CourseConverter.toCourseOptional(courseEntity);
+    }
 }

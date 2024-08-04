@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -57,4 +58,11 @@ public class CourseController {
         return "course/courseList";
     }
 
+    // course 자세히보기
+    @GetMapping("course/{id}")
+    public String getCourseDetail(@PathVariable(name = "id")Long courseId, Model model){
+        Course course = courseService.findCourseById(courseId);
+        model.addAttribute("course", course);
+        return "course/courseDetail";
+    }
 }
