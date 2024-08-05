@@ -2,7 +2,6 @@ package likelion.eight.user;
 
 import jakarta.persistence.*;
 import likelion.eight.BaseTimeEntity;
-import likelion.eight.user.enums.GenderType;
 import likelion.eight.user.enums.RoleType;
 import likelion.eight.user.enums.UserStatus;
 import lombok.*;
@@ -22,7 +21,7 @@ public class UserEntity extends BaseTimeEntity {
     private Long id;
 
     @Column(length = 50, nullable = false, unique = true)
-    private String email; //TODO 패턴 검증필요
+    private String email;
 
     @Column(length = 50, nullable = false)
     private String password;
@@ -33,15 +32,8 @@ public class UserEntity extends BaseTimeEntity {
     @Column(length = 255, nullable = false)
     private String address;
 
-    @Column(length = 50, nullable = false)
-    private String nickName;
-
     @Column(nullable = false, unique = true)
     private String phoneNumber;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private GenderType genderType;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
