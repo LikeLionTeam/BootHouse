@@ -1,5 +1,6 @@
 package likelion.eight.domain.review.model;
 
+import likelion.eight.common.service.port.ClockHolder;
 import likelion.eight.domain.review.controller.model.ReviewUpdateRequest;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +11,8 @@ import java.time.LocalTime;
 @Builder
 @Getter
 public class Review {
+
+    private final ClockHolder clockHolder;
 
     private Long id;
     private Long courseId;
@@ -45,6 +48,7 @@ public class Review {
         if (reviewUpdateRequest.getRating() != null) {
             this.rating = reviewUpdateRequest.getRating();
         }
-        this.lastModifiedDate = LocalDateTime.now();
+        this.lastModifiedDate = clockHolder.now();
+
     }
 }
