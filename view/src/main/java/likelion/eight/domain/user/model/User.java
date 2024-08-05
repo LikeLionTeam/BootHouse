@@ -1,7 +1,9 @@
 package likelion.eight.domain.user.model;
 
+import jakarta.servlet.http.HttpServletResponse;
 import likelion.eight.common.domain.exception.CertificationFailedException;
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
+import likelion.eight.common.service.CookieService;
 import likelion.eight.common.service.port.ClockHolder;
 import likelion.eight.user.enums.RoleType;
 import likelion.eight.user.enums.UserStatus;
@@ -42,7 +44,6 @@ public class User {
         if (!this.password.equals(password)) {
             throw new ResourceNotFoundException("비밀번호가 틀렸습니다.");
         }
-
         return User.builder()
                 .id(id)
                 .name(name)
@@ -58,7 +59,6 @@ public class User {
                 .build();
 
     }
-
 
     public User certificate(String certificationCode){
         if (!this.certificationCode.equals(certificationCode)) {

@@ -64,6 +64,10 @@ public class UserService {
         return UserConverter.toResponse(user);
     }
 
+    public void logout(HttpServletRequest request, HttpServletResponse response){
+        cookieService.expiredCookie(request, response);
+    }
+
 
     public void verifyEmail(long id, String certificationCode){
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Users", id));
