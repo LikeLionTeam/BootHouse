@@ -36,5 +36,4 @@ public class BootCampEntity extends BaseTimeEntity {
 
     private String url; // 교육기관 홈페이지 url
 
-
 }

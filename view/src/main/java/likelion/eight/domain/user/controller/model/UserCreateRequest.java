@@ -2,11 +2,8 @@ package likelion.eight.domain.user.controller.model;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import likelion.eight.common.annotation.Password;
 import likelion.eight.common.annotation.PhoneNumber;
-import likelion.eight.user.enums.GenderType;
-import likelion.eight.user.enums.RoleType;
 import lombok.Builder;
 import lombok.Data;
 
@@ -19,16 +16,12 @@ public class UserCreateRequest {
     @NotBlank
     @Email
     private String email;
-    @Password
+    //@Password //TODO
     @NotBlank
     private String password;
     @NotBlank
-    private String nickName;
-    @NotBlank
     private String address;
     @NotBlank
-    @PhoneNumber
+    //@PhoneNumber
     private String phoneNumber;
-    @NotNull
-    private GenderType genderType;
 }

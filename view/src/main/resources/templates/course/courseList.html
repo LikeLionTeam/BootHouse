@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head xmlns:th="http://www.thymeleaf.org">
+    <meta charset="UTF-8">
+    <title>부트캠프 목록</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        /* 네비게이션 바 */
+        nav {
+            background-color: #4a4a4a;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        /* 카테고리 선택 */
+        .category-list {
+            background-color: white;
+            padding: 10px 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .category-list ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .category-list ul li {
+            margin-right: 10px;
+            margin-bottom: 5px;
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        /* 선택된 카테고리 스타일 추가 */
+        .category-list ul li.selected {
+            color: purple;
+        }
+
+        /* 필터 섹션 */
+        .filter-section {
+            padding: 20px;
+            background-color: white;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .filter-section p {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .filter-options {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .filter-options select,
+        .filter-options input,
+        .filter-options button {
+            margin-right: 10px;
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .filter-options select {
+            width: 150px;
+        }
+
+        .filter-options input {
+            width: 200px;
+        }
+
+        .filter-options button {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* 프로그램 목록 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table thead {
+            background-color: #f1f1f1;
+        }
+
+        table th,
+        table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #4a4a4a;
+            color: white;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        <!-- 데이터 필터링 추가 -->
+        .comparison-menu {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        }
+
+        .comparison-menu.show {
+            display: block;
+        }
+
+        .comparison-menu label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        td a {
+            text-decoration-line: none;
+            color: black;
+        }
+    </style>
+
+    <script>
+        // 카테고리 리스트에서, 카테고리를 선택했을 때
+        function selectCategory(event, categoryId) {
+            document.querySelectorAll('.category-list ul li').forEach(function (item) {
+               item.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            window.location.href = '/boothouse/camps?categories=' + categoryId;
+        }
+
+        function toggleComparisonMenu() {
+            const menu = document.getElementById('comparison-menu');
+            menu.style.display = (menu.style.display === 'none' || menu.style.display === '') ? 'block' : 'none';
+        }
+
+        // HTML 테이블에서, 사용자가 선택한 비교항목을 보여줄지 말지를 조절해줌
+        function toggleColumn(checkbox) {
+            // 1. 체크박스의 value 속성값 가져옴 (class명)
+            const columnClass = checkbox.value;
+
+            // 2. 체크박스가 선택되었다면 display 변수에 table-call값을, 아니라면 none 값을
+            const display = checkbox.checked ? 'table-cell' : 'none';
+
+            // 3. 앞서 가져온 class명을 선택해, display CSS 적용
+            document.querySelectorAll('.' + columnClass).forEach(function (cell) {
+                cell.style.display = display;
+            });
+        }
+
+        // 선택된 select 박스 기준으로, 데이터 필터링
+        // 전역 필터 상태 객체
+        let filters = {
+            onlineOffline: 'all',
+            location: 'all',
+            cost: 'all',
+            participationTime: 'all',
+            selectionProcedure: 'all',
+            subCourse: 'all',
+            sort: 'default', // 정렬옵션 추가
+            search: '' // 검색어 필터 추가
+        };
+
+        function updateCourses() {
+            // 각 select 박스에서 선택된 값을 가져옴
+            filters.onlineOffline = document.querySelector('select[name="online-offline"]').value;
+            filters.location = document.querySelector('select[name="location"]').value;
+            filters.cost = document.querySelector('select[name="cost"]').value;
+            filters.participationTime = document.querySelector('select[name="participation-time"]').value;
+            filters.selectionProcedure = document.querySelector('select[name="selection-procedure"]').value;
+            filters.subCourse = document.querySelector('select[name="subcourse"]').value;
+            filters.sort = document.querySelector('select[name="sort"]').value;
+            filters.search = document.querySelector('input[name="search"]').value;
+
+            // 쿼리 파라미터 문자열 생성
+            let queryParams = new URLSearchParams(window.location.search); // 기존 URL의 쿼리 파라미터를 가져옴
+
+            // 새로운 필터 조건에 따라 queryParams 갱신
+            if (filters.onlineOffline !== 'all') queryParams.set('onlineOffline', filters.onlineOffline);
+            else queryParams.delete('onlineOffline');
+
+            if (filters.location !== 'all') queryParams.set('location', filters.location);
+            else queryParams.delete('location');
+
+            if (filters.cost !== 'all') queryParams.set('cost', filters.cost);
+            else queryParams.delete('cost');
+
+            if (filters.participationTime !== 'all') queryParams.set('participationTime', filters.participationTime);
+            else queryParams.delete('participationTime');
+
+            if (filters.selectionProcedure !== 'all') queryParams.set('selectionProcedure', filters.selectionProcedure);
+            else queryParams.delete('selectionProcedure');
+
+            if (filters.subCourse !== 'all') queryParams.set('subCourse', filters.subCourse);
+            else queryParams.delete('subCourse');
+
+            if (filters.sort !== 'default') queryParams.set('sort', filters.sort);
+            else queryParams.delete('sort');
+
+            if (filters.search !== '') queryParams.set('search', filters.search);
+            else queryParams.delete('search');
+
+            // 필터링된 URL로 페이지 이동
+            window.location.href = '/boothouse/camps?' + queryParams.toString();
+        }
+
+        // 초기 페이지 로드 시, 기존 URL의 쿼리 파라미터를 기반으로 필터 상태를 설정
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            if (urlParams.has('onlineOffline')) {
+                filters.onlineOffline = urlParams.get('onlineOffline');
+                document.querySelector('select[name="online-offline"]').value = filters.onlineOffline;
+            }
+            if (urlParams.has('location')) {
+                filters.location = urlParams.get('location');
+                document.querySelector('select[name="location"]').value = filters.location;
+            }
+            if (urlParams.has('cost')) {
+                filters.cost = urlParams.get('cost');
+                document.querySelector('select[name="cost"]').value = filters.cost;
+            }
+            if (urlParams.has('participationTime')) {
+                filters.participationTime = urlParams.get('participationTime');
+                document.querySelector('select[name="participation-time"]').value = filters.participationTime;
+            }
+            if (urlParams.has('selectionProcedure')) {
+                filters.selectionProcedure = urlParams.get('selectionProcedure');
+                document.querySelector('select[name="selection-procedure"]').value = filters.selectionProcedure;
+            }
+            if (urlParams.has('subCourse')) {
+                filters.subCourse = urlParams.get('subCourse');
+                document.querySelector('select[name="subcourse"]').value = filters.subCourse;
+            }
+            if (urlParams.has('sort')) {
+                filters.sort = urlParams.get('sort');
+                document.querySelector('select[name="sort"]').value = filters.sort;
+            }
+            if (urlParams.has('search')) {
+                filters.search = urlParams.get('search');
+                document.querySelector('input[name="search"]').value = filters.search;
+            }
+        }
+    </script>
+</head>
+<body>
+<!-- 네비게이션 바 -->
+<nav>
+    <ul>
+        <li><a href="/boothouse/camps">부트캠프 리스트</a></li>
+    </ul>
+    <div>
+        <img src="profile-image-url" alt="유저 프로필" style="border-radius: 50%; width: 40px; height: 40px;">
+    </div>
+</nav>
+
+<!-- 카테고리 선택 -->
+<div class="category-list">
+    <ul>
+        <li th:each="category : ${categories}"
+            th:text="${category.name}"
+            th:onclick="'selectCategory(event, \'' + ${category.id} + '\')'"
+            >카테고리명
+        </li>
+    </ul>
+</div>
+
+
+<!-- 필터 및 비교 항목 선택 -->
+<div class="filter-section">
+    <div class="filter-options">
+        <!-- 셀렉트 박스 -->
+        <select name="subcourse" onchange="updateCourses()">
+            <option value="all">프로그램 과정</option>
+            <option th:if="${subCourseList != null}"
+                    th:each="subCourse : ${subCourseList}"
+                    th:value="${subCourse.id}"
+                    th:text="${subCourse.name}">프로그램 과정</option>
+            <option th:if="${subCourseList == null}"
+                    th:text="'관심분야를 먼저 선택해주세요'">
+            </option>
+        </select>
+        <select name="online-offline" onchange="updateCourses()">
+            <option value="all">온/오프라인</option>
+            <option value="online">온라인</option>
+            <option value="offline">오프라인</option>
+        </select>
+        <select name="location" onchange="updateCourses()">
+            <option value="all">지역</option>
+            <option value="seoul">서울</option>
+            <option value="busan">부산</option>
+        </select>
+        <select name="cost" onchange="updateCourses()">
+            <option value="all">비용</option>
+            <option value="free">무료 (내배카 필요)</option>
+            <option value="paid">유료 (내배카 필요 X)</option>
+        </select>
+        <select name="participation-time" onchange="updateCourses()">
+            <option value="all">참여 시간</option>
+            <option value="full-time">풀타임</option>
+            <option value="part-time">파트타임</option>
+        </select>
+        <select name="selection-procedure" onchange="updateCourses()">
+            <option value="all">선발절차</option>
+            <option value="easy">선발절차에 코딩 없음</option>
+            <option value="hard">선발절차에 코딩 있음</option>
+        </select>
+        <button type="button" onclick="location.href='http://localhost:8080/boothouse/camps'">초기화버튼</button>
+    </div>
+
+    <!-- 비교항목 선택 -- 토글 -->
+    <div class="comparison-options">
+        <button type="button" onclick="toggleComparisonMenu()">비교항목 선택</button>
+        <div id="comparison-menu" class="comparison-menu" style="display:none;">
+            <label><input type="checkbox" value="subcourse" checked onclick="toggleColumn(this)">프로그램 과정명</label>
+            <label><input type="checkbox" value="recruitment-status" checked onclick="toggleColumn(this)"> 모집상태</label>
+            <label><input type="checkbox" value="cost" checked onclick="toggleColumn(this)"> 비용</label>
+            <label><input type="checkbox" value="online-offline" checked onclick="toggleColumn(this)"> 온/오프라인</label>
+            <label><input type="checkbox" value="location" checked onclick="toggleColumn(this)"> 지역</label>
+            <label><input type="checkbox" value="study-period" checked onclick="toggleColumn(this)"> 학습기간</label>
+            <label><input type="checkbox" value="participation-time" checked onclick="toggleColumn(this)"> 참여 시간</label>
+            <label><input type="checkbox" value="selection-procedure" checked onclick="toggleColumn(this)"> 선발절차·키워드</label>
+        </div>
+    </div>
+</div>
+
+<!-- 프로그램 목록 -->
+<div class="filter-section">
+    <p th:if="${selectedCategory == null}">
+        모집 중인 프로그램 <strong th:text="${count}"></strong>개를 찾았어요.
+    </p>
+    <p th:if="${selectedCategory != null}">
+        모집 중인 <strong th:text="${selectedCategory.name}"></strong> 프로그램 <strong th:text="${count}"></strong>개를 찾았어요.
+    </p>
+
+    <div class="filter-options">
+        <select name="sort" onchange="updateCourses()">
+            <option value="default">기본정렬</option>
+            <option value="deadline">마감 임박순</option>
+            <option value="startDate">개강 빠른순</option>
+            <option value="lowCost">비용 낮은순</option>
+            <option value="highCost">비용 높은순</option>
+            <option value="shortDuration">짧은 기간순</option>
+            <option value="longDuration">긴 기간순</option>
+        </select>
+        <input type="text" placeholder="부트캠프 검색" name="search"/>
+        <button type="button" onclick="updateCourses()">검색</button>
+    </div>
+<div>
+
+
+<table>
+    <thead>
+    <tr>
+        <th>교육과정명</th> <!-- 교육과정명은 항상 보임 -->
+        <th class="subcourse">프로그램 과정명</th>
+        <th class="recruitment-status">모집상태</th>
+        <th class="cost">비용</th>
+        <th class="online-offline">온/오프라인</th>
+        <th class="study-period">학습기간</th>
+        <th class="participation-time">참여 시간</th>
+        <th class="selection-procedure">선발절차</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="course : ${courses}">
+        <td>
+            <a th:href="@{'/course/' + ${course.id}}" th:text="${course.name}"></a></td>
+        <td class="subcourse" th:text="${course.subCourse != null ? course.subCourse.name : '프로그램 과정명 없음'}">
+            프로그램 과정명</td>
+        <td class="recruitment-status">
+            <div th:text="${course.recruitmentStatus.description}">모집상태</div>
+            <div th:text="'~' + ${#temporals.format(course.closingDate, 'yy.MM.dd')}">마감날</div>
+        </td>
+        <td class="cost" th:text="${course.tuitionType}"></td>
+        <td class="online-offline" th:text="${course.onlineOffline ? '온라인' : '오프라인 ' + course.location}"></td>
+        <td class="study-period">
+            <div th:text="'수업 시작 날짜: ' + ${#temporals.format(course.startDate, 'yy.MM.dd')}"></div>
+            <div th:text="'수업 종료 날짜: ' + ${#temporals.format(course.endDate, 'yy.MM.dd')}"></div>
+        </td>
+        <td class="participation-time">
+            <span th:text="${course.participationTime.displayName}"></span><br/>
+            <span th:text="${course.participationTime.defaultSchedule}"></span>
+        </td>
+        <td class="selection-procedure" th:text="${course.codingTestExempt ? '코딩 테스트 있음' : '코딩 테스트 없음'}"></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

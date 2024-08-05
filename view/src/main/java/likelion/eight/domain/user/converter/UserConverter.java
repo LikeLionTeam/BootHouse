@@ -15,9 +15,7 @@ public class UserConverter {
                 .name(user.getName())
                 .email(user.getEmail())
                 .password(user.getPassword())
-                .nickName(user.getNickName())
                 .phoneNumber(user.getPhoneNumber())
-                .genderType(user.getGenderType())
                 .roleType(user.getRoleType())
                 .address(user.getAddress())
                 .lastLoginAt(user.getLastLoginAt())
@@ -33,13 +31,11 @@ public class UserConverter {
                 .name(userEntity.getName())
                 .email(userEntity.getEmail())
                 .password(userEntity.getPassword())
-                .nickName(userEntity.getNickName())
                 .phoneNumber(userEntity.getPhoneNumber())
                 .address(userEntity.getAddress())
                 .lastLoginAt(userEntity.getLastLoginAt())
                 .userStatus(userEntity.getUserStatus())
                 .certificationCode(userEntity.getCertificationCode())
-                .genderType(userEntity.getGenderType())
                 .image(userEntity.getImage())
                 .roleType(userEntity.getRoleType())
                 .build();
@@ -50,13 +46,11 @@ public class UserConverter {
                 .name(userCreateRequest.getName())
                 .email(userCreateRequest.getEmail())
                 .password(userCreateRequest.getPassword())
-                .nickName(userCreateRequest.getNickName())
                 .phoneNumber(userCreateRequest.getPhoneNumber())
                 .address(userCreateRequest.getAddress())
                 .roleType(RoleType.USER)
                 .certificationCode(uuidHolder.random())
                 .userStatus(UserStatus.PENDING)
-                .genderType(userCreateRequest.getGenderType())
                 .build();
     }
 }

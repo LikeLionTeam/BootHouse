@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Course Detail</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .course-container {
+            display: flex;
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .course-detail {
+            flex: 3;
+            padding: 20px;
+        }
+
+        .course-sidebar {
+            flex: 1;
+            border-left: 1px solid #ddd;
+            padding: 20px;
+            background-color: #f0f0f0;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .course-detail h1, .course-sidebar h1 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .course-summary, .course-info, .course-schedule, .course-cost, .course-review{
+            margin-bottom: 20px;
+        }
+
+        .course-summary .status {
+            background-color: #8000ff;
+            color: white;
+            text-align: center;
+            padding: 5px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .course-summary h2 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        .course-summary p, .course-info p, .course-schedule p, .course-cost p, .course-review p{
+            color: #666;
+        }
+
+        .course-info h2, .course-schedule h2, .course-cost h2, .course-review h2 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        .course-info img {
+            height: 50px;
+            margin-right: 10px; /*이미지 - div 사이의 간격*/
+            vertical-align: middle;
+        }
+
+        .course-info .details {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 30px; /* details와 a 태그 사이 간격*/
+        }
+
+        .course-info .details p {
+            margin: 0;
+        }
+
+        .course-info a {
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: auto; /* a 태그를 오른쪽으로 떨어뜨림 */
+            text-decoration-line: none;
+            color: #666;
+        }
+
+        .course-sidebar .sidebar-info {
+            margin-bottom: 20px;
+        }
+
+        .sidebar-info p {
+            margin: 5px 0;
+        }
+
+        /* 찜하기, 공유하기 버튼 */
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .action-button {
+            display: inline-block;
+            padding: 10px 0;
+            width: 48%;
+            text-align: center;
+            border-radius: 5px;
+            text-decoration: none;
+            color: black;
+            border: 1px solid #666;
+        }
+
+        .wishlist-btn {
+            background-color: white;
+        }
+
+        .wishlist-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .wishlist-btn.act {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .share-btn {
+            background-color: white;
+        }
+
+        .share-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* sns 공유하기, 팝업 */
+        /* 배경을 어둡게 처리 */
+        body.dimmed::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            pointer-events: none;
+        }
+
+        .share-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            z-index: 1000;
+        }
+
+        /* 공유하기 팝업 헤더 */
+        .share-popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* 닫기 버튼 스타일 */
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .sns-buttons {
+            display: flex;
+            justify-content: space-around; /* 각 버튼을 균등하게 배치 */
+            gap: 5px; /* 각 버튼 사이의 간격 */
+            margin-top: 20px;
+        }
+
+        .sns-btn {
+            padding: 10px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+        }
+
+        .kakao {
+            background-color: #fee500;
+        }
+
+        .facebook {
+            background-color: #3b5998;
+            color: white;
+        }
+
+        .twitter {
+            background-color: #1da1f2;
+            color: white;
+        }
+
+        .clipboard {
+            background-color: #666;
+            color: white;
+        }
+    </style>
+
+</head>
+
+<script>
+    function toggleAct(button){
+        button.classList.toggle("act");
+    }
+
+    // sns 공유하기, 팝업
+    // 배경 어두운 효과주고, 팝업창 보여지게
+    function showSharePopup() {
+        document.body.classList.add('dimmed');
+        document.getElementById('share-popup').style.display = 'block';
+    }
+
+    // sns 공유 - 페이스북, 트위터
+    function shareFacebook(){
+        const url = encodeURI(window.location.href);
+        window.open("http://www.facebook.com/sharer/sharer.php?u=" + url); // 페이스북은 주소를 넘기면 됨
+    }
+
+    function shareX(){
+        const url = encodeURI(window.location.href);
+        const text = '부트캠프 프로그램 공유';
+        window.open("https://twitter.com/intent/tweet?text=" + text + "&url=" + url); // 텍스트문자와 주소를 넘기면 됨
+    }
+
+    // 링크복사
+    function copyToClipboard() {
+        const url = window.location.href; // 현재 링크를 가져오는 코드
+        navigator.clipboard.writeText(url).then(() => {
+            alert('URL이 복사되었습니다.'); // 크롬에서는 navigator 객체가, 페이지보안시(localhost 혹은 HTTPS)에서만 작동함
+        });
+    }
+
+    // 'x' 버튼 누르면, 팝업창 닫게
+    function closeSharePopup() {
+        document.body.classList.remove('dimmed');
+        document.getElementById('share-popup').style.display = 'none';
+    }
+</script>
+<body>
+<div class="course-container">
+    <div class="course-detail">
+        <div class="course-summary">
+            <span class="status" th:text="${course.recruitmentStatus.description}">모집 중</span>
+            <h1 th:text="${course.name}">course name</h1>
+            <br>
+            <h2>프로그램 요약</h2>
+            <p th:text="${course.summary}">프로그램 요약</p>
+        </div>
+
+        <br>
+
+        <div class="course-info">
+            <h2>교육기관 정보</h2>
+            <img src="logo_url" alt="교육기관 로고">
+            <div class="details">
+                <p><strong th:text="${course.bootcamp.name}">course 주최 bootcamp 기관</strong></p>
+                <p th:text="${course.bootcamp.description}">course 주최 bootcamp 설명</p>
+                <p th:text="${course.bootcamp.location}">course 주최 bootcamp location</p>
+            </div>
+            <a th:href="${course.bootcamp.url}" th:text="'교육기관으로 가기'"></a>
+        </div>
+
+        <br>
+
+        <div class="course-schedule">
+            <h2>일정 & 수업</h2>
+            <p>모집마감: <span th:text="${#temporals.format(course.closingDate, 'yyyy.MM.dd HH:mm')}"></span></p>
+            <p>수업일정: <span th:text="${course.startDate} + ' ~ ' + ${course.endDate}"></span></p>
+            <p>수업장소:
+                <span th:if="${course.onlineOffline}" th:text="'온라인'"></span>
+                <span th:unless="${course.onlineOffline}" th:text="${course.location}"></span>
+            </p>
+            <p>모집정원:
+                <span th:if="${course.maxParticipants != -1}" th:text="${course.maxParticipants}"></span>
+                <span th:if="${course.maxParticipants == -1}" th:text="${'제한없음'}"></span>
+            </p>
+        </div>
+
+        <br>
+
+        <div class="course-cost">
+            <h2>수강료 & 지원금</h2>
+            <p>수강료: <span th:text="${course.tuitionType == '무료' ? '무료' : course.tuitionType + '만원'}"></span>
+            <p>내일배움카드: <span th:text="${course.cardRequirement ? '필요함' : '불필요'}"></span></p>
+        </div>
+
+        <br>
+
+        <div class="course-review">
+            <h2>리뷰 & 후기</h2>
+            <p>평균 별점 : </p>
+            <p>리뷰 : </p>
+        </div>
+    </div>
+
+    <div class="course-sidebar">
+        <p th:text="${course.bootcamp.name}" style="color: #666;"></p>
+        <h1 th:text="${course.name}">course name</h1>
+        <div class="sidebar-info">
+            <p><strong>모집마감일:</strong> <span th:text="${#temporals.format(course.closingDate, 'yyyy.MM.dd HH:mm')}"></span></p>
+            <p><strong>수업일정:</strong> <span th:text="${course.startDate} + ' ~ ' + ${course.endDate}"></span></p>
+            <p><strong>수업장소:</strong>
+                <span th:if="${course.onlineOffline}" th:text="'온라인'"></span>
+                <span th:unless="${course.onlineOffline}" th:text="${course.location}"></span>
+            </p>
+            <p><strong>교육비용:</strong> <span th:text="${course.tuitionType == '무료' ? '무료' : course.tuitionType + '만원'}"></span></p>
+            <p><strong>(내일배움카드 <span th:text="${course.isCardRequirement() ? '필요)' : '필요 X)'}"></span></strong></p>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn action-button wishlist-btn" onclick="toggleAct(this)">찜하기</button>
+            <button class="btn action-button share-btn" onclick="showSharePopup()">공유하기</button>
+        </div>
+    </div>
+
+    <!-- 공유하기 팝업 -->
+    <div id="share-popup" class="share-popup">
+        <div class="share-popup-header">
+            <h4>공유하기</h4>
+            <button class="close-btn" onclick="closeSharePopup()">X</button>
+        </div>
+        <p>코스 정보 요약:</p>
+        <p id="course-summary" th:text="${course.summary}">여기에 코스 정보 요약이 들어갑니다.</p>
+        <div class="sns-buttons">
+            <button class="sns-btn kakao" onclick="shareKaKao()">카카오톡</button>
+            <button class="sns-btn facebook" onclick="shareFacebook()">페이스북</button>
+            <button class="sns-btn twitter" onclick="shareX()">X (twitter) </button>
+            <button class="sns-btn clipboard" onclick="copyToClipboard()">URL 복사</button>
+        </div>
+    </div>
+</div>
+<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+<script>
+    //SNS 공유 - 카카오톡
+    Kakao.init('2a85e9b7261e20602098df66e58fb0a5');
+    // 키 값이 초기화되었는지 확인
+    console.log('카카오 초기화:', Kakao.isInitialized());
+    function shareKaKao(){
+        if (!Kakao.isInitialized()) {
+            console.error('Kakao SDK가 초기화되지 않았습니다.');
+            return;
+        }
+
+        // 현재 링크 가져오기
+        var currentURL = window.location.href;
+
+        //alert('currentURL :: ' + currentURL)
+        // 타이틀을 가져오는 부분
+        var title = '[부트하우스] 2024년 국비지원, 부트캠프 모음!';
+
+        // 설명을 가져오는 부분
+        var description = '모든 부트캠프들의 정보를 한눈에 비교하고, 리뷰 및 후기들을 확인해보세요!';
+
+        // 제품 이미지를 가져오는 부분
+        var imageurl = 'https://ifh.cc/g/wsJAYx.webp'; // 유효한 이미지 URL
+
+        window.Kakao.Link.sendDefault({
+            objectType: 'feed',
+            content: {
+                title: title,
+                description: description,
+                imageUrl: imageurl,
+                link: {
+                    mobileWebUrl: currentURL,
+                    webUrl: currentURL,
+                },
+            },
+            buttons: [
+                {
+                    title: '웹으로 이동',
+                    link: {
+                        mobileWebUrl: currentURL,
+                        webUrl: currentURL,
+                    },
+                },
+            ],
+            // 카카오톡 미설치 시 카카오톡 설치 경로이동
+            installTalk: true,
+        }, function(response) {
+            console.log('카카오톡 공유 성공', response);
+        }, function(error) {
+            console.error('카카오톡 공유 실패', error);
+        });
+    }
+
+</script>
+
+</body>
+</html>

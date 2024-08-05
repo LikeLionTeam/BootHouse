@@ -19,11 +19,11 @@
     <div class="py-5 text-center"></div>
     <h4 class="mb-3">회원 가입</h4>
 
-    <form action="" th:action method="post">
+    <form action="" th:action="@{/{id}/verify(id=${id})}" method="post">
 
         <div class="mb-3">
             <label for="code">code</label>
-            <input type="text" id="code" class="form-control" placeholder="code">
+            <input type="text" id="code" name="code" class="form-control" placeholder="code">
         </div>
 
         <hr class="my-4">
