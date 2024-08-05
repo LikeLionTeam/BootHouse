@@ -1,5 +1,6 @@
 package likelion.eight.domain.review.infra;
 
+import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import likelion.eight.course.CourseEntity;
 import likelion.eight.domain.review.controller.model.ReviewUpdateRequest;
 import likelion.eight.domain.review.converter.ReviewConverter;
@@ -32,7 +33,7 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     public Review getById(Long id) {
         return reviewJpaRepository.findById(id)
                 .map(ReviewConverter::toDto)
-                .orElseThrow(() -> new IllegalArgumentException("Review Not Found : " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Review Not Found : " + id));
     }
 
     @Override

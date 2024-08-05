@@ -1,5 +1,6 @@
 package likelion.eight.domain.review.service;
 
+import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import likelion.eight.course.CourseEntity;
 import likelion.eight.domain.course.service.port.CourseRepository;
 import likelion.eight.domain.review.controller.model.ReviewUpdateRequest;
@@ -30,14 +31,14 @@ public class ReviewService {
     @Transactional(readOnly = true)
     public Review findReviewById(Long id) {
         return reviewRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Review Not Found : "));
+                .orElseThrow(() -> new ResourceNotFoundException("Review Not Found : "));
     }
 
     @Transactional
     public void saveReview(Review review) {
 
         CourseEntity courseEntity = courseRepository.findByCourseId(review.getCourseId())
-                .orElseThrow(() -> new IllegalArgumentException("Course not found: " + review.getCourseId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found: " + review.getCourseId()));
 
         reviewRepository.save(review, courseEntity);
 
@@ -45,10 +46,10 @@ public class ReviewService {
 
     public void updateReview(Long id, ReviewUpdateRequest reviewUpdateRequest) {
         Review review = reviewRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Review not found "));
+                .orElseThrow(() -> new ResourceNotFoundException("Review not found "));
 
         CourseEntity courseEntity = courseRepository.findByCourseId(review.getCourseId())
-                .orElseThrow(() -> new IllegalArgumentException("Course not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found"));
 
         review.update(reviewUpdateRequest);
 
