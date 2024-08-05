@@ -17,7 +17,6 @@ public class CertificationService {
         mailSender.send(email, title, content);
     }
 
-
     private String generateCertificationUrl(long userId) {
         return "http://localhost:8080/users/" + userId + "/verify";
     }
