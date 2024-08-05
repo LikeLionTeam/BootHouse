@@ -36,7 +36,7 @@ public class ReviewService {
     @Transactional
     public void saveReview(Review review) {
 
-        CourseEntity courseEntity = courseRepository.findById(review.getCourseId())
+        CourseEntity courseEntity = courseRepository.findByCourseId(review.getCourseId())
                 .orElseThrow(() -> new IllegalArgumentException("Course not found: " + review.getCourseId()));
 
         reviewRepository.save(review, courseEntity);
@@ -47,8 +47,8 @@ public class ReviewService {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Review not found "));
 
-        CourseEntity courseEntity = courseRepository.findById(review.getCourseId())
-                .orElseThrow(() -> new IllegalArgumentException("Coruse not found"));
+        CourseEntity courseEntity = courseRepository.findByCourseId(review.getCourseId())
+                .orElseThrow(() -> new IllegalArgumentException("Course not found"));
 
         review.update(reviewUpdateRequest);
 

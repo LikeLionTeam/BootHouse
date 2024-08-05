@@ -163,6 +163,11 @@ public class CourseRepositoryImpl implements CourseRepository {
     }
 
     @Override
+    public Optional<CourseEntity> findByCourseId(Long courseId) {
+        return courseJpaRepository.findById(courseId);
+    }
+
+    @Override
     public Optional<Course> findCourseById(Long courseId) {
         Optional<CourseEntity> courseEntity = courseJpaRepository.findById(courseId);
         return CourseConverter.toCourseOptional(courseEntity);
