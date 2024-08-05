@@ -209,6 +209,7 @@ public class CourseInitData implements CommandLineRunner {
 //
 //        courseRepository.save(course);
 
+
         // 세번째 카테고리 :: 데이터 AI
 //        BootCampEntity bootCamp = bootCampRepository.findByName("패스트캠퍼스");
 //        CategoryEntity category = categoryRepository.findByName("데이터·AI");
@@ -257,6 +258,7 @@ public class CourseInitData implements CommandLineRunner {
                 .viewCounts(0) //-- 평점이랑 조회수는 우선 null, 0 초기값으로
                 .maxParticipants(60)
                 .build();
+
 
         courseRepository.save(course);
 
