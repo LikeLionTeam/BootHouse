@@ -1,6 +1,6 @@
 package likelion.eight.common.controller;
 
-import likelion.eight.common.domain.exception.CertificationCodeNotMatchedException;
+import likelion.eight.common.domain.exception.CertificationFailedException;
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.Ordered;
@@ -27,8 +27,8 @@ public class ExceptionControllerAdvice {
 
     @ResponseBody
     @ResponseStatus(FORBIDDEN)
-    @ExceptionHandler(CertificationCodeNotMatchedException.class)
-    public String certificationCodeNotMatchedException(CertificationCodeNotMatchedException exception) {
+    @ExceptionHandler(CertificationFailedException.class)
+    public String certificationCodeNotMatchedException(CertificationFailedException exception) {
         return exception.getMessage();
     }
 

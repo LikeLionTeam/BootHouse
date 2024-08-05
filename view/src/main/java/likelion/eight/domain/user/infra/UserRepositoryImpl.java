@@ -36,6 +36,11 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email).map(UserConverter::toUser);
+    }
+
+    @Override
     public Optional<User> findByEmailAndPassword(String email, String password) {
         return userRepository.findByEmailAndPassword(email, password).map(UserConverter::toUser);
     }
