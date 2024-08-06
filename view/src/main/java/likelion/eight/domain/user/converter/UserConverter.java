@@ -49,7 +49,7 @@ public class UserConverter {
                 .password(userCreateRequest.getPassword())
                 .phoneNumber(userCreateRequest.getPhoneNumber())
                 .address(userCreateRequest.getAddress())
-                .roleType(RoleType.USER)
+                .roleType(RoleType.USER) // TODO 어드민권한주기
                 .certificationCode(uuidHolder.random())
                 .userStatus(UserStatus.PENDING)
                 .build();
