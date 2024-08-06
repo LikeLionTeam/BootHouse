@@ -78,7 +78,7 @@ public class UserAuthController {
 
     @PostMapping("/{id}/approve")
     public String approveUserAuth(@PathVariable long id) {
-        userAuthService.approval(id);
+        userAuthService.approve(id);
         return "redirect:/userauth/list";
     }
 

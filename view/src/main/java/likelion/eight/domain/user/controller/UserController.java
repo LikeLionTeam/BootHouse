@@ -1,7 +1,11 @@
 package likelion.eight.domain.user.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import likelion.eight.domain.user.controller.model.UserCreateRequest;
+import likelion.eight.domain.user.controller.model.UserLoginRequest;
+import likelion.eight.domain.user.controller.model.UserResponse;
 import likelion.eight.domain.user.model.User;
 import likelion.eight.domain.user.service.UserService;
 import likelion.eight.user.UserEntity;
@@ -34,8 +38,7 @@ public class UserController {
     public String createUser(
             @Valid @ModelAttribute("request")
             UserCreateRequest request,
-            BindingResult bindingResult,
-            RedirectAttributes redirectAttributes
+            BindingResult bindingResult
     ){
 
 /*        if(bindingResult.hasErrors()){
@@ -44,9 +47,37 @@ public class UserController {
         }*/
         UserCreateRequest init = init(request);
 
-        User user = userService.createUser(init);
-        log.info("user={}",user.getPhoneNumber());
-        redirectAttributes.addAttribute("id", user.getId());
+        UserResponse user = userService.createUser(init);
+        return "redirect:/";
+    }
+
+    @GetMapping("/login")
+    public String loginForm(
+            Model model
+    ){
+        model.addAttribute("request",  new UserLoginRequest());
+        return "login/loginForm";
+    }
+
+    @PostMapping("/login")
+    public String loginUser(
+            @Valid @ModelAttribute("request")
+            UserLoginRequest loginRequest,
+            BindingResult bindingResult,
+            HttpServletResponse response
+    ){
+        if (bindingResult.hasErrors()) {
+            return "login/loginForm"; // 에러가 있을 경우 로그인 폼으로 이동
+        }
+
+        try {
+            UserResponse loginUser = userService.login(response, loginRequest);
+
+        } catch (ResourceNotFoundException e) {
+
+            bindingResult.reject("loginError", e.getMessage());
+            return "login/loginForm"; // 에러 메시지를 설정한 후 로그인 폼으로 이동
+        }
         return "redirect:/";
     }
 

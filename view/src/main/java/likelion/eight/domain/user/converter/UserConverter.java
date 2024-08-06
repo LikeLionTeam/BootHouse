@@ -2,6 +2,7 @@ package likelion.eight.domain.user.converter;
 
 import likelion.eight.common.service.port.UuidHolder;
 import likelion.eight.domain.user.controller.model.UserCreateRequest;
+import likelion.eight.domain.user.controller.model.UserResponse;
 import likelion.eight.domain.user.model.User;
 import likelion.eight.user.UserEntity;
 import likelion.eight.user.enums.RoleType;
@@ -51,6 +52,20 @@ public class UserConverter {
                 .roleType(RoleType.USER)
                 .certificationCode(uuidHolder.random())
                 .userStatus(UserStatus.PENDING)
+                .build();
+    }
+
+    public static UserResponse toResponse(User user){
+        return UserResponse.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .address(user.getAddress())
+                .email(user.getEmail())
+                .phoneNumber(user.getPhoneNumber())
+                .certificationCode(user.getCertificationCode())
+                .userStatus(user.getUserStatus())
+                .roleType(user.getRoleType())
+                .image(user.getImage())
                 .build();
     }
 }
