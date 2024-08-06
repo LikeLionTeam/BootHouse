@@ -39,12 +39,10 @@ public class NoticeService {
         String htmlContent = markdownConverter.convertMarkdownToHtml(noticeReq.getContent());
 
         NoticeEntity notice = NoticeEntity.builder()
-                //.postType(PostType.valueOf(noticeReq.getPostType()))
-                .postType(PostType.NOTICE)
+                .postType(PostType.valueOf(noticeReq.getPostType()))
                 .title(noticeReq.getTitle())
                 .content(htmlContent)
-                //.importance(noticeReq.getImportance())
-                .importance(true)
+                .importance(noticeReq.getImportance())
                 .build();
         NoticeEntity savedNotice = noticeJpaRepository.save(notice);
 
@@ -78,7 +76,6 @@ public class NoticeService {
         notice.setContent(content);
         notice.setPostType(PostType.valueOf(noticeReq.getPostType()));
         notice.setImportance(noticeReq.getImportance());
-
         noticeJpaRepository.save(notice);
     }
 
@@ -103,6 +100,7 @@ public class NoticeService {
         Page<NoticeEntity> allNotices = noticeJpaRepository.findAll(pageable);
 
         return allNotices.map(notice -> NoticeRes.builder()
+                .noticeId(notice.getId())
                 .title(notice.getTitle())
                 .postType(notice.getPostType().toString())
                 .importance(notice.getImportance())

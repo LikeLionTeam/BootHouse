@@ -26,7 +26,7 @@ public class NoticeController {
     @GetMapping("/new")
     public String newPost(Model model) {
         model.addAttribute("notice", new NoticeReq());
-        return "/noticeForm";
+        return "/notice/noticeForm";
     }
 
 
@@ -48,22 +48,20 @@ public class NoticeController {
     }
 
     @PutMapping("/{noticeId}")
-    public ResponseEntity<?> updateNotice(@PathVariable Long noticeId,
-                                          @RequestBody NoticeReq noticeReq) {
+    public String updateNotice(@PathVariable Long noticeId,
+                               @RequestBody NoticeReq noticeReq) {
         // todo: 작성자의 게시글인지 확인
 
         noticeService.updateNotice(noticeId, noticeReq);
-
-        return ResponseEntity.ok("update success");
+        return "redirect:/notice/"+noticeId;
     }
 
     @DeleteMapping("/{noticeId}")
-    public ResponseEntity<?> deleteNotice(@PathVariable Long noticeId) {
+    public String deleteNotice(@PathVariable Long noticeId) {
         // todo: 작성자의 게시글인지 확인
 
         noticeService.deleteNotice(noticeId);
-
-        return ResponseEntity.ok("delete success");
+        return "redirect:/notice";
     }
 
     @GetMapping("/{noticeId}")
