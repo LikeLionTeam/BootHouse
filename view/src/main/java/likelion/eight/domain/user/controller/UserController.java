@@ -1,21 +1,17 @@
 package likelion.eight.domain.user.controller;
 
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import likelion.eight.common.domain.exception.ResourceNotFoundException;
+import likelion.eight.common.annotation.Login;
+import likelion.eight.domain.user.controller.model.LoginUser;
 import likelion.eight.domain.user.controller.model.UserCreateRequest;
-import likelion.eight.domain.user.controller.model.UserLoginRequest;
 import likelion.eight.domain.user.controller.model.UserResponse;
-import likelion.eight.domain.user.model.User;
 import likelion.eight.domain.user.service.UserService;
-import likelion.eight.user.UserEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
@@ -30,7 +26,6 @@ public class UserController {
     public String createForm(
             @ModelAttribute("request") UserCreateRequest request
     ){
-        log.info("createForm");
         return "user/createForm";
     }
 
@@ -51,43 +46,13 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping("/login")
-    public String loginForm(
-            Model model
-    ){
-        model.addAttribute("request",  new UserLoginRequest());
-        return "login/loginForm";
-    }
-
-    @PostMapping("/login")
-    public String loginUser(
-            @Valid @ModelAttribute("request")
-            UserLoginRequest loginRequest,
-            BindingResult bindingResult,
-            HttpServletResponse response
-    ){
-        if (bindingResult.hasErrors()) {
-            return "login/loginForm"; // 에러가 있을 경우 로그인 폼으로 이동
-        }
-
-        try {
-            UserResponse loginUser = userService.login(response, loginRequest);
-
-        } catch (ResourceNotFoundException e) {
-
-            bindingResult.reject("loginError", e.getMessage());
-            return "login/loginForm"; // 에러 메시지를 설정한 후 로그인 폼으로 이동
-        }
-        return "redirect:/";
-    }
-
     @GetMapping("/{id}/verify")
     public String verifyForm(
-            @PathVariable long id,
+            @Login LoginUser loginUser,
             Model model
     ){
-        log.info("verifyForm={}", id);
-        model.addAttribute("id", id);
+        log.info("loginUser={}", loginUser);
+        model.addAttribute("id", loginUser.getId());
         return "/user/verifyForm";
     }
 
@@ -101,8 +66,6 @@ public class UserController {
         userService.verifyEmail(id, code);
         return "redirect:/";
     }
-
-
 
 
     private UserCreateRequest init(UserCreateRequest request){

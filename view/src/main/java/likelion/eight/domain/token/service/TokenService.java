@@ -49,7 +49,7 @@ public class TokenService {
         Object userId = map.get(USER_ID);
 
         Objects.requireNonNull(userId, () -> {
-            throw new ResourceNotFoundException("Token User", (long) userId);
+            throw new ResourceNotFoundException("Token UserId Null");
         });
 
         return Long.parseLong(userId.toString());
