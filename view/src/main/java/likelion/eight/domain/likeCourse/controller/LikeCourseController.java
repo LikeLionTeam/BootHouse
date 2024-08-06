@@ -1,6 +1,6 @@
-package likelion.eight.domain.likeCourse.Controller;
+package likelion.eight.domain.likeCourse.controller;
 
-import likelion.eight.domain.likeCourse.Service.LikeCourseService;
+import likelion.eight.domain.likeCourse.service.LikeCourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 
