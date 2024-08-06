@@ -1,19 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-<ul>
-    <li>상품 관리
-        <ul>
-            <li><a href="/servlet/v1/upload">서블릿 파일 업로드1</a></li>
-            <li><a href="/servlet/v2/upload">서블릿 파일 업로드2</a></li>
-            <li><a href="/spring/upload">스프링 파일 업로드</a></li>
-            <li><a href="/items/new">상품 - 파일, 이미지 업로드</a></li>
-        </ul>
-    </li>
-</ul>
+<div>
+    <div class="card-footer">
+        <button class="btn btn-info" onclick="location.href='/login'">로그인</button>
+    </div>
+</div>
 </body>
 </html>
