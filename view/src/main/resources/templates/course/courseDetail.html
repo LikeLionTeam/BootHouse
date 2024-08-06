@@ -393,7 +393,7 @@
 
             <br>
             <div>
-                <a th:text="${'내 리뷰 쓰기'}"></a>
+                <a th:text="${'내 리뷰 쓰기'}" th:href="@{/reviews/new/{courseId}(courseId=${course.id})}"></a>
             </div>
         </div>
     </div>
