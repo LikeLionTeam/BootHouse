@@ -7,7 +7,11 @@ import likelion.eight.domain.review.controller.model.ReviewUpdateRequest;
 import likelion.eight.domain.review.converter.ReviewConverter;
 import likelion.eight.domain.review.model.Review;
 import likelion.eight.domain.review.service.port.ReviewRepository;
+import likelion.eight.domain.user.converter.UserConverter;
+import likelion.eight.domain.user.model.User;
+import likelion.eight.domain.user.service.port.UserRepository;
 import likelion.eight.review.ReviewEntity;
+import likelion.eight.user.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +25,7 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final CourseRepository courseRepository;
+    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
     public List<Review> findAllReviews() {
@@ -40,7 +45,12 @@ public class ReviewService {
         CourseEntity courseEntity = courseRepository.findByCourseId(review.getCourseId())
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found: " + review.getCourseId()));
 
-        reviewRepository.save(review, courseEntity);
+        User user = userRepository.findById(review.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found : " + review.getUserId()));
+
+        UserEntity userEntity = UserConverter.toEntity(user);
+
+        reviewRepository.save(review, courseEntity, userEntity);
 
     }
 
@@ -51,14 +61,23 @@ public class ReviewService {
         CourseEntity courseEntity = courseRepository.findByCourseId(review.getCourseId())
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found"));
 
+        User user = userRepository.findById(review.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found : " + review.getUserId()));
+
+        UserEntity userEntity = UserConverter.toEntity(user);
+
         review.update(reviewUpdateRequest);
 
-        reviewRepository.save(review, courseEntity);
+        reviewRepository.save(review, courseEntity,userEntity);
 
     }
 
     @Transactional
     public void deleteReview(Long id) {
         reviewRepository.deleteById(id);
+    }
+
+    public boolean existsByUserIdAndCourseId(Long userId, Long courseId) {
+        return reviewRepository.existsByUserIdAndCourseId(userId, courseId);
     }
 }

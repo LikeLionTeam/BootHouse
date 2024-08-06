@@ -15,6 +15,7 @@ public class Review {
     private final ClockHolder clockHolder;
 
     private Long id;
+    private Long userId;
     private Long courseId;
     private String title;
     private String oneLineReview;

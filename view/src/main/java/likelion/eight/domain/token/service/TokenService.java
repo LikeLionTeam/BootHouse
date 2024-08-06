@@ -1,5 +1,7 @@
 package likelion.eight.domain.token.service;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import likelion.eight.domain.token.helper.ifs.TokenHelperIfs;
 import likelion.eight.domain.token.model.Token;
@@ -12,6 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+
+import static likelion.eight.common.service.CookieService.ADMIN_TOKEN_CODE;
+import static likelion.eight.common.service.CookieService.USER_TOKEN_CODE;
 
 @Service
 @RequiredArgsConstructor
@@ -53,5 +58,24 @@ public class TokenService {
         });
 
         return Long.parseLong(userId.toString());
+    }
+
+    // 로그인 여부 확인 메서드 추가
+    public boolean isUserLoggedIn(HttpServletRequest request){
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null){
+            for (Cookie cookie : cookies) {
+                if (USER_TOKEN_CODE.equals(cookie.getName()) || ADMIN_TOKEN_CODE.equals(cookie.getName()) ){
+                    try {
+                        validationToken(cookie.getValue()); // 토큰 유효성 검사
+                        return true; // 유효한 경우, 로그인 상태
+                    } catch (Exception e){
+                        // validationToken에서 발생한 예외로, 로그인하지 않은 상태로 간주
+                    }
+                }
+            }
+        }
+        return false; // 쿠키가 없거나, 유효한 토큰이 없는 경우
     }
 }

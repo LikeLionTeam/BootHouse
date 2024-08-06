@@ -1,5 +1,7 @@
 package likelion.eight.course.initializer;
 
+import likelion.eight.SubCourseEntity.SubCourseEntity;
+import likelion.eight.SubCourseEntity.ifs.SubCourseJpaRepository;
 import likelion.eight.bootcamp.BootCampEntity;
 import likelion.eight.bootcamp.ifs.BootCampJpaRepository;
 import likelion.eight.category.CategoryEntity;
@@ -7,21 +9,27 @@ import likelion.eight.category.ifs.CategoryJpaRepository;
 import likelion.eight.course.CourseEntity;
 import likelion.eight.course.ParticipationTime;
 import likelion.eight.course.ifs.CourseJpaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-//@Component
+@Component
 public class CourseInitData implements CommandLineRunner {
-    //@Autowired
+    @Autowired
     private CourseJpaRepository courseRepository;
 
-    //@Autowired
+    @Autowired
     private BootCampJpaRepository bootCampRepository;
 
-    //@Autowired
+    @Autowired
     private CategoryJpaRepository categoryRepository;
+
+    @Autowired
+    private SubCourseJpaRepository subCourseRepository;
+
     @Override
     public void run(String... args) throws Exception {
       
@@ -220,9 +228,9 @@ public class CourseInitData implements CommandLineRunner {
 //                .categoryEntity(category)
 //                .subCourseEntity(subCourse)
 //                .name("데이터분석 부트캠프 16기")
-//                .startDate(LocalDate.of(2024, 8, 19))
+//                .startDate(LocalDate.of(2024, 9, 1))
 //                .endDate(LocalDate.of(2025, 1, 10))
-//                .closingDate(LocalDateTime.of(2024, 8, 4, 0,0))
+//                .closingDate(LocalDateTime.of(2024, 9, 20, 0,0))
 //                .codingTestExempt(false)
 //                .cardRequirement(true)
 //                .onlineOffline(true)
@@ -237,30 +245,55 @@ public class CourseInitData implements CommandLineRunner {
 //
 //        courseRepository.save(course);
 
-        BootCampEntity bootCamp = bootCampRepository.findById(1L).get();
-        CategoryEntity category = categoryRepository.findById(7L).get();
+//        BootCampEntity bootCamp = bootCampRepository.findById(1L).get();
+//        CategoryEntity category = categoryRepository.findById(7L).get();
+//
+//        CourseEntity course = CourseEntity.builder()
+//                .bootcampEntity(bootCamp)
+//                .categoryEntity(category)
+//                .name("UXUI 디자인 스쿨 3기")
+//                .startDate(LocalDate.of(2024, 8, 12))
+//                .endDate(LocalDate.of(2024, 12, 23))
+//                .closingDate(LocalDateTime.of(2024, 8,12,23,0))
+//                .codingTestExempt(false)
+//                .cardRequirement(true)
+//                .onlineOffline(true)
+//                //.location() -- 온라인이라 무시
+//                .tuitionType("무료")
+//                .summary("온라인, 풀타임으로 진행되는 KDT(무료) UI/UX디자인 부트캠프입니다. 선발절차에 코딩테스트는 없습니다.")
+//                .participationTime(ParticipationTime.FULL_TIME)
+//                .averageRating(null)
+//                .viewCounts(0) //-- 평점이랑 조회수는 우선 null, 0 초기값으로
+//                .maxParticipants(60)
+//                .build();
+//
+//
+//        courseRepository.save(course);
 
-        CourseEntity course = CourseEntity.builder()
-                .bootcampEntity(bootCamp)
-                .categoryEntity(category)
-                .name("UXUI 디자인 스쿨 3기")
-                .startDate(LocalDate.of(2024, 8, 12))
-                .endDate(LocalDate.of(2024, 12, 23))
-                .closingDate(LocalDateTime.of(2024, 8,5,23,0))
-                .codingTestExempt(false)
-                .cardRequirement(true)
-                .onlineOffline(true)
-                //.location() -- 온라인이라 무시
-                .tuitionType("무료")
-                .summary("온라인, 풀타임으로 진행되는 KDT(무료) UI/UX디자인 부트캠프입니다. 선발절차에 코딩테스트는 없습니다.")
-                .participationTime(ParticipationTime.FULL_TIME)
-                .averageRating(null)
-                .viewCounts(0) //-- 평점이랑 조회수는 우선 null, 0 초기값으로
-                .maxParticipants(60)
-                .build();
 
-
-        courseRepository.save(course);
-
+//        BootCampEntity bootCamp = bootCampRepository.findByName("코드잇");
+//        CategoryEntity category = categoryRepository.findByName("웹개발");
+//        SubCourseEntity subCourse = subCourseRepository.findByName("프론트앤드");
+//
+//        CourseEntity course = CourseEntity.builder()
+//                .bootcampEntity(bootCamp)
+//                .categoryEntity(category)
+//                .subCourseEntity(subCourse)
+//                .name("HTML/CSS/JS 기초 첫걸음")
+//                .startDate(LocalDate.of(2024, 10, 5))
+//                .endDate(LocalDate.of(2024, 12, 15))
+//                .closingDate(LocalDateTime.of(2024, 10,2,14,0))
+//                .codingTestExempt(false)
+//                .cardRequirement(true)
+//                .onlineOffline(true)
+//                //.location() -- 온라인이라 무시
+//                .tuitionType("무료")
+//                .summary("온라인, 파트타임으로 진행되는 KDC(무료) 프론트앤드 부트챌린지입니다. 선발절차에 코딩테스트는 없습니다.")
+//                .participationTime(ParticipationTime.PART_TIME)
+//                .maxParticipants(50) // 정원없음
+//                .build();
+//
+//        courseRepository.save(course);
+//
     }
 }

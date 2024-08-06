@@ -213,6 +213,47 @@
             background-color: #666;
             color: white;
         }
+
+        /* 리뷰 관련 css */
+        .course-review .review-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .course-review .review-list li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 5px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-review .review-list li .review-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        a.review-title {
+            text-decoration-line: none;
+            color: black;
+        }
+
+        .course-review .review-list li .review-content {
+            color: #666;
+        }
+
+        .review-more {
+            cursor: pointer;
+            color: #0066cc;
+            text-decoration: underline;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .review-more:hover {
+            color: #004c99;
+        }
     </style>
 
 </head>
@@ -254,6 +295,32 @@
         document.body.classList.remove('dimmed');
         document.getElementById('share-popup').style.display = 'none';
     }
+
+    // 리뷰 더보기 + 접기 부분 JS
+    document.addEventListener("DOMContentLoaded", function() {
+        const reviews = document.querySelectorAll(".course-review .review-list li");
+        const reviewMoreBtn = document.querySelector(".review-more");
+
+        if (reviews.length > 3) {
+            reviews.forEach((review, index) => {
+                if (index >= 3) review.style.display = "none"; // 모든 리뷰 중 첫 3개만 보이고, 나머지는 none 처리
+            });
+
+            reviewMoreBtn.style.display = "inline-block";
+
+            reviewMoreBtn.addEventListener("click", function() {
+                if (reviewMoreBtn.textContent === "리뷰 더보기") {
+                    reviews.forEach(review => review.style.display = "block");
+                    reviewMoreBtn.textContent = "리뷰 접기";
+                } else {
+                    reviews.forEach((review, index) => {
+                        if (index >= 3) review.style.display = "none";
+                    });
+                    reviewMoreBtn.textContent = "리뷰 더보기";
+                }
+            });
+        }
+    });
 </script>
 <body>
 <div class="course-container">
@@ -307,8 +374,27 @@
 
         <div class="course-review">
             <h2>리뷰 & 후기</h2>
-            <p>평균 별점 : </p>
+            <p>평균 별점 : <span th:text="${course.averageRating}"></span></p>
             <p>리뷰 : </p>
+
+            <ul class="review-list">
+                <th:block th:each="review, iterStat : ${reviews}">
+                    <li>
+                        <a class="review-title" th:text="${review.title}"
+                           th:href="@{/reviews/{id}(id=${review.id})}">리뷰 제목</a>
+                        <div class="review-content" th:text="${review.oneLineReview}">한줄리뷰</div>
+                    </li>
+                </th:block>
+            </ul>
+
+            <span class="review-more" style="display: none;">리뷰 더보기</span>
+
+            <p th:if="${#lists.isEmpty(reviews)}">등록된 리뷰가 없습니다</p>
+
+            <br>
+            <div>
+                <a th:text="${'내 리뷰 쓰기'}" th:href="@{/reviews/new/{courseId}(courseId=${course.id})}"></a>
+            </div>
         </div>
     </div>
 

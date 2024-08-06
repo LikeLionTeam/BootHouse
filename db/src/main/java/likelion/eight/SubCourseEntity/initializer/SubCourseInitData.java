@@ -91,7 +91,7 @@ public class SubCourseInitData implements CommandLineRunner {
 //        subCourseRepository.save(DataAISubCourse3);
 //        subCourseRepository.save(DataAISubCourse4);
 
-//        // 클라우드·보안
+        // 클라우드·보안
 //        CategoryEntity CloudCategory = categoryRepository.findByName("클라우드·보안");
 //
 //        SubCourseEntity subCourseEntity1 = SubCourseEntity.builder()
@@ -119,7 +119,7 @@ public class SubCourseInitData implements CommandLineRunner {
 //        subCourseRepository.save(subCourseEntity3);
 //        subCourseRepository.save(subCourseEntity4);
 
-        // IoT·임베디드·반도체
+//         IoT·임베디드·반도체
 
 //        CategoryEntity category = categoryRepository.findByName("IoT·임베디드·반도체");
 //
@@ -199,7 +199,7 @@ public class SubCourseInitData implements CommandLineRunner {
 //        subCourseRepository.save(subCourseEntity2);
 //        subCourseRepository.save(subCourseEntity3);
 
-        // 디자인·3D
+       //  디자인·3D
 //        CategoryEntity category = categoryRepository.findByName("디자인·3D");
 //
 //        SubCourseEntity subCourseEntity1 = SubCourseEntity.builder()
