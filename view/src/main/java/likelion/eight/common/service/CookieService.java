@@ -47,7 +47,7 @@ public class CookieService {
             HttpServletRequest request,
             HttpServletResponse response
     ){
-        deleteSession(request);
+        //deleteSession(request);
         deleteCookie(request, response);
     }
 
