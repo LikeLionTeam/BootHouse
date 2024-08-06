@@ -6,7 +6,9 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum RoleType {
     ADMIN("관리자"),
-    USER("사용자"),
+    USER("일반사용자"),
+    BOOTCAMP("부트캠프출신"),
+    COMPANY("취업자")
     ;
 
     private String description;

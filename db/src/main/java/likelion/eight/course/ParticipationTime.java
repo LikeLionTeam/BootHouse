@@ -12,15 +12,17 @@ import lombok.Setter;
 @Getter
 public enum ParticipationTime {
 
-    FULL_TIME("Full Time", "월~금, 09:00 ~ 18:00"),
-    PART_TIME("Part Time", "");
+    FULL_TIME("Full Time", "월~금, 09:00 ~ 18:00", "FULL_TIME"),
+    PART_TIME("Part Time", "", "PART_TIME");
 
     private String displayName;
     private String defaultSchedule;
+    private String databaseName;
 
-    ParticipationTime(String displayName, String defaultSchedule) {
+    ParticipationTime(String displayName, String defaultSchedule, String databaseName) {
         this.displayName = displayName;
         this.defaultSchedule = defaultSchedule;
+        this.databaseName = databaseName;
     }
 
     // 파트타임의 경우 상세 일정을 설정할 수 있도록 setter 추가

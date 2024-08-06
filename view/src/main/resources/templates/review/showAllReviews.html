@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All Reviews</title>
+</head>
+<body>
+<h2>Reviews</h2>
+
+<h3><a href="/review/new">나의 리뷰 등록하기</a></h3>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>One Line Review</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="review : ${reviews}">
+        <td><a th:href="@{/reviews/{id}(id=${review.id})}" th:text="${review.title}">Title</a></td>
+        <td th:text="${review.oneLineReview}">One Line Review</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

@@ -17,13 +17,13 @@
 <h4 class="mb-3" th:text="|ID: ${id}|">인증 ID</h4>
 <div class="container">
     <div class="py-5 text-center"></div>
-    <h4 class="mb-3">회원 가입</h4>
+    <h4 class="mb-3">인증 코드</h4>
 
     <form action="" th:action method="post">
 
         <div class="mb-3">
             <label for="code">code</label>
-            <input type="text" id="code" class="form-control" placeholder="code">
+            <input type="text" id="code" name="code" class="form-control" placeholder="code">
         </div>
 
         <hr class="my-4">

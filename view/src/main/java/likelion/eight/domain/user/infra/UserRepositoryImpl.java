@@ -34,4 +34,14 @@ public class UserRepositoryImpl implements UserRepository {
     public Optional<User> findById(long id) {
         return userRepository.findById(id).map(UserConverter::toUser);
     }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email).map(UserConverter::toUser);
+    }
+
+    @Override
+    public Optional<User> findByEmailAndPassword(String email, String password) {
+        return userRepository.findByEmailAndPassword(email, password).map(UserConverter::toUser);
+    }
 }
