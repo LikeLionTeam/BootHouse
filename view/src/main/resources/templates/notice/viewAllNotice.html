@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Notices</title>
+</head>
+<body>
+<h1>Notices</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Post Type</th>
+        <th>Importance</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="notice : ${notices}">
+        <td th:text="${notice.title}"></td>
+        <td th:text="${notice.postType}"></td>
+        <td th:text="${notice.importance}"></td>
+    </tr>
+    </tbody>
+</table>
+<div>
+    <a th:if="${notices.hasPrevious()}" th:href="@{/notice(page=${notices.number - 1})}">Previous</a>
+    <span th:text="${notices.number + 1} + '/' + ${notices.totalPages}"></span>
+    <a th:if="${notices.hasNext()}" th:href="@{/notice(page=${notices.number + 1})}">Next</a>
+</div>
+</body>
+</html>
