@@ -39,7 +39,8 @@ public class NoticeEntity extends BaseTimeEntity {
     private Boolean importance;
 
     @Builder
-    public NoticeEntity(PostType postType, String title, String content, Boolean importance) {
+    public NoticeEntity(UserEntity userEntity,PostType postType, String title, String content, Boolean importance) {
+        this.userEntity = userEntity;
         this.postType = postType;
         this.title = title;
         this.content = content;

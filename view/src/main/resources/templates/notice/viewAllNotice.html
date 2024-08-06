@@ -4,6 +4,10 @@
     <title>Notices</title>
 </head>
 <body>
+<div th:if="${isAdmin}">
+    <!-- isAdmin이 true일 때 보이는 작성하기 버튼 -->
+    <a href="/notice/new">작성하기</a>
+</div>
 <h1>Notices</h1>
 <table>
     <thead>
