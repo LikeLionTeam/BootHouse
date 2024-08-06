@@ -32,7 +32,8 @@ public class WebConfig implements WebMvcConfigurer {
             "/health",
             "/favicon.ico",
             "/css/**",
-            "/error"
+            "/error",
+            "/users/**"
     );
 
     @Override

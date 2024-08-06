@@ -27,10 +27,6 @@ public class MessageEntity extends BaseTimeEntity {
     @JoinColumn(name = "sender_id", nullable = false)
     private UserEntity sender;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "receiver_id", nullable = false)
-//    private UserEntity receiver;
-
     @Lob
     @Column(name = "message", nullable = false)
     private String message;

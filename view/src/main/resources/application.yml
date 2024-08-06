@@ -50,3 +50,7 @@ management:
   endpoints:
     web:
       base-path: /
+
+app:
+  upload:
+    url: \Temp\upload
