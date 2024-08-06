@@ -8,7 +8,7 @@
             height: 300px; /* 충분한 높이 제공 */
             margin-bottom: 20px; /* 하단 여백 */
         }
-        #fileInput {
+        #fileInput, #postType, #importance {
             margin-bottom: 20px; /* 파일 입력 하단 여백 */
         }
     </style>
@@ -17,6 +17,14 @@
 <form th:action="@{/notice/save}" th:object="${notice}" method="post" enctype="multipart/form-data">
     <input type="text" th:field="*{title}" placeholder="Title" style="width: 100%; margin-bottom: 10px;"/><br/>
     <textarea id="markdownArea" th:field="*{content}" placeholder="Content"></textarea><br/>
+    <select id="postType" th:field="*{postType}">
+        <option value="NOTICE">공지사항</option>
+        <option value="EVENT">이벤트</option>
+    </select><br/>
+    <label>
+        <input type="checkbox" id="importance" th:field="*{importance}"/>
+        중요
+    </label><br/>
     <input type="file" id="fileInput" multiple onchange="uploadFiles()"/><br/>
     <button type="submit">Submit</button>
 </form>

@@ -9,15 +9,18 @@
     <thead>
     <tr>
         <th>Title</th>
-        <th>Post Type</th>
-        <th>Importance</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="notice : ${notices}">
-        <td th:text="${notice.title}"></td>
-        <td th:text="${notice.postType}"></td>
-        <td th:text="${notice.importance}"></td>
+        <td>
+            <a th:href="@{/notice/{noticeId}(noticeId=${notice.noticeId})}">
+                <span th:switch="${notice.postType}">
+                    <span th:case="'NOTICE'" th:text="${notice.importance} ? '*중요* [공지사항] ' + ${notice.title} : '[공지사항] ' + ${notice.title}"></span>
+                    <span th:case="'EVENT'" th:text="${notice.importance} ? '*중요* [이벤트] ' + ${notice.title} : '[이벤트] ' + ${notice.title}"></span>
+                </span>
+            </a>
+        </td>
     </tr>
     </tbody>
 </table>
