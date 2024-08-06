@@ -68,7 +68,6 @@ public class UserService {
         cookieService.expiredCookie(request, response);
     }
 
-
     public void verifyEmail(long id, String certificationCode){
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Users", id));
         user =  user.certificate(certificationCode);
