@@ -1,6 +1,10 @@
 package likelion.eight.domain.user.model;
 
-import likelion.eight.common.domain.exception.CertificationCodeNotMatchedException;
+import jakarta.servlet.http.HttpServletResponse;
+import likelion.eight.common.domain.exception.CertificationFailedException;
+import likelion.eight.common.domain.exception.ResourceNotFoundException;
+import likelion.eight.common.service.CookieService;
+import likelion.eight.common.service.port.ClockHolder;
 import likelion.eight.user.enums.RoleType;
 import likelion.eight.user.enums.UserStatus;
 import lombok.Builder;
@@ -36,10 +40,29 @@ public class User {
         this.image = image;
     }
 
+    public User login(ClockHolder clockHolder, String password){
+        if (!this.password.equals(password)) {
+            throw new ResourceNotFoundException("비밀번호가 틀렸습니다.");
+        }
+        return User.builder()
+                .id(id)
+                .name(name)
+                .address(address)
+                .email(email)
+                .password(password)
+                .phoneNumber(phoneNumber)
+                .certificationCode(certificationCode)
+                .userStatus(userStatus)
+                .roleType(roleType)
+                .lastLoginAt(clockHolder.millis())
+                .image(image)
+                .build();
+
+    }
 
     public User certificate(String certificationCode){
         if (!this.certificationCode.equals(certificationCode)) {
-            throw new CertificationCodeNotMatchedException();
+            throw new CertificationFailedException("인증 코드 불일치");
         }
         return User.builder()
                 .id(id)

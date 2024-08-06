@@ -5,6 +5,8 @@ import likelion.eight.domain.category.service.CategoryService;
 import likelion.eight.domain.course.controller.model.CourseFilter;
 import likelion.eight.domain.course.model.Course;
 import likelion.eight.domain.course.service.CourseService;
+import likelion.eight.domain.review.model.Review;
+import likelion.eight.domain.review.service.port.ReviewRepository;
 import likelion.eight.domain.subcourse.model.SubCourse;
 import likelion.eight.domain.subcourse.service.SubCourseService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ public class CourseController {
     private final CourseService courseService;
     private final CategoryService categoryService;
     private final SubCourseService subCourseService;
+    private final ReviewRepository reviewRepository;
 
     // 모집중인 캠프 조회
     // Todo :: 조회 성능 개선
@@ -59,10 +62,15 @@ public class CourseController {
     }
 
     // course 자세히보기
-    @GetMapping("course/{id}")
+    @GetMapping("courses/{id}")
     public String getCourseDetail(@PathVariable(name = "id")Long courseId, Model model){
         Course course = courseService.findCourseById(courseId);
+        List<Review> reviews = reviewRepository.findByCourseId(courseId);
+
+        course.calculateAverageRating(reviews);
+
         model.addAttribute("course", course);
+        model.addAttribute("reviews", reviews);
         return "course/courseDetail";
     }
 }

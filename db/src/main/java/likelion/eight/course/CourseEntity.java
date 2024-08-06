@@ -73,11 +73,8 @@ public class CourseEntity extends BaseTimeEntity {
     @Column(name = "max_participants", nullable = false)
     private int maxParticipants; // 모집정원 :: -1 값이면, 모집정원 없음
 
-    @Column(precision = 3, scale = 2) // 가능값 : 9.99, 0.01, 불가능값: 10.00
-    private BigDecimal averageRating; // 해당 프로그램 평균 평점
-
-    @Column(nullable = false, name = "view_counts")
-    private int viewCounts; // 해당 프로그램 조회수 (정렬을 위해)
+    @Column(precision = 3, scale = 2) // 가능값 : 9.99, 0.01, 불가능값 : 10.00
+    private BigDecimal averageRating; // 해당 프로그램 평균별점 (리뷰로부터 계산)
 
     // 모집정원이 있는지 없는지 판단로직
     public boolean hasNoLimit(){

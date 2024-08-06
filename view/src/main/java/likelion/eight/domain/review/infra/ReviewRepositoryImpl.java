@@ -43,7 +43,10 @@ public class ReviewRepositoryImpl implements ReviewRepository {
 
     @Override
     public List<Review> findByCourseId(Long courseId) {
-        return null;
+        List<ReviewEntity> reviewEntities = reviewJpaRepository.findByCourseId(courseId);
+        return reviewEntities.stream()
+                .map(ReviewConverter::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
