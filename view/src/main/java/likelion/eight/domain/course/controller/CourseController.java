@@ -1,5 +1,7 @@
 package likelion.eight.domain.course.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import likelion.eight.common.annotation.Login;
 import likelion.eight.domain.category.model.Category;
 import likelion.eight.domain.category.service.CategoryService;
 import likelion.eight.domain.course.controller.model.CourseFilter;
@@ -9,14 +11,13 @@ import likelion.eight.domain.review.model.Review;
 import likelion.eight.domain.review.service.port.ReviewRepository;
 import likelion.eight.domain.subcourse.model.SubCourse;
 import likelion.eight.domain.subcourse.service.SubCourseService;
+import likelion.eight.domain.token.service.TokenService;
+import likelion.eight.domain.user.controller.model.LoginUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class CourseController {
     private final CategoryService categoryService;
     private final SubCourseService subCourseService;
     private final ReviewRepository reviewRepository;
+    private final TokenService tokenService;
 
     // 모집중인 캠프 조회
     // Todo :: 조회 성능 개선
@@ -63,14 +65,20 @@ public class CourseController {
 
     // course 자세히보기
     @GetMapping("courses/{id}")
-    public String getCourseDetail(@PathVariable(name = "id")Long courseId, Model model){
+    public String getCourseDetail(@PathVariable(name = "id")Long courseId,
+                                  Model model,
+                                  HttpServletRequest request){
         Course course = courseService.findCourseById(courseId);
         List<Review> reviews = reviewRepository.findByCourseId(courseId);
+        boolean isUserLoggedIn = tokenService.isUserLoggedIn(request);
 
         course.calculateAverageRating(reviews);
 
         model.addAttribute("course", course);
         model.addAttribute("reviews", reviews);
+        model.addAttribute("isUserLoggedIn", isUserLoggedIn);
+
+
         return "course/courseDetail";
     }
 }

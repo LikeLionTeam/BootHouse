@@ -259,8 +259,66 @@
 </head>
 
 <script>
-    function toggleAct(button){
-        button.classList.toggle("act");
+    function setButtonColor(button, isLiked) {
+        if (isLiked) {
+            button.classList.add("act");
+        } else {
+            button.classList.remove("act");
+        }
+    }
+
+    // 초기화 함수 -- 로그인한 유저가, 이미 찜하기 버튼 누르기 전에 예전에 찜하기 기능을 사용했다면..
+    function initializeWishlistButton(){
+        const isUserLoggedIn = document.getElementById('isUserLoggedIn').value === 'true';
+        const courseId = document.getElementById('courseId').value;
+
+        if (isUserLoggedIn){
+            fetch(`/courses/${courseId}/isLiked`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => response.json().then(data => {
+                const button = document.getElementById('wishlist-button');
+                setButtonColor(button, data.isLiked === 'true');
+            })).catch(error => {
+                console.error('Error :: ', error);
+            });
+        }
+    }
+
+    // 찜하기 버튼 클릭시 동작
+    function wishlistAction(){
+        const isUserLoggedIn = document.getElementById('isUserLoggedIn').value === 'true'; // 문자열 -> boolean 타입으로 변환하기 위한 수식
+        const courseId = document.getElementById('courseId').value;
+
+        if (isUserLoggedIn){
+            // 유저가 로그인한 상태
+            fetch(`/courses/${courseId}/like`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => response.text().then(message => {
+                alert(message);
+
+                const button = document.querySelector('.wishlist-btn');
+
+                if (message.includes("추가")){
+                    setButtonColor(button, true);
+                } else {
+                    setButtonColor(button, false);
+                }
+            })).catch(error => {
+                console.error('Error :: ', error);
+            });
+
+        } else {
+            // 유저 로그인 안함
+            if (confirm('로그인/회원가입을 하시겠어요?')){
+                window.location.href = '/login';
+            }
+        }
     }
 
     // sns 공유하기, 팝업
@@ -322,7 +380,7 @@
         }
     });
 </script>
-<body>
+<body onload="initializeWishlistButton()">
 <div class="course-container">
     <div class="course-detail">
         <div class="course-summary">
@@ -413,7 +471,11 @@
         </div>
 
         <div class="action-buttons">
-            <button class="btn action-button wishlist-btn" onclick="toggleAct(this)">찜하기</button>
+            <input type="hidden" id="isUserLoggedIn" th:value="${isUserLoggedIn}">
+            <input type="hidden" id="courseId" th:value="${course.id}">
+            <button id="wishlist-button"
+                    class="btn action-button wishlist-btn"
+                    onclick="wishlistAction()">찜하기</button>
             <button class="btn action-button share-btn" onclick="showSharePopup()">공유하기</button>
         </div>
     </div>
