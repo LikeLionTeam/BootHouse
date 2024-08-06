@@ -19,23 +19,24 @@ import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/notice")
 public class NoticeController {
     private final NoticeService noticeService;
 
     @GetMapping("/new")
     public String newPost(Model model) {
         model.addAttribute("notice", new NoticeReq());
-        return "/notice/noticeForm";
+        return "/noticeForm";
     }
 
 
-    @PostMapping("/notice/save")
+    @PostMapping("/save")
     public String saveNotice(@ModelAttribute NoticeReq noticeReq){
         Long result = noticeService.saveNotice(noticeReq);
         return "redirect:/notice/"+result;
     }
 
-    @PostMapping("/notice/upload")
+    @PostMapping("/upload")
     public ResponseEntity<Map<String,Object>> uploadImage(@RequestParam("file") MultipartFile file){
         Map<String, Object> result = noticeService.uploadImage(file);
 
@@ -46,7 +47,7 @@ public class NoticeController {
         }
     }
 
-    @PutMapping("/notice/{noticeId}")
+    @PutMapping("/{noticeId}")
     public ResponseEntity<?> updateNotice(@PathVariable Long noticeId,
                                           @RequestBody NoticeReq noticeReq) {
         // todo: 작성자의 게시글인지 확인
@@ -56,7 +57,7 @@ public class NoticeController {
         return ResponseEntity.ok("update success");
     }
 
-    @DeleteMapping("/notice/{noticeId}")
+    @DeleteMapping("/{noticeId}")
     public ResponseEntity<?> deleteNotice(@PathVariable Long noticeId) {
         // todo: 작성자의 게시글인지 확인
 
@@ -65,7 +66,7 @@ public class NoticeController {
         return ResponseEntity.ok("delete success");
     }
 
-    @GetMapping("/notice/{noticeId}")
+    @GetMapping("/{noticeId}")
     public String getNoticeDetail(@PathVariable Long noticeId,Model model) {
         try {
             NoticeDetailRes noticeDetail = noticeService.getNoticeDetail(noticeId);
@@ -76,7 +77,7 @@ public class NoticeController {
         }
     }
 
-    @GetMapping("/notice")
+    @GetMapping
     public String getAllNotices(@RequestParam(defaultValue = "0") int page, Model model) {
         Pageable pageable = PageRequest.of(page, 10);
         Page<NoticeRes> allNotices = noticeService.getAllNotices(pageable);
