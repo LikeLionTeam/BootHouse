@@ -6,9 +6,11 @@ import likelion.eight.domain.review.controller.model.ReviewCreateRequest;
 import likelion.eight.domain.review.controller.model.ReviewUpdateRequest;
 import likelion.eight.domain.review.model.Review;
 import likelion.eight.domain.review.service.ReviewService;
+import likelion.eight.domain.token.service.TokenService;
 import likelion.eight.domain.user.model.User;
 import likelion.eight.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,7 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final CourseService courseService;
     private final UserService userService;
+    private final TokenService tokenService;
 
 
     @GetMapping("/reviews")
@@ -38,12 +41,27 @@ public class ReviewController {
         return "review/showReview";
     }
 
-    @GetMapping("/review/new")
-    public String createReviewForm(Model model, @RequestParam Long userId, @RequestParam Long courseId) {
+    @GetMapping("/review/new/{courseId}")
+    public String createReviewForm(Model model, @PathVariable Long courseId,@RequestHeader("Authorization") String token) {
         //TODO : [user_id랑 course_id 조합이 유일할 때 리뷰 쓰기 가능하도록]
 
-        Course course = courseService.findCourseById(courseId);
+        // JWT 로그인 유저 찾아서 넣기
+
+        // JWT 토큰에서 Bearer 접두사를 제거
+        String jwtToken = token.substring(7);
+
+        // JWT 토큰을 사용하여 로그인한 사용자 ID를 가져오기
+        Long userId = tokenService.validationToken(jwtToken);
+
         User user = userService.findUserById(userId);
+
+        Course course = courseService.findCourseById(courseId);
+
+        // userId와 courseId 조합이 이미 존재하는지 확인
+        boolean reviewExists = reviewService.existsByUserIdAndCourseId(userId, courseId);
+        if (reviewExists) {
+            return "redirect:/reviews/"; // 이미 리뷰가 존재하는 경우 리다이렉트
+        }
 
         model.addAttribute("course", course);
         model.addAttribute("user", user);
@@ -52,7 +70,7 @@ public class ReviewController {
         return "review/reviewRegisterForm";
     }
 
-    @PostMapping("/review/new")
+    @PostMapping("/review/new/{courseId}")
     public String createReview(@ModelAttribute ReviewCreateRequest reviewCreateRequest) {
 
         //TODO : review에 user_id로 User 찾아서 넣기
