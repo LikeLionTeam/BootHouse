@@ -1,8 +1,0 @@
-rootProject.name = 'boothouse'
-include 'db'
-include 'db'
-include 'view'
-include 'view'
-include 'db'
-include 'common'
-
