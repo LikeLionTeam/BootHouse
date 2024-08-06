@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>New Post</title>
+    <style>
+        #markdownArea {
+            width: 100%;  /* 너비를 화면에 꽉 차게 설정 */
+            height: 300px; /* 충분한 높이 제공 */
+            margin-bottom: 20px; /* 하단 여백 */
+        }
+        #fileInput {
+            margin-bottom: 20px; /* 파일 입력 하단 여백 */
+        }
+    </style>
+</head>
+<body>
+<form th:action="@{/notice/save}" th:object="${notice}" method="post" enctype="multipart/form-data">
+    <input type="text" th:field="*{title}" placeholder="Title" style="width: 100%; margin-bottom: 10px;"/><br/>
+    <textarea id="markdownArea" th:field="*{content}" placeholder="Content"></textarea><br/>
+    <input type="file" id="fileInput" multiple onchange="uploadFiles()"/><br/>
+    <button type="submit">Submit</button>
+</form>
+
+<script>
+    function insertAtCursor(myField, myValue) {
+        if (document.selection) { // IE 지원
+            myField.focus();
+            var sel = document.selection.createRange();
+            sel.text = myValue;
+        } else if (myField.selectionStart || myField.selectionStart == '0') { // 모질라 및 기타 브라우저
+            var startPos = myField.selectionStart;
+            var endPos = myField.selectionEnd;
+            myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
+            myField.selectionStart = startPos + myValue.length;
+            myField.selectionEnd = startPos + myValue.length;
+        } else {
+            myField.value += myValue; // 커서 위치 정보가 없는 경우, 텍스트 끝에 추가
+        }
+    }
+
+    function uploadFiles() {
+        var fileInput = document.getElementById('fileInput');
+        Array.from(fileInput.files).forEach(file => {
+            var formData = new FormData();
+            formData.append("file", file); // 단일 파일 추가
+
+            fetch('/notice/upload', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.url) {
+                        var markdownArea = document.getElementById('markdownArea');
+                        insertAtCursor(markdownArea, `![](${data.url})\n`); // 커서 위치에 이미지 URL 삽입
+                    }
+                    fileInput.value = ''; // 파일 입력 필드 초기화
+                })
+                .catch(error => {
+                    console.error('Error uploading image:', error);
+                    alert('Error uploading image: ' + error.message);
+                });
+        });
+    }
+</script>
+</body>
+</html>

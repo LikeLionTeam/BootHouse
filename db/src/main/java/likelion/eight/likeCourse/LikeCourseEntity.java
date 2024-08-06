@@ -1,4 +1,5 @@
-package likelion.eight.userinterest;
+package likelion.eight.likeCourse;
+
 
 import jakarta.persistence.*;
 import likelion.eight.BaseTimeEntity;
@@ -8,25 +9,25 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "user_interests")
+@Table(name = "like_course")
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserInterestEntity extends BaseTimeEntity {
+public class LikeCourseEntity extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_interest_id")
+    @Column(name = "like_course_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private CourseEntity courseEntity;
+
 }
