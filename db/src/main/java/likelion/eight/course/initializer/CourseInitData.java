@@ -1,8 +1,10 @@
 package likelion.eight.course.initializer;
 
+import likelion.eight.bootcamp.BootCampEntity;
 import likelion.eight.bootcamp.ifs.BootCampJpaRepository;
 import likelion.eight.category.CategoryEntity;
 import likelion.eight.category.ifs.CategoryJpaRepository;
+import likelion.eight.course.CourseEntity;
 import likelion.eight.course.ParticipationTime;
 import likelion.eight.course.ifs.CourseJpaRepository;
 import org.springframework.boot.CommandLineRunner;

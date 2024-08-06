@@ -1,5 +1,6 @@
 package likelion.eight.bootcamp.initializer;
 
+import likelion.eight.bootcamp.BootCampEntity;
 import likelion.eight.bootcamp.ifs.BootCampJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

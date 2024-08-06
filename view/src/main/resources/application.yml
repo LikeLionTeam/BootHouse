@@ -15,8 +15,8 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/boothouse?sslmode=disable&charSet=UTF-8
     driver-class-name: org.postgresql.Driver
-    username: postgres
-    password: postgres
+    username: root
+    password: root1234
 
   mail:
     host: smtp.gmail.com
