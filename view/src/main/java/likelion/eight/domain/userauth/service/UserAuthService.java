@@ -51,7 +51,7 @@ public class UserAuthService {
         return userAuthRepository.findAll(page, size);
     }
 
-    public void approval(long id){
+    public void approve(long id){
         UserAuth userAuth = userAuthRepository.getById(id);
         userAuth = userAuth.approve(clockHolder);
         userAuthRepository.save(userAuth);

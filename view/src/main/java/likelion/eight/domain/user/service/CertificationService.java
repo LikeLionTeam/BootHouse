@@ -16,8 +16,6 @@ public class CertificationService {
         String content = "인증코드 : " + certificationCode + " / 링크를 클릭해서 인증코드를 입력 해주세요 : " + certificationUrl;
         mailSender.send(email, title, content);
     }
-
-
     private String generateCertificationUrl(long userId) {
         return "http://localhost:8080/users/" + userId + "/verify";
     }
