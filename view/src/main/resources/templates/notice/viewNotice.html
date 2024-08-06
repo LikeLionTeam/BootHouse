@@ -2,11 +2,171 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>View Post</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        #editTitle, #editContent {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        #editContent {
+            height: 200px;
+        }
+    </style>
 </head>
 <body>
-<h1 th:text="${noticeDetail.title}">Notice Title</h1>
-<div th:utext="${noticeDetail.content}">[Notice content]</div>
-<a th:href="@{/notice/edit/{id}(id=${noticeDetail.id})}" class="edit-button">Edit Notice</a>
+<h1 id="title" th:text="${noticeDetail.title}">Notice Title</h1>
+<div id="content" th:utext="${noticeDetail.content}">[Notice content]</div>
+
+<div id="editForm" style="display:none;" th:data-notice-id="${noticeDetail.noticeId}">
+    <input type="text" id="editTitle" value="" />
+    <textarea id="editContent"></textarea>
+    <input type="file" id="fileInput" multiple style="margin-bottom: 10px;" onchange="uploadFiles()"/>
+    <select id="editPostType" th:value="${noticeDetail.postType}">
+        <option value="NOTICE">공지</option>
+        <option value="EVENT">이벤트</option>
+    </select>
+    <label>
+        <input type="checkbox" id="editImportance" th:checked="${noticeDetail.importance}"/> 중요
+    </label>
+    <button onclick="saveChanges()">Save Changes</button>
+</div>
+
+<div id="editButton" th:if="${noticeDetail.isOwner}">
+    <button onclick="enableEditMode()">수정</button>
+    <button onclick="deletePost()">삭제</button>
+</div>
 <a href="/notice">Back to posts</a>
+
+<script>
+    function enableEditMode() {
+        $('#editTitle').val($('#title').text());
+        var htmlContent = $('#content').html();
+        var markdown = htmlToMarkdown(htmlContent);
+        $('#editContent').val(markdown);
+        $('#title').hide();
+        $('#content').hide();
+        $('#editForm').show();
+        $('#editButton').hide(); // Hide the edit button when edit mode is enabled
+    }
+
+    function htmlToMarkdown(htmlContent) {
+        const rules = [
+            { regex: /<img[^>]*src="([^"]*)"[^>]*>/gi, replacement: '![]($1)' },
+            { regex: /<h1>(.*?)<\/h1>/gi, replacement: '# $1\n' },
+            { regex: /<h2>(.*?)<\/h2>/gi, replacement: '## $1\n' },
+            { regex: /<h3>(.*?)<\/h3>/gi, replacement: '### $1\n' },
+            { regex: /<strong>(.*?)<\/strong>/gi, replacement: '**$1**' },
+            { regex: /<em>(.*?)<\/em>/gi, replacement: '*$1*' },
+            { regex: /<ul>/gi, replacement: '' },
+            { regex: /<\/ul>/gi, replacement: '' },
+            { regex: /<ol>/gi, replacement: '' },
+            { regex: /<\/ol>/gi, replacement: '' },
+            { regex: /<li>(.*?)<\/li>/gi, replacement: '- $1\n' },
+            { regex: /<p>([^<]+)<\/p>/gi, replacement: '$1\n\n' }, // 개선된 단락 처리
+            { regex: /<br\s*\/?>/gi, replacement: '\n' },
+            { regex: /<hr\s*\/?>/gi, replacement: '---\n' }
+        ];
+
+        rules.forEach(rule => {
+            htmlContent = htmlContent.replace(rule.regex, rule.replacement);
+        });
+
+        return htmlContent;
+    }
+
+    function deletePost() {
+        var noticeId = $('#editForm').data('notice-id'); // 데이터 속성에서 noticeId 읽기
+        if (confirm('정말로 삭제하시겠습니까?')) { // 삭제 확인
+            $.ajax({
+                url: '/notice/' + noticeId, // 삭제 요청 URL
+                method: 'DELETE', // HTTP DELETE 메소드 사용
+                success: function(response) {
+                    window.location.href = '/notice'; // 공지 목록으로 리디렉션
+                },
+                error: function(xhr) {
+                    alert('공지사항 삭제 실패: ' + xhr.responseJSON.error);
+                }
+            });
+        }
+    }
+
+    function saveChanges() {
+        var noticeId = $('#editForm').data('notice-id');
+        var updatedTitle = $('#editTitle').val();
+        var updatedContent = $('#editContent').val();
+        var updatedPostType = $('#editPostType').val();
+        var updatedImportance = $('#editImportance').is(':checked');
+
+        $.ajax({
+            url: '/notice/' + noticeId,
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                title: updatedTitle,
+                content: updatedContent,
+                postType: updatedPostType,
+                importance: updatedImportance
+            }),
+            success: function(response) {
+                window.location.href = response.redirectUrl;
+            },
+            error: function(xhr) {
+                alert('Error updating post: ' + xhr.responseJSON.error);
+            }
+        });
+
+        $('#editForm').hide();
+        $('#title').show();
+        $('#content').show();
+        $('#editButton').show(); // Optionally, show the edit button again if you exit edit mode without saving
+    }
+
+    function insertAtCursor(myField, myValue) {
+        if (document.selection) {
+            myField.focus();
+            var sel = document.selection.createRange();
+            sel.text = myValue;
+        } else if (myField.selectionStart || myField.selectionStart == '0') {
+            var startPos = myField.selectionStart;
+            var endPos = myField.selectionEnd;
+            myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
+            myField.selectionStart = startPos + myValue.length;
+            myField.selectionEnd = startPos + myValue.length;
+        } else {
+            myField.value += myValue;
+        }
+    }
+
+    function uploadFiles() {
+        var fileInput = document.getElementById('fileInput');
+        Array.from(fileInput.files).forEach(file => {
+            var formData = new FormData();
+            formData.append("file", file);
+
+            fetch('/notice/upload', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.url) {
+                        var editContent = document.getElementById('editContent');
+                        insertAtCursor(editContent, `![](${data.url})\n`);
+                    }
+                    fileInput.value = '';
+                })
+                .catch(error => {
+                    console.error('Error uploading image:', error);
+                    alert('Error uploading image: ' + error.message);
+                });
+        });
+    }
+</script>
 </body>
 </html>
