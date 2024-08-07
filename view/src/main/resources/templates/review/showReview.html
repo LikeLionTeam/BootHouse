@@ -50,10 +50,13 @@
 </table>
 
 <a href="/reviews">Back to All Reviews</a>
-<a th:href="@{/review/{id}/edit(id=${review.id})}">Edit Review</a>
-<form th:action="@{/review/{id}/delete(id=${review.id})}" method="post" style="display:inline;">
-    <button type="submit">Delete Review</button>
-</form>
+
+<div th:if="${review.userId == loginUser.id}">
+    <a th:href="@{/review/{id}/edit(id=${review.id})}">Edit Review</a>
+    <form th:action="@{/review/{id}/delete(id=${review.id})}" method="post" style="display:inline;">
+        <button type="submit">Delete Review</button>
+    </form>
+</div>
 
 </body>
 </html>
