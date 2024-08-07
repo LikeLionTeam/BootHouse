@@ -21,11 +21,12 @@ public class ReviewConverter {
                 .disadvantages(review.getDisadvantages())
                 .instructorEvaluation(review.getInstructorEvaluation())
                 .rating(review.getRating())
-                .viewCount(review.getViewCount())
+                .viewCount(review.getViewCount() != null ? review.getViewCount() : 0)
                 .registrationDate(review.getRegistrationDate())
                 .lastModifiedDate(review.getLastModifiedDate())
                 .build();
     }
+
 
     // 엔티티를 모델(DTO)로 변경
     public static Review toDto(ReviewEntity reviewEntity) {

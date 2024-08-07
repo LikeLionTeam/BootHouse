@@ -49,6 +49,7 @@ public class ReviewEntity extends BaseTimeEntity {
     @Column(nullable = false)
     private Integer rating; //평점
 
+    @Column(nullable = false)
     private Integer viewCount=0; //조회수 카운팅
 
 

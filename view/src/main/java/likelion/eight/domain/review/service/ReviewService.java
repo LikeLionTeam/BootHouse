@@ -80,4 +80,33 @@ public class ReviewService {
     public boolean existsByUserIdAndCourseId(Long userId, Long courseId) {
         return reviewRepository.existsByUserIdAndCourseId(userId, courseId);
     }
+
+
+    public Review findReviewByCourseIdAndUserId(Long courseId, Long userId) {
+        return reviewRepository.findByCourseIdAndUserId(courseId, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Review Not Found"));
+    }
+
+    public void incrementViewcount(Long reviewId) {
+
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new ResourceNotFoundException("Review Not Found"));
+
+        CourseEntity courseEntity = courseRepository.findByCourseId(review.getCourseId())
+                .orElseThrow(() -> new ResourceNotFoundException("Course Not Found"));
+
+        User user = userRepository.findById(review.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
+
+        UserEntity userEntity = UserConverter.toEntity(user);
+
+        ReviewEntity reviewEntity = ReviewConverter.toReviewEntity(review, courseEntity, userEntity);
+
+        reviewEntity.incrementViewCount();
+
+        Review reviewDto = ReviewConverter.toDto(reviewEntity);
+
+        reviewRepository.save(reviewDto, courseEntity, userEntity);
+
+    }
 }

@@ -15,7 +15,7 @@ public interface ReviewRepository {
 
     Optional<Review> findById(Long id);
 
-    List<Review> findByCourseId(Long courseId);
+    Optional<Review> findReviewByCourseId(Long courseId);
 
     List<Review> findAll();
 
@@ -24,5 +24,6 @@ public interface ReviewRepository {
 
     boolean existsByUserIdAndCourseId(Long userId, Long courseId);
 
+    Optional<Review> findByCourseIdAndUserId(Long courseId, Long userId);
 }
 

@@ -44,11 +44,6 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     }
 
     @Override
-    public List<Review> findByCourseId(Long courseId) {
-        return null;
-    }
-
-    @Override
     public List<Review> findAll() {
         List<ReviewEntity> reviewEntities = reviewJpaRepository.findAll();
         return reviewEntities.stream()
@@ -65,4 +60,16 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     public boolean existsByUserIdAndCourseId(Long userId, Long courseId) {
         return reviewJpaRepository.existsByUserEntityIdAndCourseEntityId(userId, courseId);
     }
+
+    @Override
+    public Optional<Review> findReviewByCourseId(Long courseId) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Review> findByCourseIdAndUserId(Long courseId, Long userId) {
+        return reviewJpaRepository.findByCourseEntityIdAndUserEntityId(courseId, userId)
+                .map(ReviewConverter::toDto);
+    }
+
 }

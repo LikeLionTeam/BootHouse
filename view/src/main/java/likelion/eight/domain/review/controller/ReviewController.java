@@ -27,6 +27,7 @@ public class ReviewController {
     public String showReview(@PathVariable Long reviewId, Model model, @Login LoginUser loginUser) {
 
         Review review = reviewService.findReviewById(reviewId);
+        reviewService.incrementViewcount(reviewId);
 
         model.addAttribute("review", review);
         model.addAttribute("loginUser", loginUser);

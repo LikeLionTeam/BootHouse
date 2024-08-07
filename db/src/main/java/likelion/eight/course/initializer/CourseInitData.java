@@ -294,6 +294,6 @@ public class CourseInitData implements CommandLineRunner {
 //                .build();
 //
 //        courseRepository.save(course);
-//
+
     }
 }

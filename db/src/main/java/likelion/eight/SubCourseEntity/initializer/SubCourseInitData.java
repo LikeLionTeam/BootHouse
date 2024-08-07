@@ -41,7 +41,7 @@ public class SubCourseInitData implements CommandLineRunner {
 //        subCourseRepository.save(webSubCourse3);
 //        subCourseRepository.save(webSubCourse4);
 
-        // 모바일
+//         모바일
 //        CategoryEntity mobileCategory = categoryRepository.findByName("모바일");
 //
 //        SubCourseEntity mobileSubCourse1 = SubCourseEntity.builder()
@@ -177,7 +177,6 @@ public class SubCourseInitData implements CommandLineRunner {
 //        subCourseRepository.save(subCourseEntity4);
 
         // 기획·마케팅·기타
-
 //        CategoryEntity category = categoryRepository.findByName("기획·마케팅·기타");
 //
 //        SubCourseEntity subCourseEntity1 = SubCourseEntity.builder()
