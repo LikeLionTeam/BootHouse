@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>View Post</title>
+</head>
+<body>
+<h1 th:text="${noticeDetail.title}">Notice Title</h1>
+<div th:utext="${noticeDetail.content}">[Notice content]</div>
+<a href="/notice">Back to posts</a>
+</body>
+</html>
