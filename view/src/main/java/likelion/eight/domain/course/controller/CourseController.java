@@ -78,6 +78,7 @@ public class CourseController {
         model.addAttribute("reviews", reviews);
         model.addAttribute("isUserLoggedIn", isUserLoggedIn);
 
+        log.info("로그인했는지 여부 :: {}", isUserLoggedIn);
 
         return "course/courseDetail";
     }
