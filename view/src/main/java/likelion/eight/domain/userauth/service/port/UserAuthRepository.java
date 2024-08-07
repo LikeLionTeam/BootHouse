@@ -14,4 +14,6 @@ public interface UserAuthRepository {
     Optional<UserAuth> findById(long id);
 
     Page<UserAuth> findAll(int page, int size);
+
+    void delete(UserAuth userAuth);
 }
