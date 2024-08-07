@@ -7,7 +7,7 @@
 </head>
 <body>
   <h1>Register a Review</h1>
-  <form action="/review/new" method="post">
+  <form th:action="@{/reviews/new/{courseId}(courseId=${course.id})}" th:object="${reviewCreateRequest}" method="post">
       <label for="title">Title:</label>
       <input type="text" id="title" name="title" required><br><br>
 

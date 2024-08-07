@@ -213,13 +213,112 @@
             background-color: #666;
             color: white;
         }
+
+        /* 리뷰 관련 css */
+        .course-review .review-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .course-review .review-list li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 5px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-review .review-list li .review-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        a.review-title {
+            text-decoration-line: none;
+            color: black;
+        }
+
+        .course-review .review-list li .review-content {
+            color: #666;
+        }
+
+        .review-more {
+            cursor: pointer;
+            color: #0066cc;
+            text-decoration: underline;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .review-more:hover {
+            color: #004c99;
+        }
     </style>
 
 </head>
 
 <script>
-    function toggleAct(button){
-        button.classList.toggle("act");
+    function setButtonColor(button, isLiked) {
+        if (isLiked) {
+            button.classList.add("act");
+        } else {
+            button.classList.remove("act");
+        }
+    }
+
+    // 초기화 함수 -- 로그인한 유저가, 이미 찜하기 버튼 누르기 전에 예전에 찜하기 기능을 사용했다면..
+    function initializeWishlistButton(){
+        const isUserLoggedIn = document.getElementById('isUserLoggedIn').value === 'true';
+        const courseId = document.getElementById('courseId').value;
+
+        if (isUserLoggedIn){
+            fetch(`/courses/${courseId}/isLiked`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => response.json().then(data => {
+                const button = document.getElementById('wishlist-button');
+                setButtonColor(button, data.isLiked === 'true');
+            })).catch(error => {
+                console.error('Error :: ', error);
+            });
+        }
+    }
+
+    // 찜하기 버튼 클릭시 동작
+    function wishlistAction(){
+        const isUserLoggedIn = document.getElementById('isUserLoggedIn').value === 'true'; // 문자열 -> boolean 타입으로 변환하기 위한 수식
+        const courseId = document.getElementById('courseId').value;
+
+        if (isUserLoggedIn){
+            // 유저가 로그인한 상태
+            fetch(`/courses/${courseId}/like`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => response.text().then(message => {
+                alert(message);
+
+                const button = document.querySelector('.wishlist-btn');
+
+                if (message.includes("추가")){
+                    setButtonColor(button, true);
+                } else {
+                    setButtonColor(button, false);
+                }
+            })).catch(error => {
+                console.error('Error :: ', error);
+            });
+
+        } else {
+            // 유저 로그인 안함
+            if (confirm('로그인/회원가입을 하시겠어요?')){
+                window.location.href = '/login';
+            }
+        }
     }
 
     // sns 공유하기, 팝업
@@ -254,8 +353,34 @@
         document.body.classList.remove('dimmed');
         document.getElementById('share-popup').style.display = 'none';
     }
+
+    // 리뷰 더보기 + 접기 부분 JS
+    document.addEventListener("DOMContentLoaded", function() {
+        const reviews = document.querySelectorAll(".course-review .review-list li");
+        const reviewMoreBtn = document.querySelector(".review-more");
+
+        if (reviews.length > 3) {
+            reviews.forEach((review, index) => {
+                if (index >= 3) review.style.display = "none"; // 모든 리뷰 중 첫 3개만 보이고, 나머지는 none 처리
+            });
+
+            reviewMoreBtn.style.display = "inline-block";
+
+            reviewMoreBtn.addEventListener("click", function() {
+                if (reviewMoreBtn.textContent === "리뷰 더보기") {
+                    reviews.forEach(review => review.style.display = "block");
+                    reviewMoreBtn.textContent = "리뷰 접기";
+                } else {
+                    reviews.forEach((review, index) => {
+                        if (index >= 3) review.style.display = "none";
+                    });
+                    reviewMoreBtn.textContent = "리뷰 더보기";
+                }
+            });
+        }
+    });
 </script>
-<body>
+<body onload="initializeWishlistButton()">
 <div class="course-container">
     <div class="course-detail">
         <div class="course-summary">
@@ -307,8 +432,29 @@
 
         <div class="course-review">
             <h2>리뷰 & 후기</h2>
-            <p>평균 별점 : </p>
+            <p>평균 별점 : <span th:text="${course.averageRating}"></span></p>
             <p>리뷰 : </p>
+
+            <ul class="review-list">
+                <th:block th:each="review, iterStat : ${reviews}">
+                    <li>
+                        <a class="review-title" th:text="${review.title}"
+
+                           th:href="@{/reviews/{id}(id=${review.id})}">리뷰 제목</a>
+
+                        <div class="review-content" th:text="${review.oneLineReview}">한줄리뷰</div>
+                    </li>
+                </th:block>
+            </ul>
+
+            <span class="review-more" style="display: none;">리뷰 더보기</span>
+
+            <p th:if="${#lists.isEmpty(reviews)}">등록된 리뷰가 없습니다</p>
+
+            <br>
+            <div>
+                <a th:text="${'내 리뷰 쓰기'}" th:href="@{/reviews/new/{courseId}(courseId=${course.id})}"></a>
+            </div>
         </div>
     </div>
 
@@ -327,7 +473,11 @@
         </div>
 
         <div class="action-buttons">
-            <button class="btn action-button wishlist-btn" onclick="toggleAct(this)">찜하기</button>
+            <input type="hidden" id="isUserLoggedIn" th:value="${isUserLoggedIn}">
+            <input type="hidden" id="courseId" th:value="${course.id}">
+            <button id="wishlist-button"
+                    class="btn action-button wishlist-btn"
+                    onclick="wishlistAction()">찜하기</button>
             <button class="btn action-button share-btn" onclick="showSharePopup()">공유하기</button>
         </div>
     </div>
@@ -371,7 +521,7 @@
         var description = '모든 부트캠프들의 정보를 한눈에 비교하고, 리뷰 및 후기들을 확인해보세요!';
 
         // 제품 이미지를 가져오는 부분
-        var imageurl = 'https://ifh.cc/g/wsJAYx.webp'; // 유효한 이미지 URL
+        var imageurl = 'https://ifh.cc/g/b6Nn12.jpg'; // 유효한 이미지 URL
 
         window.Kakao.Link.sendDefault({
             objectType: 'feed',

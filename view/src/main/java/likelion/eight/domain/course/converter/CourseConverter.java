@@ -32,7 +32,6 @@ public class CourseConverter {
                 .participationTime(course.getParticipationTime())
                 .maxParticipants(course.getMaxParticipants())
                 .averageRating(course.getAverageRating())
-                .viewCounts(course.getViewCounts())
                 .build();
     }
 
@@ -55,7 +54,6 @@ public class CourseConverter {
                 .participationTime(courseEntity.getParticipationTime())
                 .maxParticipants(courseEntity.getMaxParticipants())
                 .averageRating(courseEntity.getAverageRating())
-                .viewCounts(courseEntity.getViewCounts())
                 .build();
     }
 

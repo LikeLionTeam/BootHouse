@@ -73,4 +73,10 @@ public class UserService {
         user =  user.certificate(certificationCode);
         userRepository.save(user);
     }
+
+    public User findUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    }
+
 }

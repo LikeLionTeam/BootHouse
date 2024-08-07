@@ -8,6 +8,7 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class NoticeRes {
+    private Long noticeId;
     private String title;
     private String postType;
     private Boolean importance;

@@ -7,6 +7,6 @@ import lombok.*;
 public class NoticeReq {
     private String title;
     private String content;
-    private String postType = null;
-    private Boolean importance = null;
+    private String postType;
+    private Boolean importance;
 }

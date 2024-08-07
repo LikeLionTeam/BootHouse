@@ -1,14 +1,20 @@
 package likelion.eight.domain.notice.controller;
 
+import likelion.eight.common.annotation.Login;
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
+import likelion.eight.domain.notice.converter.MarkdownConverter;
 import likelion.eight.domain.notice.model.request.NoticeReq;
 import likelion.eight.domain.notice.model.response.NoticeDetailRes;
 import likelion.eight.domain.notice.model.response.NoticeRes;
 import likelion.eight.domain.notice.service.NoticeService;
+import likelion.eight.domain.user.controller.model.LoginUser;
+import likelion.eight.notice.enums.PostType;
+import likelion.eight.user.enums.RoleType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +25,7 @@ import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/notice")
 public class NoticeController {
     private final NoticeService noticeService;
 
@@ -29,13 +36,17 @@ public class NoticeController {
     }
 
 
-    @PostMapping("/notice/save")
-    public String saveNotice(@ModelAttribute NoticeReq noticeReq){
-        Long result = noticeService.saveNotice(noticeReq);
+    @PostMapping("/save")
+    public String saveNotice(@ModelAttribute NoticeReq noticeReq,
+                             @Login LoginUser loginUser){
+        if(!loginUser.getRoleType().equals(RoleType.ADMIN)){
+            return "redirect:/notice";
+        }
+        Long result = noticeService.saveNotice(noticeReq,loginUser);
         return "redirect:/notice/"+result;
     }
 
-    @PostMapping("/notice/upload")
+    @PostMapping("/upload")
     public ResponseEntity<Map<String,Object>> uploadImage(@RequestParam("file") MultipartFile file){
         Map<String, Object> result = noticeService.uploadImage(file);
 
@@ -46,29 +57,40 @@ public class NoticeController {
         }
     }
 
-    @PutMapping("/notice/{noticeId}")
+    @ResponseBody
+    @PutMapping("/{noticeId}")
     public ResponseEntity<?> updateNotice(@PathVariable Long noticeId,
-                                          @RequestBody NoticeReq noticeReq) {
-        // todo: 작성자의 게시글인지 확인
+                                          @RequestBody NoticeReq noticeReq,
+                                          @Login LoginUser loginUser) {
 
-        noticeService.updateNotice(noticeId, noticeReq);
-
-        return ResponseEntity.ok("update success");
+        boolean result = noticeService.updateNotice(noticeId, noticeReq, loginUser);
+        if(result){
+            return ResponseEntity.ok(Map.of("redirectUrl", "/notice/" + noticeId));
+        }else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Unable to update notice"));
+        }
     }
 
-    @DeleteMapping("/notice/{noticeId}")
-    public ResponseEntity<?> deleteNotice(@PathVariable Long noticeId) {
-        // todo: 작성자의 게시글인지 확인
+    @ResponseBody
+    @DeleteMapping("/{noticeId}")
+    public ResponseEntity<?> deleteNotice(@PathVariable Long noticeId,
+                               @Login LoginUser loginUser) {
 
-        noticeService.deleteNotice(noticeId);
-
-        return ResponseEntity.ok("delete success");
+        boolean result = noticeService.deleteNotice(noticeId, loginUser);
+        if(result){
+            return ResponseEntity.ok(Map.of("redirectUrl", "/notice"));
+        }else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Unable to delete notice"));
+        }
     }
 
-    @GetMapping("/notice/{noticeId}")
-    public String getNoticeDetail(@PathVariable Long noticeId,Model model) {
+    @GetMapping("/{noticeId}")
+    public String getNoticeDetail(@PathVariable Long noticeId,Model model,
+                                  @Login LoginUser loginUser) {
         try {
-            NoticeDetailRes noticeDetail = noticeService.getNoticeDetail(noticeId);
+            NoticeDetailRes noticeDetail = noticeService.getNoticeDetail(noticeId,loginUser);
             model.addAttribute("noticeDetail",noticeDetail);
             return "/notice/viewNotice";
         }catch (ResourceNotFoundException e){
@@ -76,11 +98,14 @@ public class NoticeController {
         }
     }
 
-    @GetMapping("/notice")
-    public String getAllNotices(@RequestParam(defaultValue = "0") int page, Model model) {
+    @GetMapping
+    public String getAllNotices(@RequestParam(defaultValue = "0") int page,
+                                Model model,
+                                @Login LoginUser loginUser) {
         Pageable pageable = PageRequest.of(page, 10);
         Page<NoticeRes> allNotices = noticeService.getAllNotices(pageable);
         model.addAttribute("notices",allNotices);
+        model.addAttribute("isAdmin",loginUser.getRoleType().equals(RoleType.ADMIN));
         return "/notice/viewAllNotice";
     }
 

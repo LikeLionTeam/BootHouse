@@ -8,7 +8,7 @@ import lombok.Getter;
 // 리뷰 생성 시 사용하는 DTO
 public class ReviewCreateRequest {
     private String title;
-    private Long courseId;  // 강좌 ID
+   // private Long courseId;  // 강좌 ID
     private String oneLineReview;
     private String advantages;
     private String disadvantages;

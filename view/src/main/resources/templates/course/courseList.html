@@ -410,7 +410,7 @@
     <tbody>
     <tr th:each="course : ${courses}">
         <td>
-            <a th:href="@{'/course/' + ${course.id}}" th:text="${course.name}"></a></td>
+            <a th:href="@{'/courses/' + ${course.id}}" th:text="${course.name}"></a></td>
         <td class="subcourse" th:text="${course.subCourse != null ? course.subCourse.name : '프로그램 과정명 없음'}">
             프로그램 과정명</td>
         <td class="recruitment-status">

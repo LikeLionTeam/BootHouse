@@ -9,7 +9,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "like_course")
+@Table(name = "like_courses")
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
@@ -30,4 +30,12 @@ public class LikeCourseEntity extends BaseTimeEntity {
     @JoinColumn(name = "course_id")
     private CourseEntity courseEntity;
 
+    public static LikeCourseEntity createLikeCourseEntity(UserEntity userEntity, CourseEntity courseEntity){
+        LikeCourseEntity likeCourseEntity = new LikeCourseEntity();
+
+        likeCourseEntity.userEntity = userEntity;
+        likeCourseEntity.courseEntity = courseEntity;
+
+        return likeCourseEntity;
+    }
 }
