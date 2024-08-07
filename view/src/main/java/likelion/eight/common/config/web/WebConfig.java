@@ -35,9 +35,10 @@ public class WebConfig implements WebMvcConfigurer {
             "/error",
             "/users/create",
             "/boothouse/camps",
-            "/courses/**"
+            "/courses/*"
 
     );
+
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

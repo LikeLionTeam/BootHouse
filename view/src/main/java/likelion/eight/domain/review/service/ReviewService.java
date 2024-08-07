@@ -1,8 +1,10 @@
 package likelion.eight.domain.review.service;
 
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
+import likelion.eight.common.service.port.ClockHolder;
 import likelion.eight.course.CourseEntity;
 import likelion.eight.domain.course.service.port.CourseRepository;
+import likelion.eight.domain.review.controller.model.ReviewCreateRequest;
 import likelion.eight.domain.review.controller.model.ReviewUpdateRequest;
 import likelion.eight.domain.review.converter.ReviewConverter;
 import likelion.eight.domain.review.model.Review;
@@ -26,6 +28,8 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
+    private final ClockHolder clockHolder;
+
 
     @Transactional(readOnly = true)
     public List<Review> findAllReviews() {
@@ -40,15 +44,27 @@ public class ReviewService {
     }
 
     @Transactional
-    public void saveReview(Review review) {
+    public void saveReview(ReviewCreateRequest reviewCreateRequest, Long userId, Long courseId) {
 
-        CourseEntity courseEntity = courseRepository.findByCourseId(review.getCourseId())
-                .orElseThrow(() -> new ResourceNotFoundException("Course not found: " + review.getCourseId()));
+        CourseEntity courseEntity = courseRepository.findByCourseId(courseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found: " + courseId));
 
-        User user = userRepository.findById(review.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found : " + review.getUserId()));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found : " + userId));
 
         UserEntity userEntity = UserConverter.toEntity(user);
+
+        Review review = Review.builder()
+                .title(reviewCreateRequest.getTitle())
+                .oneLineReview(reviewCreateRequest.getOneLineReview())
+                .advantages(reviewCreateRequest.getAdvantages())
+                .disadvantages(reviewCreateRequest.getDisadvantages())
+                .instructorEvaluation(reviewCreateRequest.getInstructorEvaluation())
+                .rating(reviewCreateRequest.getRating())
+                .courseId(courseId)
+                .userId(userId)
+                .viewCount(0) //기본 값
+                .build();
 
         reviewRepository.save(review, courseEntity, userEntity);
 
@@ -66,7 +82,7 @@ public class ReviewService {
 
         UserEntity userEntity = UserConverter.toEntity(user);
 
-        review.update(reviewUpdateRequest);
+        review.update(reviewUpdateRequest, clockHolder);
 
         reviewRepository.save(review, courseEntity,userEntity);
 

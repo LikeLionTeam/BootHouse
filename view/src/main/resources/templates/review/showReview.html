@@ -36,9 +36,9 @@
         <td th:text="${review.viewCount}">View Count</td>
     </tr>
     <tr>
-<!--        <th>Course</th>-->
-<!--        <td th:text="${review.courseId}">Course Name</td>-->
-<!--    </tr>-->
+        <th>Course</th>
+        <td th:text="${course.name}">Course Name</td>
+    </tr>
     <tr>
         <th>Created Date</th>
         <td th:text="${#temporals.format(review.registrationDate, 'yyyy-MM-dd HH:mm:ss')}">Created Date</td>
