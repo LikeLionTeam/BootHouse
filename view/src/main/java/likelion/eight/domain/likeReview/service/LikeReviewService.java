@@ -1,4 +1,4 @@
-package likelion.eight.domain.LikeReview.service;
+package likelion.eight.domain.likeReview.service;
 
 import likelion.eight.likeReview.LikeReviewJpaRepository;
 import lombok.RequiredArgsConstructor;

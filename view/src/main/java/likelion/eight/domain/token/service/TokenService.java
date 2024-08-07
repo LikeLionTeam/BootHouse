@@ -24,6 +24,8 @@ public class TokenService {
 
     public static final String USER_ID = "userId";
     private final TokenHelperIfs tokenHelper;
+    public static final String USER_TOKEN_CODE = "userTokenCode";
+    public static final String ADMIN_TOKEN_CODE = "adminTokenCode";
 
     public TokenResponse issueToken(User user){
 
@@ -49,6 +51,7 @@ public class TokenService {
         return tokenHelper.issueRefreshToken(data);
     }
 
+    // JWT 토큰의 유효성 검사 후, 유효한 경우 사용자 ID 반환. 토큰이 유효하지 않거나, 사용자 ID가 없다면 예외를 던짐
     public Long validationToken(String token){
         Map<String, Object> map = tokenHelper.validationTokenWithThrow(token);
         Object userId = map.get(USER_ID);

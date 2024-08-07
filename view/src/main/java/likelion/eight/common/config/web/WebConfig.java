@@ -36,6 +36,7 @@ public class WebConfig implements WebMvcConfigurer {
             "/users/create",
             "/boothouse/camps",
             "/courses/**"
+
     );
 
     @Override

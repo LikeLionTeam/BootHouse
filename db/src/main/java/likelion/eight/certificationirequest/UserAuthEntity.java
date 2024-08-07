@@ -40,4 +40,7 @@ public class UserAuthEntity extends BaseTimeEntity {
 
     @Lob
     private byte[] image;
+
+    @Column(length = 255)
+    private String imageUrl;
 }

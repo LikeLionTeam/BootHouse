@@ -17,6 +17,8 @@ public interface ReviewRepository {
 
     Optional<Review> findReviewByCourseId(Long courseId);
 
+    List<Review> findByCourseId(Long courseId);
+
     List<Review> findAll();
 
     void deleteById(Long id);

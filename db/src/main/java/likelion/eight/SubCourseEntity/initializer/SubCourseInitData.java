@@ -42,6 +42,7 @@ public class SubCourseInitData implements CommandLineRunner {
 //        subCourseRepository.save(webSubCourse4);
 
 //         모바일
+
 //        CategoryEntity mobileCategory = categoryRepository.findByName("모바일");
 //
 //        SubCourseEntity mobileSubCourse1 = SubCourseEntity.builder()
@@ -62,8 +63,8 @@ public class SubCourseInitData implements CommandLineRunner {
 //        subCourseRepository.save(mobileSubCourse1);
 //        subCourseRepository.save(mobileSubCourse2);
 //        subCourseRepository.save(mobileSubCourse3);
-
-        // 데이터·AI
+//
+//        // 데이터·AI
 //        CategoryEntity DataAICategory = categoryRepository.findByName("데이터·AI");
 //
 //        SubCourseEntity DataAISubCourse1 = SubCourseEntity.builder()
@@ -92,6 +93,7 @@ public class SubCourseInitData implements CommandLineRunner {
 //        subCourseRepository.save(DataAISubCourse4);
 
         // 클라우드·보안
+
 //        CategoryEntity CloudCategory = categoryRepository.findByName("클라우드·보안");
 //
 //        SubCourseEntity subCourseEntity1 = SubCourseEntity.builder()
@@ -121,6 +123,7 @@ public class SubCourseInitData implements CommandLineRunner {
 
 //         IoT·임베디드·반도체
 
+
 //        CategoryEntity category = categoryRepository.findByName("IoT·임베디드·반도체");
 //
 //        SubCourseEntity subCourseEntity1 = SubCourseEntity.builder()
@@ -147,8 +150,8 @@ public class SubCourseInitData implements CommandLineRunner {
 //        subCourseRepository.save(subCourseEntity2);
 //        subCourseRepository.save(subCourseEntity3);
 //        subCourseRepository.save(subCourseEntity4);
-
-        // 게임·블록체인
+//
+//        // 게임·블록체인
 //        CategoryEntity category = categoryRepository.findByName("게임·블록체인");
 //
 //        SubCourseEntity subCourseEntity1 = SubCourseEntity.builder()
@@ -177,6 +180,7 @@ public class SubCourseInitData implements CommandLineRunner {
 //        subCourseRepository.save(subCourseEntity4);
 
         // 기획·마케팅·기타
+
 //        CategoryEntity category = categoryRepository.findByName("기획·마케팅·기타");
 //
 //        SubCourseEntity subCourseEntity1 = SubCourseEntity.builder()
@@ -199,6 +203,7 @@ public class SubCourseInitData implements CommandLineRunner {
 //        subCourseRepository.save(subCourseEntity3);
 
        //  디자인·3D
+
 //        CategoryEntity category = categoryRepository.findByName("디자인·3D");
 //
 //        SubCourseEntity subCourseEntity1 = SubCourseEntity.builder()
@@ -219,9 +224,9 @@ public class SubCourseInitData implements CommandLineRunner {
 //        subCourseRepository.save(subCourseEntity1);
 //        subCourseRepository.save(subCourseEntity2);
 //        subCourseRepository.save(subCourseEntity3);
-
-        // 프로젝트·취준·창업
-
+//
+//        // 프로젝트·취준·창업
+//
 //        CategoryEntity category = categoryRepository.findByName("프로젝트·취준·창업");
 //
 //        SubCourseEntity subCourseEntity1 = SubCourseEntity.builder()

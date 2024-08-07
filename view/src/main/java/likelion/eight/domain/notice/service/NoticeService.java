@@ -7,9 +7,12 @@ import likelion.eight.domain.notice.converter.MarkdownConverter;
 import likelion.eight.domain.notice.model.request.NoticeReq;
 import likelion.eight.domain.notice.model.response.NoticeDetailRes;
 import likelion.eight.domain.notice.model.response.NoticeRes;
+import likelion.eight.domain.user.controller.model.LoginUser;
 import likelion.eight.notice.NoticeEntity;
 import likelion.eight.notice.NoticeJpaRepository;
 import likelion.eight.notice.enums.PostType;
+import likelion.eight.user.UserEntity;
+import likelion.eight.user.ifs.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,21 +33,26 @@ import java.util.*;
 @Slf4j
 public class NoticeService {
     private final NoticeJpaRepository noticeJpaRepository;
+    private final UserJpaRepository userJpaRepository;
     private final MarkdownConverter markdownConverter;
 
     @Value("${app.upload.url}")
     private String UPLOAD_DIR;
 
-    public Long saveNotice(NoticeReq noticeReq){
+    public Long saveNotice(NoticeReq noticeReq, LoginUser loginUser){
         String htmlContent = markdownConverter.convertMarkdownToHtml(noticeReq.getContent());
 
+
+        UserEntity userEntity = userJpaRepository.findById(loginUser.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("존재하지않는 user"));
+
+
         NoticeEntity notice = NoticeEntity.builder()
-                //.postType(PostType.valueOf(noticeReq.getPostType()))
-                .postType(PostType.NOTICE)
+                .userEntity(userEntity)
+                .postType(PostType.valueOf(noticeReq.getPostType()))
                 .title(noticeReq.getTitle())
                 .content(htmlContent)
-                //.importance(noticeReq.getImportance())
-                .importance(true)
+                .importance(noticeReq.getImportance())
                 .build();
         NoticeEntity savedNotice = noticeJpaRepository.save(notice);
 
@@ -69,40 +77,66 @@ public class NoticeService {
         }
     }
 
-    public void updateNotice(Long noticeId, NoticeReq noticeReq) {
+    public boolean updateNotice(Long noticeId, NoticeReq noticeReq,LoginUser loginUser) {
+
+        UserEntity userEntity = userJpaRepository.findById(loginUser.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("존재하지않는 user"));
         NoticeEntity notice = getNotice(noticeId);
 
-        String content = markdownConverter.convertMarkdownToHtml(noticeReq.getContent());
+        if(!notice.getUserEntity().getId().equals(userEntity.getId())){
+            return false;
+        }else {
 
-        notice.setTitle(noticeReq.getTitle());
-        notice.setContent(content);
-        notice.setPostType(PostType.valueOf(noticeReq.getPostType()));
-        notice.setImportance(noticeReq.getImportance());
+            String content = markdownConverter.convertMarkdownToHtml(noticeReq.getContent());
 
-        noticeJpaRepository.save(notice);
+            notice.setTitle(noticeReq.getTitle());
+            notice.setContent(content);
+            notice.setPostType(PostType.valueOf(noticeReq.getPostType()));
+            notice.setImportance(noticeReq.getImportance());
+            noticeJpaRepository.save(notice);
+            return true;
+        }
     }
 
 
 
-    public void deleteNotice(Long noticeId) {
-        noticeJpaRepository.deleteById(noticeId);
+    public boolean deleteNotice(Long noticeId,LoginUser loginUser) {
+        NoticeEntity notice = noticeJpaRepository.findById(noticeId)
+                .orElseThrow(() -> new ResourceNotFoundException("존재하지않는 notice"));
+
+        if(notice.getUserEntity().getId().equals(loginUser.getId())){
+            noticeJpaRepository.deleteById(noticeId);
+            return true;
+        }
+        return false;
     }
 
-    public NoticeDetailRes getNoticeDetail(Long noticeId) {
+    public NoticeDetailRes getNoticeDetail(Long noticeId,LoginUser loginUser) {
         NoticeEntity notice = getNotice(noticeId);
 
-        return NoticeDetailRes.builder()
+        NoticeDetailRes detailNotice = NoticeDetailRes.builder()
+                .noticeId(notice.getId())
+                .author(notice.getUserEntity().getName())
                 .title(notice.getTitle())
                 .content(notice.getContent())
                 .postType(notice.getPostType().toString())
                 .importance(notice.getImportance())
+                .isOwner(false)
                 .build();
+
+        if(loginUser!=null&&notice.getUserEntity().getId().equals(loginUser.getId())){
+            detailNotice.setIsOwner(true);
+        }
+        log.info("isOwner: "+detailNotice.getIsOwner());
+
+        return detailNotice;
     }
 
     public Page<NoticeRes> getAllNotices(Pageable pageable) {
         Page<NoticeEntity> allNotices = noticeJpaRepository.findAll(pageable);
 
         return allNotices.map(notice -> NoticeRes.builder()
+                .noticeId(notice.getId())
                 .title(notice.getTitle())
                 .postType(notice.getPostType().toString())
                 .importance(notice.getImportance())
