@@ -9,7 +9,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "like_course")
+@Table(name = "like_courses")
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)

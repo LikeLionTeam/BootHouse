@@ -1,4 +1,4 @@
-package likelion.eight.domain.likeCourse.Service;
+package likelion.eight.domain.likeCourse.service;
 
 import likelion.eight.likeCourse.LikeCourseJpaRepository;
 import lombok.RequiredArgsConstructor;
