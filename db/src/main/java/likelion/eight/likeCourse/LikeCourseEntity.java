@@ -30,4 +30,12 @@ public class LikeCourseEntity extends BaseTimeEntity {
     @JoinColumn(name = "course_id")
     private CourseEntity courseEntity;
 
+    public static LikeCourseEntity createLikeCourseEntity(UserEntity userEntity, CourseEntity courseEntity){
+        LikeCourseEntity likeCourseEntity = new LikeCourseEntity();
+
+        likeCourseEntity.userEntity = userEntity;
+        likeCourseEntity.courseEntity = courseEntity;
+
+        return likeCourseEntity;
+    }
 }
