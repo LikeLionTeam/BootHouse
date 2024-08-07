@@ -65,7 +65,7 @@
             });
             stompClient.subscribe('/user/' + username + '/queue/errors', function(message) {
                 alert(message.body);
-                window.location.reload();  // 페이지 새로고침
+                window.location.reload();
             });
         });
     }
@@ -107,9 +107,6 @@
             sendMessage();
         }
     };
-
-
-
 
 </script>
 </body>

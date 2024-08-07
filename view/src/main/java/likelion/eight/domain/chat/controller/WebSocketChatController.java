@@ -31,8 +31,5 @@ public class WebSocketChatController {
             // 토큰 만료 또는 인증 실패 시 클라이언트에게 에러 메시지 전송
             messagingTemplate.convertAndSendToUser(chatMessage.getSender(), "/queue/errors", "Token expired or invalid. Please refresh the page.");
         }
-
-
-
     }
 }

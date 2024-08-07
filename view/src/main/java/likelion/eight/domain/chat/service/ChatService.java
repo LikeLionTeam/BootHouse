@@ -27,11 +27,17 @@ public class ChatService {
     private final UserJpaRepository userRepository;
     private final TokenService tokenService;
 
+    //    @Transactional(readOnly = true)
+//    public List<ChatListEntity> getChatList(String email) {
+//        UserEntity user = userRepository.findByEmail(email)
+//                .orElseThrow(() -> new RuntimeException("User not found"));
+//        return chatListRepository.findByUser(user);
+//    }
     @Transactional(readOnly = true)
-    public List<ChatListEntity> getChatList(String email) {
-        UserEntity user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        return chatListRepository.findByUser(user);
+    public List<ChatListEntity> getChatList(String name) {
+        UserEntity user = userRepository.findByName(name)
+                .orElseThrow(() -> new ResourceNotFoundException("User", name));
+        return chatListRepository.findByUserOrderByIdDesc(user);
     }
 
     @Transactional(readOnly = true)
@@ -88,8 +94,19 @@ public class ChatService {
                 .message(chatMessage.getMessage())
                 .build();
 
-        return messageRepository.save(messageEntity);
+//        --
+
+        MessageEntity savedMessage = messageRepository.save(messageEntity);
+        System.out.println("Message saved: ID=" + savedMessage.getId() + ", Content=" + savedMessage.getMessage());
+        return savedMessage;
+//        return messageRepository.save(messageEntity);
     }
+
+//    @Transactional(readOnly = true)
+//    public List<MessageEntity> getChatroomMessages(Long chatroomId) {
+//        ChatroomEntity chatroom = getChatroom(chatroomId);
+//        return messageRepository.findByChatroomOrderByIdAsc(chatroom);
+//    }
 
     @Transactional(readOnly = true)
     public List<MessageEntity> getChatroomMessages(Long chatroomId) {

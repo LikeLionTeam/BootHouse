@@ -10,6 +10,7 @@ import org.springframework.web.socket.config.annotation.*;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+    // 반드시 수정해야함.
     private final TokenService tokenService;
 
     public WebSocketConfig(TokenService tokenService) {
