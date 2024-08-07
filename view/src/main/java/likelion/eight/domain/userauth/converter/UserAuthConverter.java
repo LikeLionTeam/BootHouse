@@ -19,6 +19,7 @@ public class UserAuthConverter {
                 .authRequestStatus(userAuth.getAuthRequestStatus())
                 .determined_at(userAuth.getDetermined_at())
                 .image(userAuth.getImage())
+                .imageUrl(userAuth.getImageUrl())
                 .build();
     }
 
@@ -30,6 +31,7 @@ public class UserAuthConverter {
                 .authRequestStatus(userAuthEntity.getAuthRequestStatus())
                 .determined_at(userAuthEntity.getDetermined_at())
                 .image(userAuthEntity.getImage())
+                .imageUrl(userAuthEntity.getImageUrl())
                 .build();
     }
 

@@ -20,15 +20,17 @@ public class UserAuth {
     private final  AuthRequestStatus authRequestStatus;
     private final  LocalDateTime determined_at;
     private final  byte[] image;
+    private final String imageUrl;
 
     @Builder
-    public UserAuth(Long id, User user, AuthRequestType authRequestType, AuthRequestStatus authRequestStatus, LocalDateTime determined_at, byte[] image) {
+    public UserAuth(Long id, User user, AuthRequestType authRequestType, AuthRequestStatus authRequestStatus, LocalDateTime determined_at, byte[] image, String imageUrl) {
         this.id = id;
         this.user = user;
         this.authRequestType = authRequestType;
         this.authRequestStatus = authRequestStatus;
         this.determined_at = determined_at;
         this.image = image;
+        this.imageUrl = imageUrl;
     }
 
     public UserAuth approve(ClockHolder clockHolder){
@@ -39,6 +41,7 @@ public class UserAuth {
                 .authRequestStatus(AuthRequestStatus.APPROVAL)
                 .determined_at(clockHolder.now())
                 .image(image)
+                .imageUrl(imageUrl)
                 .build();
     }
 
@@ -50,6 +53,7 @@ public class UserAuth {
                 .authRequestStatus(AuthRequestStatus.DENY)
                 .determined_at(clockHolder.now())
                 .image(image)
+                .imageUrl(imageUrl)
                 .build();
     }
 }

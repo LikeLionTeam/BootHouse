@@ -40,4 +40,9 @@ public class UserAuthRepositoryImpl implements UserAuthRepository {
         PageRequest pageRequest = PageRequest.of(page, size);
         return userAuthRepository.findAll(pageRequest).map(UserAuthConverter::toUserAuth);
     }
+
+    @Override
+    public void delete(UserAuth userAuth) {
+        userAuthRepository.delete(UserAuthConverter.toEntity(userAuth));
+    }
 }
