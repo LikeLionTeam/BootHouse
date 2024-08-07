@@ -27,7 +27,7 @@ public class CookieService {
         createCookie(response, token, USER_TOKEN_CODE);
     }
 
-    public void createAdminCookie(
+    public void  createAdminCookie(
             HttpServletResponse response,
             User loginUser
     ){
@@ -35,7 +35,7 @@ public class CookieService {
         createCookie(response, token, ADMIN_TOKEN_CODE);
     }
 
-    private void createCookie(HttpServletResponse response, TokenResponse token, String tokenKey) {
+    private void  createCookie(HttpServletResponse response, TokenResponse token, String tokenKey) {
         Cookie cookie = new Cookie(tokenKey, token.getAccessToken());
         cookie.setPath("/");
         cookie.setHttpOnly(true);

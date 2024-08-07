@@ -60,6 +60,9 @@ dependencies {
     //markdown
     implementation 'com.vladsch.flexmark:flexmark-all:0.62.2'
 
+    //S3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
     implementation project(':db')
 
 }

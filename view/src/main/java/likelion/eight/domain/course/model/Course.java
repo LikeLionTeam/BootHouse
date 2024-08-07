@@ -4,6 +4,7 @@ package likelion.eight.domain.course.model;
 import likelion.eight.bootcamp.BootCampEntity;
 import likelion.eight.course.ParticipationTime;
 import likelion.eight.domain.category.model.Category;
+import likelion.eight.domain.review.model.Review;
 import likelion.eight.domain.subcourse.model.SubCourse;
 import likelion.eight.domain.bootcamp.model.Bootcamp;
 import lombok.Builder;
@@ -12,6 +13,7 @@ import lombok.Getter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 public class Course {
@@ -48,15 +50,15 @@ public class Course {
 
     private final int maxParticipants; // 모집정원 :: -1 값이면, 모집정원 없음
 
-    private final BigDecimal averageRating; // 해당 프로그램 평균 평점
-
-    private final int viewCounts; // 해당 프로그램 조회수 (정렬을 위해)
+    private BigDecimal averageRating; // 해당 course에 대한 평균별점
 
     // 엔디티에는 없지만, dto에는 추가
     private final RecruitmentStatus recruitmentStatus; // 모집 상태
 
     @Builder
-    public Course(Long id, Bootcamp bootcamp, Category category, SubCourse subCourse, String name, LocalDate startDate, LocalDate endDate, LocalDateTime closingDate, boolean codingTestExempt, boolean cardRequirement, boolean onlineOffline, String location, String tuitionType, String summary, ParticipationTime participationTime, int maxParticipants, BigDecimal averageRating, int viewCounts) {
+    public Course(Long id, Bootcamp bootcamp, Category category, SubCourse subCourse, String name, LocalDate startDate, LocalDate endDate, LocalDateTime closingDate,
+                  boolean codingTestExempt, boolean cardRequirement, boolean onlineOffline, String location, String tuitionType, String summary, ParticipationTime participationTime, int maxParticipants
+                    , BigDecimal averageRating) {
         this.id = id;
         this.bootcamp = bootcamp;
         this.category = category;
@@ -74,7 +76,6 @@ public class Course {
         this.participationTime = participationTime;
         this.maxParticipants = maxParticipants;
         this.averageRating = averageRating;
-        this.viewCounts = viewCounts;
 
         // 모집상태 초기화
         this.recruitmentStatus = determineRecruitmentStatus(this.closingDate);
@@ -87,6 +88,20 @@ public class Course {
             return RecruitmentStatus.OPEN;
         } else {
             return RecruitmentStatus.CLOSED;
+        }
+    }
+
+    // 특정 course에 대한 평균 평점 계산로직
+    public void calculateAverageRating(List<Review> reviews){
+        if (reviews == null || reviews.isEmpty()){
+            this.averageRating = BigDecimal.ZERO;
+        } else {
+            double sum = reviews
+                    .stream()
+                    .mapToInt(Review::getRating)
+                    .sum();
+
+            this.averageRating = BigDecimal.valueOf(sum / reviews.size());
         }
     }
 }

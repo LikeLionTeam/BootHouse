@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
+<!DOCTYPE html><html xmlns:th="http://www.thymeleaf.org"><head>
     <title>UserAuth List</title>
     <style>
         /* 모달 스타일 */
@@ -40,10 +38,7 @@
             text-decoration: none;
             cursor: pointer;
         }
-    </style>
-</head>
-<body>
-<h1>User Auth List</h1>
+    </style></head><body><h1>User Auth List</h1>
 
 <table>
     <thead>
@@ -61,7 +56,7 @@
         <td th:text="${userAuth.user.id}"></td>
         <td th:text="${userAuth.authRequestType}"></td>
         <td>
-            <img th:src="@{/userauth/{id}/image(id=${userAuth.id})}" alt="User Image" width="100" class="image"/>
+            <img th:src="${userAuth.imageUrl}" alt="User Image" width="100" class="image"/>
         </td>
         <td>
             <form th:action="@{/userauth/{id}/approve(id=${userAuth.id})}" method="post">
@@ -70,10 +65,12 @@
             <form th:action="@{/userauth/{id}/deny(id=${userAuth.id})}" method="post">
                 <button type="submit">거절</button>
             </form>
+            <form th:action="@{/userauth/{id}/delete(id=${userAuth.id})}" method="post">
+                <button type="submit">삭제</button>
+            </form>
         </td>
     </tr>
-    </tbody>
-</table>
+    </tbody></table>
 
 <div>
     <div th:if="${pageNumbers != null}">
@@ -81,14 +78,11 @@
             <a th:href="@{/userauth/list(page=${pageNumber - 1}, size=${userAuthPage.size})}"
                th:text="${pageNumber}"></a>
         </span>
-    </div>
-</div>
+    </div></div>
 
-<!-- 이미지 확대를 위한 모달 -->
-<div id="myModal" class="modal">
+<!-- 이미지 확대를 위한 모달 --><div id="myModal" class="modal">
     <span class="close">&times;</span>
-    <img class="modal-content" id="img01">
-</div>
+    <img class="modal-content" id="img01"></div>
 
 <script>
     // 이미지 클릭 시 모달을 여는 스크립트
@@ -108,5 +102,4 @@
     }
 </script>
 
-</body>
-</html>
+</body></html>

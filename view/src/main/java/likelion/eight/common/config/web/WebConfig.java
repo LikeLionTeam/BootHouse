@@ -33,7 +33,9 @@ public class WebConfig implements WebMvcConfigurer {
             "/favicon.ico",
             "/css/**",
             "/error",
-            "/users/**"
+            "/users/create",
+            "/boothouse/camps",
+            "/courses/*"
     );
 
     @Override
