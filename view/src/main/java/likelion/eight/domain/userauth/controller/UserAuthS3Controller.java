@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import likelion.eight.certificationirequest.enums.AuthRequestType;
 import likelion.eight.domain.userauth.controller.model.UserAuthCreateRequest;
 import likelion.eight.domain.userauth.model.UserAuth;
+import likelion.eight.domain.userauth.service.UserAuthS3Service;
 import likelion.eight.domain.userauth.service.UserAuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +24,9 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 @Slf4j
 @Controller
-public class UserAuthController {
+public class UserAuthS3Controller {
 
-    private final UserAuthService userAuthService;
+    private final UserAuthS3Service userAuthService;
 
 
     @GetMapping("{id}/upload")
@@ -42,19 +43,9 @@ public class UserAuthController {
             @Valid @ModelAttribute("request")
             UserAuthCreateRequest request
     ){
-        request.setAuthRequestType(AuthRequestType.BOOTCAMP);
-        UserAuth userAuth = userAuthService.create(request);
+        request.setAuthRequestType(AuthRequestType.BOOTCAMP); // TODO 추후 화면에서 인증요청이 회사 or 부트캠프 선택 해야함
+        userAuthService.create(request);
         return "redirect:/";
-    }
-
-    @GetMapping("{id}/image")
-    public ResponseEntity<Resource> getAuthImage(
-            @PathVariable long id
-    ){
-        byte[] userAuthImage = userAuthService.getUserAuthImage(id);
-        return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_PNG) // 이미지 타입에 맞게 설정 TODO 확장자 필터링
-                .body(new ByteArrayResource(userAuthImage));
     }
 
     @GetMapping("/list")
@@ -76,6 +67,12 @@ public class UserAuthController {
         return "user/images";
     }
 
+    @PostMapping("/{id}/delete")
+    public String deleteUserAuth(@PathVariable long id) {
+        userAuthService.delete(id);
+        return "redirect:/userauth/list";
+    }
+
     @PostMapping("/{id}/approve")
     public String approveUserAuth(@PathVariable long id) {
         userAuthService.approve(id);
@@ -87,5 +84,4 @@ public class UserAuthController {
         userAuthService.deny(id);
         return "redirect:/userauth/list";
     }
-
 }
