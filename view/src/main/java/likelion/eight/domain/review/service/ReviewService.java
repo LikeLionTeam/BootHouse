@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,20 +40,14 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public Review findReviewById(Long id) {
-        return reviewRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Review Not Found : "));
+        return getReview(id);
     }
 
     @Transactional
     public void saveReview(ReviewCreateRequest reviewCreateRequest, Long userId, Long courseId) {
 
-        CourseEntity courseEntity = courseRepository.findByCourseId(courseId)
-                .orElseThrow(() -> new ResourceNotFoundException("Course not found: " + courseId));
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found : " + userId));
-
-        UserEntity userEntity = UserConverter.toEntity(user);
+        CourseEntity courseEntity = getCourseEntity(courseId);
+        UserEntity userEntity = getUserEntity(userId);
 
         Review review = Review.builder()
                 .title(reviewCreateRequest.getTitle())
@@ -71,18 +64,12 @@ public class ReviewService {
         reviewRepository.save(review, courseEntity, userEntity);
 
     }
-
+    @Transactional
     public void updateReview(Long id, ReviewUpdateRequest reviewUpdateRequest) {
-        Review review = reviewRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Review not found "));
+        Review review = getReview(id);
 
-        CourseEntity courseEntity = courseRepository.findByCourseId(review.getCourseId())
-                .orElseThrow(() -> new ResourceNotFoundException("Course not found"));
-
-        User user = userRepository.findById(review.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found : " + review.getUserId()));
-
-        UserEntity userEntity = UserConverter.toEntity(user);
+        CourseEntity courseEntity = getCourseEntity(review.getCourseId());
+        UserEntity userEntity = getUserEntity(review.getUserId());
 
         review.update(reviewUpdateRequest, clockHolder);
 
@@ -95,45 +82,58 @@ public class ReviewService {
         reviewRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     public boolean existsByUserIdAndCourseId(Long userId, Long courseId) {
         return reviewRepository.existsByUserIdAndCourseId(userId, courseId);
     }
 
-
+    @Transactional(readOnly = true)
     public Review findReviewByCourseIdAndUserId(Long courseId, Long userId) {
         return reviewRepository.findByCourseIdAndUserId(courseId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Review Not Found"));
     }
 
+    @Transactional
     public void incrementViewcount(Long reviewId) {
 
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ResourceNotFoundException("Review Not Found"));
-
-        CourseEntity courseEntity = courseRepository.findByCourseId(review.getCourseId())
-                .orElseThrow(() -> new ResourceNotFoundException("Course Not Found"));
-
-        User user = userRepository.findById(review.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
-
-        UserEntity userEntity = UserConverter.toEntity(user);
+        Review review = getReview(reviewId);
+        CourseEntity courseEntity = getCourseEntity(review.getCourseId());
+        UserEntity userEntity = getUserEntity(review.getUserId());
 
         ReviewEntity reviewEntity = ReviewConverter.toReviewEntity(review, courseEntity, userEntity);
 
         reviewEntity.incrementViewCount();
 
-        Review reviewDto = ReviewConverter.toDto(reviewEntity);
+        reviewRepository.save(ReviewConverter.toDto(reviewEntity), courseEntity, userEntity);
 
-        reviewRepository.save(reviewDto, courseEntity, userEntity);
 
     }
 
+    @Transactional(readOnly = true)
     public List<Review> searchReviews(ReviewSearchCondition condition) {
         if (condition.getKeyword() == null || condition.getKeyword().isEmpty()) {
             return findAllReviews();
         }
         List<ReviewEntity> reviewEntities = reviewRepository.searchByKeyword(condition.getKeyword());
         return reviewEntities.stream().map(ReviewConverter::toDto).collect(Collectors.toList());
+    }
+
+
+    // 중복 함수 빼 놓음
+    private Review getReview(Long reviewId) {
+        return reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new ResourceNotFoundException("Review Not Found : "));
+    }
+
+    private CourseEntity getCourseEntity(Long courseId) {
+        return courseRepository.findByCourseId(courseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found: " + courseId));
+    }
+
+    private UserEntity getUserEntity(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
+        return UserConverter.toEntity(user);
     }
 
 }
