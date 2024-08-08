@@ -1,12 +1,13 @@
 package likelion.eight.domain.review.infra;
 
+import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import likelion.eight.course.CourseEntity;
-import likelion.eight.domain.review.controller.model.ReviewUpdateRequest;
 import likelion.eight.domain.review.converter.ReviewConverter;
 import likelion.eight.domain.review.model.Review;
 import likelion.eight.domain.review.service.port.ReviewRepository;
 import likelion.eight.review.ReviewEntity;
 import likelion.eight.review.ifs.ReviewJpaRepository;
+import likelion.eight.user.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -22,8 +23,8 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     private final ReviewJpaRepository reviewJpaRepository; //JPA 리포지토리 사용
 
     @Override
-    public Review save(Review review, CourseEntity courseEntity) {
-        ReviewEntity reviewEntity = ReviewConverter.toReviewEntity(review, courseEntity); // TODO :: courseEntity 나중에 넣기
+    public Review save(Review review, CourseEntity courseEntity, UserEntity userEntity) {
+        ReviewEntity reviewEntity = ReviewConverter.toReviewEntity(review, courseEntity,userEntity);
         reviewEntity = reviewJpaRepository.save(reviewEntity);
         return ReviewConverter.toDto(reviewEntity);
     }
@@ -32,7 +33,7 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     public Review getById(Long id) {
         return reviewJpaRepository.findById(id)
                 .map(ReviewConverter::toDto)
-                .orElseThrow(() -> new IllegalArgumentException("Review Not Found : " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Review Not Found : " + id));
     }
 
     @Override
@@ -60,6 +61,22 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     @Override
     public void deleteById(Long id) {
         reviewJpaRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean existsByUserIdAndCourseId(Long userId, Long courseId) {
+        return reviewJpaRepository.existsByUserEntityIdAndCourseEntityId(userId, courseId);
+    }
+
+    @Override
+    public Optional<Review> findReviewByCourseId(Long courseId) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Review> findByCourseIdAndUserId(Long courseId, Long userId) {
+        return reviewJpaRepository.findByCourseEntityIdAndUserEntityId(courseId, userId)
+                .map(ReviewConverter::toDto);
     }
 
 }

@@ -5,7 +5,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-<h1>Messages for <span th:text="${username}">User</span></h1>
+<h1>Messages for <span th:text="${username}" id="currentUsername">User</span></h1>
 
 <h2>Recent Chats</h2>
 <ul id="chatList">
@@ -20,10 +20,18 @@
 
 <p id="errorMessage" style="color: red;"></p>
 
-<script>
+<script th:inline="javascript">
     $(document).ready(function() {
+        var currentUsername = [[${username}]];
+
         $('#startChatBtn').click(function() {
             var targetName = $('#targetName').val();
+
+            if (targetName === currentUsername) {
+                $('#errorMessage').text('자기 자신과는 채팅할 수 없습니다.');
+                return;
+            }
+
             $.ajax({
                 url: '/messages/startChat',
                 type: 'POST',
@@ -35,8 +43,12 @@
                         window.location.href = '/messages/' + response.chatroomId;
                     }
                 },
-                error: function() {
-                    $('#errorMessage').text('An error occurred. Please try again.');
+                error: function(xhr) {
+                    if (xhr.responseJSON && xhr.responseJSON.error) {
+                        $('#errorMessage').text(xhr.responseJSON.error);
+                    } else {
+                        $('#errorMessage').text('An error occurred. Please try again.');
+                    }
                 }
             });
         });

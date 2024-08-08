@@ -439,7 +439,9 @@
                 <th:block th:each="review, iterStat : ${reviews}">
                     <li>
                         <a class="review-title" th:text="${review.title}"
-                            th:href="@{/reviews/{id}(id=${review.id})}">리뷰 제목</a>
+
+                           th:href="@{/reviews/{id}(id=${review.id})}">리뷰 제목</a>
+
                         <div class="review-content" th:text="${review.oneLineReview}">한줄리뷰</div>
                     </li>
                 </th:block>

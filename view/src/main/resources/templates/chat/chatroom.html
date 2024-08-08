@@ -34,26 +34,12 @@
 <button id="send-button">Send</button>
 
 <script th:inline="javascript">
-
-
-
     var chatroomId = [[${chatroom.id}]];
     var username = [[${username}]];
-    // var socket = new SockJS('/ws');
-    // var stompClient = Stomp.over(socket);
     var stompClient = null;
-    var token = getCookie('USER_TOKEN');  // 쿠키에서 토큰 가져오기
+    var token = getCookie('userTokenCode');  // 쿠키에서 토큰 가져오기
 
     window.onload = connect;
-
-    // stompClient.connect({}, function(frame) {
-    //     console.log('Connected: ' + frame);
-    //     stompClient.subscribe('/topic/messages/' + chatroomId, function(message) {
-    //         showMessage(JSON.parse(message.body));
-    //     });
-    // }, function(error) {
-    //     console.log('STOMP error ' + error);
-    // });
 
     function connect() {
         var socket = new SockJS('/ws');
@@ -67,9 +53,11 @@
                 alert(message.body);
                 window.location.reload();
             });
+        }, function(error) {
+            console.log('STOMP error ' + error);
+            setTimeout(connect, 5000);  // 5초 후 재연결 시도
         });
     }
-
 
     function showMessage(message) {
         var messageElement = document.createElement('div');
@@ -86,10 +74,11 @@
             var chatMessage = {
                 chatroomId: chatroomId,
                 sender: username,
-                message: content,
-                token: token
+                message: content
             };
-            stompClient.send("/app/chat", {}, JSON.stringify(chatMessage));
+            stompClient.send("/app/chat", {
+                Authorization: 'Bearer ' + token
+            }, JSON.stringify(chatMessage));
             document.getElementById('message-input').value = '';
         }
     }
@@ -107,7 +96,6 @@
             sendMessage();
         }
     };
-
 </script>
 </body>
 </html>

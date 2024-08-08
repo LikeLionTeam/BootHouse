@@ -14,6 +14,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(callSuper = true)
+
 public class MessageEntity extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "message_id")
@@ -28,6 +29,6 @@ public class MessageEntity extends BaseTimeEntity {
     private UserEntity sender;
 
     @Lob
-    @Column(name = "message", nullable = false)
+    @Column(name = "message", columnDefinition = "TEXT", nullable = false)
     private String message;
 }

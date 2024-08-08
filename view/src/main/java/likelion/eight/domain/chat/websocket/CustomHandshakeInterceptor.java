@@ -1,38 +1,49 @@
 package likelion.eight.domain.chat.websocket;
 
 import likelion.eight.domain.token.service.TokenService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
-import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHandler;
-import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
+import org.springframework.web.socket.server.HandshakeInterceptor;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
 
-public class CustomHandshakeInterceptor extends HttpSessionHandshakeInterceptor {
+@Component
+@RequiredArgsConstructor
+@Slf4j
+public class CustomHandshakeInterceptor implements HandshakeInterceptor {
 
     private final TokenService tokenService;
 
-    public CustomHandshakeInterceptor(TokenService tokenService) {
-        this.tokenService = tokenService;
+    @Override
+    public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
+                                   WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
+        if (request instanceof ServletServerHttpRequest) {
+            ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
+            String token = extractToken(servletRequest.getServletRequest());
+            if (token != null) {
+                try {
+                    Long userId = tokenService.validationToken(token);
+                    attributes.put("userId", userId);
+                    log.info("Added security context to WebSocket session : {} , userId: {}", token, userId);
+                    return true;
+                } catch (Exception e) {
+                    return false;
+                }
+            }
+        }
+        return false;
     }
 
     @Override
-    public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
-                                    WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
-        if (request instanceof ServletServerHttpRequest) {
-            ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
-            HttpServletRequest httpServletRequest = servletRequest.getServletRequest();
-            String token = extractToken(httpServletRequest);
-            if (token != null) {
-                Long userId = tokenService.validationToken(token);
-                attributes.put("userId", userId);
-            }
-        }
-        return super.beforeHandshake(request, response, wsHandler, attributes);
+    public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response,
+                               WebSocketHandler wsHandler, Exception exception) {
     }
 
     private String extractToken(HttpServletRequest request) {
@@ -40,16 +51,11 @@ public class CustomHandshakeInterceptor extends HttpSessionHandshakeInterceptor 
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if ("USER_TOKEN".equals(cookie.getName())) {
+                    log.info("cookie value : {}", cookie.getValue());
                     return cookie.getValue();
                 }
             }
         }
         return null;
-    }
-
-    @Override
-    public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response,
-                                WebSocketHandler wsHandler, @Nullable Exception ex) {
-        super.afterHandshake(request, response, wsHandler, ex);
     }
 }
