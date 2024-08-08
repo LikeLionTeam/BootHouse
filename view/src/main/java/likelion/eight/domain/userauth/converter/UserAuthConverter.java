@@ -43,4 +43,13 @@ public class UserAuthConverter {
                 .image(request.getImage().getBytes())
                 .build();
     }
+
+    public static UserAuth toUserAuth(User user, UserAuthCreateRequest request, String imageUrl){
+        return UserAuth.builder()
+                .user(user)
+                .authRequestType(request.getAuthRequestType())
+                .authRequestStatus(AuthRequestStatus.PENDING)
+                .imageUrl(imageUrl)
+                .build();
+    }
 }
