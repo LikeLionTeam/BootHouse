@@ -1,7 +1,6 @@
 package likelion.eight.domain.review.controller;
 
 import likelion.eight.common.annotation.Login;
-import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import likelion.eight.domain.course.model.Course;
 import likelion.eight.domain.course.service.CourseService;
 import likelion.eight.domain.review.controller.model.ReviewSearchCondition;
@@ -11,11 +10,13 @@ import likelion.eight.domain.review.service.ReviewService;
 import likelion.eight.domain.user.controller.model.LoginUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 // 로그인 안한 사용자도 볼 수 있음
@@ -28,11 +29,17 @@ public class ReviewController {
     private final CourseService courseService;
 
     @GetMapping("/reviews")
-    public String showAllReviews(Model model) {
+    public String showAllReviews(
+            Model model,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "2") int size
+    ) {
 
-        List<Review> reviews = reviewService.findAllReviews();
+        Pageable pageable = PageRequest.of(page, size);
 
-        model.addAttribute("reviews", reviews);
+        Page<Review> reviewPage = reviewService.findAllReviews(pageable);
+
+        model.addAttribute("reviewPage", reviewPage);
         model.addAttribute("searchCondition", new ReviewSearchCondition()); // 검색 조건 초기화
         model.addAttribute("sortCondition", new ReviewSortCondition()); // 정렬 조건 초기화
 
@@ -40,13 +47,19 @@ public class ReviewController {
     }
 
     @GetMapping("/reviews/search")
-    public String searchReviews(Model model, @RequestParam String keyword) {
+    public String searchReviews(
+            Model model,
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "2") int size
+    ) {
 
         //검색 기능
         ReviewSearchCondition searchCondition = new ReviewSearchCondition(keyword);
-        List<Review> reviews = reviewService.searchReviews(searchCondition);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Review> reviewPage = reviewService.searchReviews(searchCondition, pageable);
 
-        model.addAttribute("reviews", reviews);
+        model.addAttribute("reviewPage", reviewPage);
         model.addAttribute("searchCondition", searchCondition);
         model.addAttribute("sortCondition", new ReviewSortCondition()); // 정렬 조건 초기화
 
@@ -54,12 +67,18 @@ public class ReviewController {
     }
 
     @GetMapping("/reviews/sort")
-    public String sortReviews(Model model, @RequestParam String sortBy) {
+    public String sortReviews(
+            Model model,
+            @RequestParam String sortBy,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "2") int size
+    ) {
         //정렬 기능 :  높은 평점순 / 낮은 평점순 / 조회수 / 최근순 / 오래된순
         ReviewSortCondition sortCondition = new ReviewSortCondition(sortBy);
-        List<Review> reviews = reviewService.sortReviews(sortCondition);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Review> reviewPage = reviewService.sortReviews(sortCondition, pageable);
 
-        model.addAttribute("reviews", reviews);
+        model.addAttribute("reviewPage", reviewPage);
         model.addAttribute("sortCondition", sortCondition);
         model.addAttribute("searchCondition", new ReviewSearchCondition());
 
@@ -69,7 +88,7 @@ public class ReviewController {
     @GetMapping("/reviews/{reviewId}")
     public String showReview(@PathVariable Long reviewId, Model model, @Login LoginUser loginUser) {
 
-        reviewService.incrementViewcount(reviewId);
+        reviewService.incrementViewCount(reviewId);
 
         Review review = reviewService.findReviewById(reviewId);
         Optional<Review> previousReviewOptional = reviewService.findPreviousReview(reviewId);

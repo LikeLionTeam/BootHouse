@@ -40,12 +40,31 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="review : ${reviews}">
+    <tr th:each="review : ${reviewPage.content}">
         <td><a th:href="@{/reviews/{id}(id=${review.id})}" th:text="${review.title}">Title</a></td>
         <td th:text="${review.oneLineReview}">One Line Review</td>
     </tr>
     </tbody>
 </table>
+
+<!-- 페이징 -->
+<div>
+    <span th:text="'Page ' + ${reviewPage.number + 1} + ' of ' + ${reviewPage.totalPages}">Page 1 of 1</span>
+    <ul>
+        <li th:if="${reviewPage.hasPrevious()}">
+            <a th:href="@{/reviews(page=${reviewPage.number - 1}, size=${reviewPage.size})}">Previous</a>
+        </li>
+        <li th:each="i : ${#numbers.sequence(1, reviewPage.totalPages)}"
+            th:classappend="${i == reviewPage.number + 1} ? 'active'">
+            <a th:href="@{/reviews(page=${i - 1}, size=${reviewPage.size})}"
+               th:text="${i}">1</a>
+        </li>
+        <li th:if="${reviewPage.hasNext()}">
+            <a th:href="@{/reviews(page=${reviewPage.number + 1}, size=${reviewPage.size})}">Next</a>
+        </li>
+    </ul>
+</div>
+
 
 </body>
 </html>

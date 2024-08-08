@@ -17,12 +17,15 @@ import likelion.eight.domain.user.service.port.UserRepository;
 import likelion.eight.review.ReviewEntity;
 import likelion.eight.user.UserEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -35,14 +38,14 @@ public class ReviewService {
 
 
     @Transactional(readOnly = true)
-    public List<Review> findAllReviews() {
-
-        return reviewRepository.findAll();
+    public Page<Review> findAllReviews(Pageable pageable) {
+        return reviewRepository.findAll(pageable).map(ReviewConverter::toDto);
     }
 
     @Transactional(readOnly = true)
     public Review findReviewById(Long id) {
-        return getReview(id);
+        ReviewEntity reviewEntity = getReviewEntity(id);
+       return ReviewConverter.toDto(reviewEntity);
     }
 
     @Transactional(readOnly = true)
@@ -81,7 +84,8 @@ public class ReviewService {
     }
     @Transactional
     public void updateReview(Long id, ReviewUpdateRequest reviewUpdateRequest) {
-        Review review = getReview(id);
+        ReviewEntity reviewEntity = getReviewEntity(id);
+        Review review = ReviewConverter.toDto(reviewEntity);
 
         CourseEntity courseEntity = getCourseEntity(review.getCourseId());
         UserEntity userEntity = getUserEntity(review.getUserId());
@@ -109,13 +113,15 @@ public class ReviewService {
     }
 
     @Transactional
-    public void incrementViewcount(Long reviewId) {
+    public void incrementViewCount(Long reviewId) {
 
-        Review review = getReview(reviewId);
+        ReviewEntity reviewEntity = getReviewEntity(reviewId);
+        Review review = ReviewConverter.toDto(reviewEntity);
+
         CourseEntity courseEntity = getCourseEntity(review.getCourseId());
         UserEntity userEntity = getUserEntity(review.getUserId());
 
-        ReviewEntity reviewEntity = ReviewConverter.toReviewEntity(review, courseEntity, userEntity);
+//        ReviewEntity reviewEntity = ReviewConverter.toReviewEntity(review, courseEntity, userEntity);
 
         reviewEntity.incrementViewCount();
 
@@ -125,25 +131,23 @@ public class ReviewService {
     }
 
     @Transactional(readOnly = true)
-    public List<Review> searchReviews(ReviewSearchCondition condition) {
+    public Page<Review> searchReviews(ReviewSearchCondition condition, Pageable pageable) {
+
         if (condition.getKeyword() == null || condition.getKeyword().isEmpty()) {
-            return findAllReviews();
+            return findAllReviews(pageable);
         }
-        List<ReviewEntity> reviewEntities = reviewRepository.searchByKeyword(condition.getKeyword());
-        return reviewEntities.stream().map(ReviewConverter::toDto).collect(Collectors.toList());
+        return reviewRepository.searchByKeyword(condition.getKeyword(), pageable).map(ReviewConverter::toDto);
     }
 
     @Transactional
-    public List<Review> sortReviews(ReviewSortCondition condition) {
-        List<ReviewEntity> reviewEntities = reviewRepository.sortByCondition(condition.getSortBy());
-
-        return reviewEntities.stream().map(ReviewConverter::toDto).collect(Collectors.toList());
+    public Page<Review> sortReviews(ReviewSortCondition condition, Pageable pageable) {
+        return reviewRepository.sortByCondition(condition.getSortBy(), pageable).map(ReviewConverter::toDto);
     }
 
     // 중복 함수 빼 놓음
-    private Review getReview(Long reviewId) {
+    private ReviewEntity getReviewEntity(Long reviewId) {
         return reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ResourceNotFoundException("Review Not Found : "));
+                .orElseThrow(() -> new ResourceNotFoundException("Review Not Found : " + reviewId));
     }
 
     private CourseEntity getCourseEntity(Long courseId) {

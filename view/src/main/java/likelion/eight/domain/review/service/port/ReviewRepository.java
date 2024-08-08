@@ -7,6 +7,8 @@ import likelion.eight.domain.review.controller.model.ReviewUpdateRequest;
 import likelion.eight.domain.review.model.Review;
 import likelion.eight.review.ReviewEntity;
 import likelion.eight.user.UserEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,13 +18,14 @@ public interface ReviewRepository {
 
     Review getById(Long id);
 
-    Optional<Review> findById(Long id);
+    Optional<ReviewEntity> findById(Long id);
 
     Optional<Review> findReviewByCourseId(Long courseId);
 
     List<Review> findByCourseId(Long courseId);
 
-    List<Review> findAll();
+    Page<ReviewEntity> findAll(Pageable pageable);
+
 
     void deleteById(Long id);
 
@@ -31,9 +34,10 @@ public interface ReviewRepository {
 
     Optional<Review> findByCourseIdAndUserId(Long courseId, Long userId);
 
-    List<ReviewEntity> searchByKeyword(String keyword);
+    Page<ReviewEntity> searchByKeyword(String keyword, Pageable pageable);
 
-    List<ReviewEntity> sortByCondition(String sortBy);
+
+    Page<ReviewEntity> sortByCondition(String sortBy, Pageable pageable);
 
 
     Optional<ReviewEntity> findPreviousReview(Long reviewId);
