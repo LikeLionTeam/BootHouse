@@ -31,9 +31,6 @@ public class BootcampController {
     public String createBootcamp(
             @ModelAttribute(name = "request") BootcampCreateRequest request
     ){
-        log.info("request :: {}", request.toString());
-        log.info("request -- file :: {}", request.getFile().getOriginalFilename());
-
         bootcampService.createBootcamp(request);
 
         return "redirect:/bootcamps";

@@ -5,7 +5,10 @@ import likelion.eight.common.annotation.Login;
 import likelion.eight.common.service.CookieService;
 import likelion.eight.domain.category.model.Category;
 import likelion.eight.domain.category.service.CategoryService;
+import likelion.eight.domain.course.controller.model.CourseDetailDto;
+import likelion.eight.domain.course.controller.model.CourseDto;
 import likelion.eight.domain.course.controller.model.CourseFilter;
+import likelion.eight.domain.course.controller.model.ReviewDto;
 import likelion.eight.domain.course.model.Course;
 import likelion.eight.domain.course.service.CourseService;
 import likelion.eight.domain.review.model.Review;
@@ -21,6 +24,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -47,6 +51,11 @@ public class CourseController {
         // 모집중인 코스를 기준으로 필터링 (모집중 고려 O, 카테고리 고려 전, 필터링 기준 고려 O)
         courses = courseService.findCoursesByFilters(categoryId, courseFilter, sort, search);
 
+        // 도메인을 dto로 변환
+        List<CourseDto> courseDtos = courses.stream()
+                .map(course -> new CourseDto(course))
+                .collect(Collectors.toList());
+
         // 카테고리 조건 추가 (모집중 고려 O, 카테고리 고려 O, 필터링 기준 고려 O)
         if (categoryId != null){
             Category category = categoryService.findById(categoryId);
@@ -57,7 +66,7 @@ public class CourseController {
             model.addAttribute("subCourseList", subCourseList);
         }
 
-        model.addAttribute("courses", courses);
+        model.addAttribute("courses", courseDtos);
         model.addAttribute("count", courses.size());
         model.addAttribute("categories", categories);
 
@@ -75,8 +84,16 @@ public class CourseController {
 
         course.calculateAverageRating(reviews);
 
-        model.addAttribute("course", course);
-        model.addAttribute("reviews", reviews);
+        // Review 도메인을 dto로
+        List<ReviewDto> reviewDtos = reviews.stream()
+                .map(review -> new ReviewDto(review))
+                .collect(Collectors.toList());
+
+        // Course 도메인을 dto로
+        CourseDetailDto courseDto = CourseDetailDto.from(course);
+
+        model.addAttribute("course", courseDto);
+        model.addAttribute("reviews", reviewDtos);
         model.addAttribute("isUserLoggedIn", isUserLoggedIn);
 
         return "course/courseDetail";

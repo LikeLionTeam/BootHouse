@@ -386,7 +386,7 @@
 <div class="course-container">
     <div class="course-detail">
         <div class="course-summary">
-            <span class="status" th:text="${course.recruitmentStatus.description}">모집 중</span>
+            <span class="status" th:text="${course.recruitmentStatusDescription}">모집 중</span>
             <h1 th:text="${course.name}">course name</h1>
             <br>
             <h2>프로그램 요약</h2>
@@ -397,13 +397,14 @@
 
         <div class="course-info">
             <h2>교육기관 정보</h2>
-            <img th:src="|/images/${course.bootcamp.logo}|" alt="교육기관 로고">
+            <img th:if="${course.logo != null}"
+                 th:src="|/images/${course.logo}|" alt="교육기관 로고">
             <div class="details">
-                <p><strong th:text="${course.bootcamp.name}">course 주최 bootcamp 기관</strong></p>
-                <p th:text="${course.bootcamp.description}">course 주최 bootcamp 설명</p>
-                <p th:text="${course.bootcamp.location}">course 주최 bootcamp location</p>
+                <p><strong th:text="${course.bootcampName}">course 주최 bootcamp 기관</strong></p>
+                <p th:text="${course.bootcampDescription}">course 주최 bootcamp 설명</p>
+                <p th:text="${course.bootcampLocation}">course 주최 bootcamp location</p>
             </div>
-            <a th:href="${course.bootcamp.url}" th:text="'교육기관으로 가기'"></a>
+            <a th:href="${course.bootcampUrl}" th:text="'교육기관으로 가기'"></a>
         </div>
 
         <br>
@@ -461,7 +462,7 @@
     </div>
 
     <div class="course-sidebar">
-        <p th:text="${course.bootcamp.name}" style="color: #666;"></p>
+        <p th:text="${course.bootcampName}" style="color: #666;"></p>
         <h1 th:text="${course.name}">course name</h1>
         <div class="sidebar-info">
             <p><strong>모집마감일:</strong> <span th:text="${#temporals.format(course.closingDate, 'yyyy.MM.dd HH:mm')}"></span></p>

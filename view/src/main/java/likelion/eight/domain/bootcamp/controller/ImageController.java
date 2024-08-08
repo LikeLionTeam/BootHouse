@@ -23,7 +23,7 @@ public class ImageController {
     public Resource loadImage(@PathVariable String filename){
         try {
             return new UrlResource("file:" + bootcampService.getFilePath(filename));
-        } catch (MalformedURLException e) {
+        } catch (Exception e) {
             throw new FileStorageException("파일 로드 실패 : " + e.getMessage());
         }
     }
