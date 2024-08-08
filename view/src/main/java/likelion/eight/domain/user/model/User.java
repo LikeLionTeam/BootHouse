@@ -5,6 +5,7 @@ import likelion.eight.common.domain.exception.CertificationFailedException;
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import likelion.eight.common.service.CookieService;
 import likelion.eight.common.service.port.ClockHolder;
+import likelion.eight.domain.user.controller.model.UserEditRequest;
 import likelion.eight.user.enums.RoleType;
 import likelion.eight.user.enums.UserStatus;
 import lombok.Builder;
@@ -57,7 +58,6 @@ public class User {
                 .lastLoginAt(clockHolder.millis())
                 .image(image)
                 .build();
-
     }
 
     public User certificate(String certificationCode){
@@ -77,6 +77,24 @@ public class User {
                 .lastLoginAt(lastLoginAt)
                 .image(image)
                 .build();
+    }
 
+    public User edit(String password, UserEditRequest request){
+        if (!this.password.equals(password)) {
+            throw new ResourceNotFoundException("비밀번호가 틀렸습니다.");
+        }
+        return User.builder()
+                .id(id)
+                .name(name)
+                .address(request.getAddress())
+                .email(email)
+                .password(password)
+                .phoneNumber(request.getPhoneNumber())
+                .certificationCode(certificationCode)
+                .userStatus(userStatus)
+                .roleType(roleType)
+                .lastLoginAt(lastLoginAt)
+                .image(image)
+                .build();
     }
 }
