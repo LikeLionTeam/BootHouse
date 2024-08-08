@@ -29,4 +29,9 @@ public class LikeReviewEntity extends BaseTimeEntity {
     @JoinColumn(name = "review_id")
     private ReviewEntity reviewEntity;
 
+    @Builder
+    public LikeReviewEntity(UserEntity userEntity, ReviewEntity reviewEntity) {
+        this.userEntity = userEntity;
+        this.reviewEntity = reviewEntity;
+    }
 }
