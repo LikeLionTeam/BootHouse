@@ -67,19 +67,9 @@ public class ReviewService {
         CourseEntity courseEntity = getCourseEntity(courseId);
         UserEntity userEntity = getUserEntity(userId);
 
-        Review review = Review.builder()
-                .title(reviewCreateRequest.getTitle())
-                .oneLineReview(reviewCreateRequest.getOneLineReview())
-                .advantages(reviewCreateRequest.getAdvantages())
-                .disadvantages(reviewCreateRequest.getDisadvantages())
-                .instructorEvaluation(reviewCreateRequest.getInstructorEvaluation())
-                .rating(reviewCreateRequest.getRating())
-                .courseId(courseId)
-                .userId(userId)
-                .viewCount(0) //기본 값
-                .build();
+        ReviewEntity reviewEntity = ReviewConverter.toReviewEntity(reviewCreateRequest, courseEntity, userEntity, clockHolder);
 
-        reviewRepository.save(review, courseEntity, userEntity);
+        reviewRepository.save(reviewEntity, courseEntity, userEntity);
 
     }
     @Transactional

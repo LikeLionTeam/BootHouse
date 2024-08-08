@@ -16,6 +16,9 @@ import java.util.Optional;
 public interface ReviewRepository {
     Review save(Review review, CourseEntity courseEntity, UserEntity userEntity);
 
+    Review save(ReviewEntity reviewEntity, CourseEntity courseEntity, UserEntity userEntity);
+
+
     Review getById(Long id);
 
     Optional<ReviewEntity> findById(Long id);

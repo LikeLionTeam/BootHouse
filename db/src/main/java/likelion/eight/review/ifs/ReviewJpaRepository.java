@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long> {
-    boolean existsByUserEntityIdAndCourseEntityId(Long userId, Long courseId);
 
+    boolean existsByUserEntityIdAndCourseEntityId(Long userId, Long courseId);
 
     Optional<ReviewEntity> findByCourseEntityIdAndUserEntityId(Long courseId, Long userId);
 

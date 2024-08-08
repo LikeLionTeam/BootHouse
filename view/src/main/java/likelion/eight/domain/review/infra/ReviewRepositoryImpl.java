@@ -32,6 +32,12 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     }
 
     @Override
+    public Review save(ReviewEntity reviewEntity, CourseEntity courseEntity, UserEntity userEntity) {
+        reviewJpaRepository.save(reviewEntity);
+        return ReviewConverter.toDto(reviewEntity);
+    }
+
+    @Override
     public Review getById(Long id) {
         return reviewJpaRepository.findById(id)
                 .map(ReviewConverter::toDto)
