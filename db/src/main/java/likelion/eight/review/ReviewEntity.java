@@ -3,7 +3,6 @@ package likelion.eight.review;
 import jakarta.persistence.*;
 import likelion.eight.BaseTimeEntity;
 import likelion.eight.course.CourseEntity;
-import likelion.eight.user.UserEntity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,9 +48,7 @@ public class ReviewEntity extends BaseTimeEntity {
     @Column(nullable = false)
     private Integer rating; //평점
 
-    @Column(nullable = false)
-    private Integer viewCount=0; //조회수 카운팅
-
+    private Integer viewCount; //조회수 카운팅
 
     // view count ++
     public void incrementViewCount() {
