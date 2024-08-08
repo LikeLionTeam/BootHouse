@@ -28,4 +28,6 @@ public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long> {
             "LOWER(r.instructorEvaluation) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<ReviewEntity> searchByKeyword(@Param("keyword") String keyword);
 
+    Optional<ReviewEntity> findTopByIdLessThanOrderByIdDesc(Long id);
+    Optional<ReviewEntity> findTopByIdGreaterThanOrderByIdAsc(Long id);
 }

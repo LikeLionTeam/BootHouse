@@ -83,4 +83,14 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     public List<ReviewEntity> searchByKeyword(String keyword) {
         return reviewJpaRepository.searchByKeyword(keyword);
     }
+
+    @Override
+    public Optional<ReviewEntity> findPreviousReview(Long reviewId) {
+        return reviewJpaRepository.findTopByIdLessThanOrderByIdDesc(reviewId);
+    }
+
+    @Override
+    public Optional<ReviewEntity> findNextReview(Long reviewId) {
+        return reviewJpaRepository.findTopByIdGreaterThanOrderByIdAsc(reviewId);
+    }
 }

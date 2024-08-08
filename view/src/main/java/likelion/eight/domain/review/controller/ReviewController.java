@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 // 로그인 안한 사용자도 볼 수 있음
 
@@ -40,12 +41,18 @@ public class ReviewController {
     @GetMapping("/reviews/{reviewId}")
     public String showReview(@PathVariable Long reviewId, Model model, @Login LoginUser loginUser) {
 
-        Review review = reviewService.findReviewById(reviewId);
         reviewService.incrementViewcount(reviewId);
+
+        Review review = reviewService.findReviewById(reviewId);
+        Optional<Review> previousReviewOptional = reviewService.findPreviousReview(reviewId);
+        Optional<Review> nextReviewOptional = reviewService.findNextReview(reviewId);
+
         Course course = courseService.findCourseById(review.getCourseId());
 
         model.addAttribute("course", course);
         model.addAttribute("review", review);
+        previousReviewOptional.ifPresent(previousReview -> model.addAttribute("previousReview", previousReview));
+        nextReviewOptional.ifPresent(nextReview -> model.addAttribute("nextReview", nextReview));
         model.addAttribute("loginUser", loginUser);
         return "review/showReview";
     }

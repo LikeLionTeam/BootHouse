@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,6 +43,19 @@ public class ReviewService {
     public Review findReviewById(Long id) {
         return getReview(id);
     }
+
+    @Transactional(readOnly = true)
+    public Optional<Review> findPreviousReview(Long reviewId) {
+        return reviewRepository.findPreviousReview(reviewId)
+                .map(ReviewConverter::toDto);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Review> findNextReview(Long reviewId) {
+        return reviewRepository.findNextReview(reviewId)
+                .map(ReviewConverter::toDto);
+    }
+
 
     @Transactional
     public void saveReview(ReviewCreateRequest reviewCreateRequest, Long userId, Long courseId) {

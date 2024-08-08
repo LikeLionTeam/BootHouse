@@ -58,5 +58,17 @@
     </form>
 </div>
 
+
+<!-- 이전글, 다음글 링크 추가 -->
+<div>
+    <div th:if="${previousReview != null}">
+        <a th:href="@{/reviews/{id}(id=${previousReview.id})}">Previous Review</a>
+    </div>
+    <div th:if="${nextReview != null}">
+        <a th:href="@{/reviews/{id}(id=${nextReview.id})}">Next Review</a>
+    </div>
+</div>
+
+
 </body>
 </html>
