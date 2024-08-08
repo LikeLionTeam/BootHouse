@@ -2,6 +2,7 @@ package likelion.eight.domain.course.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import likelion.eight.common.annotation.Login;
+import likelion.eight.common.service.CookieService;
 import likelion.eight.domain.category.model.Category;
 import likelion.eight.domain.category.service.CategoryService;
 import likelion.eight.domain.course.controller.model.CourseFilter;
@@ -29,7 +30,7 @@ public class CourseController {
     private final CategoryService categoryService;
     private final SubCourseService subCourseService;
     private final ReviewRepository reviewRepository;
-    private final TokenService tokenService;
+    private final CookieService cookieService;
 
     // 모집중인 캠프 조회
     // Todo :: 조회 성능 개선
@@ -64,20 +65,19 @@ public class CourseController {
     }
 
     // course 자세히보기
-    @GetMapping("courses/{id}")
+    @GetMapping("/courses/{id}")
     public String getCourseDetail(@PathVariable(name = "id")Long courseId,
                                   Model model,
                                   HttpServletRequest request){
         Course course = courseService.findCourseById(courseId);
         List<Review> reviews = reviewRepository.findByCourseId(courseId);
-        boolean isUserLoggedIn = tokenService.isUserLoggedIn(request);
+        boolean isUserLoggedIn = cookieService.isUserLoggedIn(request);
 
         course.calculateAverageRating(reviews);
 
         model.addAttribute("course", course);
         model.addAttribute("reviews", reviews);
         model.addAttribute("isUserLoggedIn", isUserLoggedIn);
-
 
         return "course/courseDetail";
     }

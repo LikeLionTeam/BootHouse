@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Bootcamp 등록</title>
+</head>
+<body>
+    <h2>Bootcamp 등록</h2>
+
+    <form id="bootcampForm" th:object="${request}" enctype="multipart/form-data" method="post">
+        <label for="name">Name : </label>
+        <input th:field="*{name}" id="name" type="text" name="name" required> <br>
+
+        <label for="description">Description : </label>
+        <textarea th:field="*{description}" id="description" name="description" required></textarea> <br>
+
+        <label for="location">Location : </label>
+        <input th:field="*{location}" type="text" id="location" name="location" required> <br>
+
+        <label for="url">Bootcamp 기관 공식 홈페이지 URL : </label>
+        <input th:field="*{url}" type="url" id="url" name="url" required> <br>
+
+        <label for="file">Logo 파일 : </label>
+        <input th:field="*{file}" id="file" type="file" name="file">
+
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

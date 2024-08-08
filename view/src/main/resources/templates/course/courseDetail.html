@@ -72,6 +72,8 @@
             height: 50px;
             margin-right: 10px; /*이미지 - div 사이의 간격*/
             vertical-align: middle;
+
+            object-fit: contain; /* 비율을 유지하면서, 이미지를 컨테이너에 맞춤*/
         }
 
         .course-info .details {
@@ -395,7 +397,7 @@
 
         <div class="course-info">
             <h2>교육기관 정보</h2>
-            <img src="logo_url" alt="교육기관 로고">
+            <img th:src="|/images/${course.bootcamp.logo}|" alt="교육기관 로고">
             <div class="details">
                 <p><strong th:text="${course.bootcamp.name}">course 주최 bootcamp 기관</strong></p>
                 <p th:text="${course.bootcamp.description}">course 주최 bootcamp 설명</p>
