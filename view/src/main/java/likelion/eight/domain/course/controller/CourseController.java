@@ -3,6 +3,7 @@ package likelion.eight.domain.course.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import likelion.eight.common.annotation.Login;
 import likelion.eight.common.service.CookieService;
+import likelion.eight.course.ifs.CourseJpaRepository;
 import likelion.eight.domain.category.model.Category;
 import likelion.eight.domain.category.service.CategoryService;
 import likelion.eight.domain.course.controller.model.CourseDetailDto;
@@ -51,11 +52,6 @@ public class CourseController {
         // 모집중인 코스를 기준으로 필터링 (모집중 고려 O, 카테고리 고려 전, 필터링 기준 고려 O)
         courses = courseService.findCoursesByFilters(categoryId, courseFilter, sort, search);
 
-        // 도메인을 dto로 변환
-        List<CourseDto> courseDtos = courses.stream()
-                .map(course -> new CourseDto(course))
-                .collect(Collectors.toList());
-
         // 카테고리 조건 추가 (모집중 고려 O, 카테고리 고려 O, 필터링 기준 고려 O)
         if (categoryId != null){
             Category category = categoryService.findById(categoryId);
@@ -65,6 +61,11 @@ public class CourseController {
             model.addAttribute("selectedCategory", category);
             model.addAttribute("subCourseList", subCourseList);
         }
+
+        // 도메인을 dto로 변환
+        List<CourseDto> courseDtos = courses.stream()
+                .map(course -> new CourseDto(course))
+                .collect(Collectors.toList());
 
         model.addAttribute("courses", courseDtos);
         model.addAttribute("count", courses.size());

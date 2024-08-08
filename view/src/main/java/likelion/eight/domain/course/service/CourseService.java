@@ -58,6 +58,7 @@ public class CourseService {
     }
 
     public Course findCourseById(Long courseId){
+        // fetch join을 통해 필요한 엔디티만 로딩
         return courseRepository.findCourseById(courseId)
                 .orElseThrow(() -> new ResourceNotFoundException("course", courseId));
     }
