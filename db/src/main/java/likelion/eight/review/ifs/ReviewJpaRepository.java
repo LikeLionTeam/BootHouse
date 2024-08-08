@@ -28,6 +28,19 @@ public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long> {
             "LOWER(r.instructorEvaluation) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<ReviewEntity> searchByKeyword(@Param("keyword") String keyword);
 
+
+    @Query("SELECT r FROM ReviewEntity r " +
+            "ORDER BY " +
+            "CASE WHEN :sortBy = 'ratingDesc' THEN r.rating END DESC, " +
+            "CASE WHEN :sortBy = 'ratingAsc' THEN r.rating END ASC, " +
+            "CASE WHEN :sortBy = 'viewCount' THEN r.viewCount END DESC, " +
+            "CASE WHEN :sortBy = 'recent' THEN r.registrationDate END DESC, " +
+            "CASE WHEN :sortBy = 'oldest' THEN r.registrationDate END ASC")
+    List<ReviewEntity> sortByCondition(String sortBy);
+
+
     Optional<ReviewEntity> findTopByIdLessThanOrderByIdDesc(Long id);
     Optional<ReviewEntity> findTopByIdGreaterThanOrderByIdAsc(Long id);
+
+
 }

@@ -6,6 +6,7 @@ import likelion.eight.course.CourseEntity;
 import likelion.eight.domain.course.service.port.CourseRepository;
 import likelion.eight.domain.review.controller.model.ReviewCreateRequest;
 import likelion.eight.domain.review.controller.model.ReviewSearchCondition;
+import likelion.eight.domain.review.controller.model.ReviewSortCondition;
 import likelion.eight.domain.review.controller.model.ReviewUpdateRequest;
 import likelion.eight.domain.review.converter.ReviewConverter;
 import likelion.eight.domain.review.model.Review;
@@ -132,6 +133,12 @@ public class ReviewService {
         return reviewEntities.stream().map(ReviewConverter::toDto).collect(Collectors.toList());
     }
 
+    @Transactional
+    public List<Review> sortReviews(ReviewSortCondition condition) {
+        List<ReviewEntity> reviewEntities = reviewRepository.sortByCondition(condition.getSortBy());
+
+        return reviewEntities.stream().map(ReviewConverter::toDto).collect(Collectors.toList());
+    }
 
     // 중복 함수 빼 놓음
     private Review getReview(Long reviewId) {

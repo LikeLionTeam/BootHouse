@@ -85,6 +85,11 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     }
 
     @Override
+    public List<ReviewEntity> sortByCondition(String sortBy) {
+        return reviewJpaRepository.sortByCondition(sortBy);
+    }
+
+    @Override
     public Optional<ReviewEntity> findPreviousReview(Long reviewId) {
         return reviewJpaRepository.findTopByIdLessThanOrderByIdDesc(reviewId);
     }
