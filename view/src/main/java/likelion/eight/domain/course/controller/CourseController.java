@@ -20,6 +20,9 @@ import likelion.eight.domain.token.service.TokenService;
 import likelion.eight.domain.user.controller.model.LoginUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +41,6 @@ public class CourseController {
     private final CookieService cookieService;
 
     // 모집중인 캠프 조회
-    // Todo :: 조회 성능 개선
     @GetMapping("/boothouse/camps")
     public String getOpenCourses(
             Model model,
@@ -52,6 +54,11 @@ public class CourseController {
         // 모집중인 코스를 기준으로 필터링 (모집중 고려 O, 카테고리 고려 전, 필터링 기준 고려 O)
         courses = courseService.findCoursesByFilters(categoryId, courseFilter, sort, search);
 
+        // 도메인을 dto로 변환
+        List<CourseDto> courseDtos = courses.stream()
+                .map(course -> new CourseDto(course))
+                .collect(Collectors.toList());
+
         // 카테고리 조건 추가 (모집중 고려 O, 카테고리 고려 O, 필터링 기준 고려 O)
         if (categoryId != null){
             Category category = categoryService.findById(categoryId);
@@ -61,11 +68,6 @@ public class CourseController {
             model.addAttribute("selectedCategory", category);
             model.addAttribute("subCourseList", subCourseList);
         }
-
-        // 도메인을 dto로 변환
-        List<CourseDto> courseDtos = courses.stream()
-                .map(course -> new CourseDto(course))
-                .collect(Collectors.toList());
 
         model.addAttribute("courses", courseDtos);
         model.addAttribute("count", courses.size());

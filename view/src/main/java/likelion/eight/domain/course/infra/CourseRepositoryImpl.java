@@ -10,6 +10,8 @@ import likelion.eight.domain.course.model.Course;
 import likelion.eight.domain.course.service.port.CourseRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
@@ -42,7 +44,8 @@ public class CourseRepositoryImpl implements CourseRepository {
 
     // 필터조건에 맞는 코스 리스트 반환
     @Override
-    public List<Course> findCoursesByFilters(Long categoryId, CourseFilter courseFilter, String sort, String search) {
+    public List<Course> findCoursesByFilters(Long categoryId, CourseFilter courseFilter,
+                                             String sort, String search) {
         Specification<CourseEntity> specification = CourseSpecification.filterCourses(categoryId, courseFilter, sort, search);
         List<CourseEntity> courseEntities = courseJpaRepository.findAll(specification);
 
