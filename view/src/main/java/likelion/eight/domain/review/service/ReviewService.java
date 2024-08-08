@@ -5,6 +5,7 @@ import likelion.eight.common.service.port.ClockHolder;
 import likelion.eight.course.CourseEntity;
 import likelion.eight.domain.course.service.port.CourseRepository;
 import likelion.eight.domain.review.controller.model.ReviewCreateRequest;
+import likelion.eight.domain.review.controller.model.ReviewSearchCondition;
 import likelion.eight.domain.review.controller.model.ReviewUpdateRequest;
 import likelion.eight.domain.review.converter.ReviewConverter;
 import likelion.eight.domain.review.model.Review;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -125,4 +127,13 @@ public class ReviewService {
         reviewRepository.save(reviewDto, courseEntity, userEntity);
 
     }
+
+    public List<Review> searchReviews(ReviewSearchCondition condition) {
+        if (condition.getKeyword() == null || condition.getKeyword().isEmpty()) {
+            return findAllReviews();
+        }
+        List<ReviewEntity> reviewEntities = reviewRepository.searchByKeyword(condition.getKeyword());
+        return reviewEntities.stream().map(ReviewConverter::toDto).collect(Collectors.toList());
+    }
+
 }

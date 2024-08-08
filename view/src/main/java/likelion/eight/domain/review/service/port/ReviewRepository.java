@@ -3,6 +3,7 @@ package likelion.eight.domain.review.service.port;
 import likelion.eight.course.CourseEntity;
 import likelion.eight.domain.review.controller.model.ReviewUpdateRequest;
 import likelion.eight.domain.review.model.Review;
+import likelion.eight.review.ReviewEntity;
 import likelion.eight.user.UserEntity;
 
 import java.util.List;
@@ -27,5 +28,8 @@ public interface ReviewRepository {
     boolean existsByUserIdAndCourseId(Long userId, Long courseId);
 
     Optional<Review> findByCourseIdAndUserId(Long courseId, Long userId);
+
+    List<ReviewEntity> searchByKeyword(String keyword);
+
 }
 

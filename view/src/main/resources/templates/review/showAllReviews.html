@@ -6,6 +6,18 @@
 </head>
 <body>
 <h2>Reviews</h2>
+
+<!-- 검색 폼 -->
+<form th:action="@{/reviews}" method="get">
+    <div>
+        <label for="keyword">Search:</label>
+        <input type="text" id="keyword" name="keyword" th:value="${condition.keyword}">
+    </div>
+    <div>
+        <button type="submit">Search</button>
+    </div>
+</form>
+
 <table border="1">
     <thead>
     <tr>

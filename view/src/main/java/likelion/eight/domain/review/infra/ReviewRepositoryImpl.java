@@ -79,4 +79,8 @@ public class ReviewRepositoryImpl implements ReviewRepository {
                 .map(ReviewConverter::toDto);
     }
 
+    @Override
+    public List<ReviewEntity> searchByKeyword(String keyword) {
+        return reviewJpaRepository.searchByKeyword(keyword);
+    }
 }

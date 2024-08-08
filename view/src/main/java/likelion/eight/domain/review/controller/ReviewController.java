@@ -4,15 +4,17 @@ import likelion.eight.common.annotation.Login;
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import likelion.eight.domain.course.model.Course;
 import likelion.eight.domain.course.service.CourseService;
+import likelion.eight.domain.review.controller.model.ReviewSearchCondition;
 import likelion.eight.domain.review.model.Review;
 import likelion.eight.domain.review.service.ReviewService;
 import likelion.eight.domain.user.controller.model.LoginUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 // 로그인 안한 사용자도 볼 수 있음
 
@@ -24,8 +26,14 @@ public class ReviewController {
     private final CourseService courseService;
 
     @GetMapping("/reviews")
-    public String showAllReviews(Model model) {
-        model.addAttribute("reviews", reviewService.findAllReviews());
+    public String showAllReviews(Model model, ReviewSearchCondition condition) {
+
+        //검색 기능
+        List<Review> reviews = reviewService.searchReviews(condition);
+
+        model.addAttribute("reviews", reviews);
+        model.addAttribute("condition", condition);
+
         return "review/showAllReviews";
     }
 
@@ -35,8 +43,6 @@ public class ReviewController {
         Review review = reviewService.findReviewById(reviewId);
         reviewService.incrementViewcount(reviewId);
         Course course = courseService.findCourseById(review.getCourseId());
-
-        log.info("LoginUser ID :::::: {}", loginUser.getId());
 
         model.addAttribute("course", course);
         model.addAttribute("review", review);
