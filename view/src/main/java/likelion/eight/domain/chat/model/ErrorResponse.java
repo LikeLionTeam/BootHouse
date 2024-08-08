@@ -1,2 +1,10 @@
-package likelion.eight.domain.chat.model;public class ErrorResponse {
+package likelion.eight.domain.chat.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
+public class ErrorResponse {
+    private String error;
 }
