@@ -7,6 +7,7 @@ import likelion.eight.common.service.CookieService;
 import likelion.eight.common.service.port.ClockHolder;
 import likelion.eight.common.service.port.UuidHolder;
 import likelion.eight.domain.user.controller.model.UserCreateRequest;
+import likelion.eight.domain.user.controller.model.UserEditRequest;
 import likelion.eight.domain.user.controller.model.UserLoginRequest;
 import likelion.eight.domain.user.controller.model.UserResponse;
 import likelion.eight.domain.user.converter.UserConverter;
@@ -77,6 +78,14 @@ public class UserService {
     public User findUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    }
+
+    public UserResponse editUser(UserLoginRequest userLoginRequest, UserEditRequest userEditRequest){
+        User user = userRepository.getById(userEditRequest.getId());
+        user = user.edit(userLoginRequest.getPassword(), userEditRequest);
+        userRepository.save(user);
+
+        return UserConverter.toResponse(user);
     }
 
 }
