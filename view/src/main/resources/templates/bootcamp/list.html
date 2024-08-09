@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Bootcamp 목록</title>
+</head>
+<body>
+    <h2>Bootcamp 목록</h2>
+
+    <ul>
+        <li th:each="bootcamp : ${bootcamps}">
+            <span th:text="${bootcamp.name}"></span> -
+            <span th:text="${bootcamp.description}"></span>
+            <br>
+            image 업로드
+            <br>
+            <div th:if="${bootcamp.logo != null}">
+                <img th:src="|/images/${bootcamp.logo}|" alt="Bootcamp Logo" width="300" height="300">
+            </div>
+        </li>
+    </ul>
+</body>
+</html>
