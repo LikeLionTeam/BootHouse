@@ -1,11 +1,12 @@
 <!DOCTYPE html>
- <head>
+<head>
     <meta charset="UTF-8">
     <title>Review Details</title>
     <style>
         .like-button {
             font-size: 24px;
             cursor: pointer;
+            color: gray;
         }
         .liked {
             color: red;
@@ -13,62 +14,58 @@
     </style>
 </head>
 <body>
-<h2>Review Details</h2>
+<h2 th:text="${course.name}">코스 이름</h2>
 
 <table border="1">
     <tr>
-        <th>Title</th>
-        <td th:text="${review.title}">Title</td>
+        <th>제목</th>
+        <td th:text="${review.title}">제목</td>
     </tr>
     <tr>
-        <th>One Line Review</th>
-        <td th:text="${review.oneLineReview}">One Line Review</td>
+        <th>총평</th>
+        <td th:text="${review.oneLineReview}">총평</td>
     </tr>
     <tr>
-        <th>Advantages</th>
-        <td th:text="${review.advantages}">Advantages</td>
+        <th>장점</th>
+        <td th:text="${review.advantages}">장점</td>
     </tr>
     <tr>
-        <th>Disadvantages</th>
-        <td th:text="${review.disadvantages}">Disadvantages</td>
+        <th>단점</th>
+        <td th:text="${review.disadvantages}">단점</td>
     </tr>
     <tr>
-        <th>Instructor Evaluation</th>
-        <td th:text="${review.instructorEvaluation}">Instructor Evaluation</td>
+        <th>강사 평가</th>
+        <td th:text="${review.instructorEvaluation}">강사 평가</td>
     </tr>
     <tr>
-        <th>Rating</th>
-        <td th:text="${review.rating}">Rating</td>
+        <th>별점</th>
+        <td th:text="${review.rating}">별점</td>
     </tr>
     <tr>
-        <th>View Count</th>
-        <td th:text="${review.viewCount}">View Count</td>
+        <th>조회수</th>
+        <td th:text="${review.viewCount}">조회수</td>
     </tr>
     <tr>
-        <th>Course</th>
-        <td th:text="${course.name}">Course Name</td>
+        <th>등록일</th>
+        <td th:text="${#temporals.format(review.registrationDate, 'yyyy-MM-dd HH:mm:ss')}">등록일</td>
     </tr>
     <tr>
-        <th>Created Date</th>
-        <td th:text="${#temporals.format(review.registrationDate, 'yyyy-MM-dd HH:mm:ss')}">Created Date</td>
-    </tr>
-    <tr>
-        <th>Last Modified Date</th>
-        <td th:text="${#temporals.format(review.lastModifiedDate, 'yyyy-MM-dd HH:mm:ss')}">Last Modified Date</td>
+        <th>수정일</th>
+        <td th:text="${#temporals.format(review.lastModifiedDate, 'yyyy-MM-dd HH:mm:ss')}">수정일</td>
     </tr>
 </table>
 
 <!-- 좋아요 버튼 추가 -->
 <div>
-    <span id="likeButton" class="like-button" onclick="toggleLike(${review.id})">&#9825;</span>
+    <span id="likeButton" class="like-button">&#9825;</span>
 </div>
 
-<a href="/reviews">Back to All Reviews</a>
+<a href="/reviews">모든 리뷰 보기</a>
 
 <div th:if="${review.userId == loginUser.id}">
-    <a th:href="@{/review/{id}/edit(id=${review.id})}">Edit Review</a>
+    <a th:href="@{/review/{id}/edit(id=${review.id})}">리뷰 수정하기</a>
     <form th:action="@{/review/{id}/delete(id=${review.id})}" method="post" style="display:inline;">
-        <button type="submit">Delete Review</button>
+        <button type="submit">리뷰 삭제하기</button>
     </form>
 </div>
 
@@ -76,35 +73,23 @@
 <!-- 이전글, 다음글 링크 추가 -->
 <div>
     <div th:if="${previousReview != null}">
-        <a th:href="@{/reviews/{id}(id=${previousReview.id})}">Previous Review</a>
+        <a th:href="@{/reviews/{id}(id=${previousReview.id})}">이전 글</a>
     </div>
     <div th:if="${nextReview != null}">
-        <a th:href="@{/reviews/{id}(id=${nextReview.id})}">Next Review</a>
+        <a th:href="@{/reviews/{id}(id=${nextReview.id})}">다음 글</a>
     </div>
 </div>
 
 
 <script>
     const likeButton = document.getElementById('likeButton');
-    let liked = false; // 초기 좋아요 상태 (서버에서 가져와서 설정)
+    let liked = false;
 
-    function toggleLike(reviewId) {
+    likeButton.addEventListener('click', () => {
         liked = !liked;
         likeButton.innerHTML = liked ? '&#9829;' : '&#9825;';
         likeButton.classList.toggle('liked');
-
-        fetch(`/likes/review/${reviewId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-            .then(response => response.text())
-            .then(message => {
-                console.log(message); // 서버에서 반환된 메시지를 콘솔에 출력
-            })
-            .catch(error => console.error('Error:', error));
-    }
+    });
 </script>
 
 </body>
