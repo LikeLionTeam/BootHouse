@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>내가 좋아요한 리뷰 목록</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>내가 좋아한 리뷰</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>리뷰 제목</th>
+            <th>한 줄 평</th>
+            <th>평점</th>
+            <th>작성자</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="review : ${allLikeReviews}">
+            <td th:text="${review.title}">리뷰 제목</td>
+            <td th:text="${review.oneLineReview}">한 줄 평</td>
+            <td th:text="${review.rating}">평점</td>
+            <td th:text="${review.author}">작성자</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

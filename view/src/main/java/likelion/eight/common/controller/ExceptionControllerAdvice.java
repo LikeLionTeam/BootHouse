@@ -1,6 +1,7 @@
 package likelion.eight.common.controller;
 
 import likelion.eight.common.domain.exception.CertificationFailedException;
+import likelion.eight.common.domain.exception.FileStorageException;
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.Ordered;
@@ -10,8 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 @ControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -32,4 +32,10 @@ public class ExceptionControllerAdvice {
         return exception.getMessage();
     }
 
+    @ResponseBody
+    @ResponseStatus(INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(FileStorageException.class)
+    public String FileStorageException(FileStorageException exception){
+        return exception.getMessage();
+    }
 }

@@ -16,6 +16,8 @@ import likelion.eight.likeCourse.LikeCourseJpaRepository;
 import likelion.eight.user.UserEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -58,6 +60,7 @@ public class CourseService {
     }
 
     public Course findCourseById(Long courseId){
+        // fetch join을 통해 필요한 엔디티만 로딩
         return courseRepository.findCourseById(courseId)
                 .orElseThrow(() -> new ResourceNotFoundException("course", courseId));
     }

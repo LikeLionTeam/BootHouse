@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import likelion.eight.common.domain.exception.CertificationFailedException;
+import likelion.eight.common.service.port.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
@@ -15,9 +16,9 @@ import java.io.IOException;
 import java.util.*;
 
 @Slf4j
-//@Service
+@Service
 @RequiredArgsConstructor
-public class S3Service {
+public class S3ServiceImpl implements S3Service {
 
     private final AmazonS3 amazonS3;
     private Set<String> uploadFileNames = new HashSet<>();

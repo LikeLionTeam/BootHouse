@@ -35,7 +35,9 @@ public class WebConfig implements WebMvcConfigurer {
             "/error",
             "/users/create",
             "/boothouse/camps",
-            "/courses/*" // /courses/* 로 수정해야 합니다. /courses/**는 아닙니다.
+            "/courses/*",
+            "/bootcamps/**",
+            "/images/**"
 
     );
 
