@@ -38,4 +38,11 @@ public class LikeCourseEntity extends BaseTimeEntity {
 
         return likeCourseEntity;
     }
+
+
+    @Builder
+    public LikeCourseEntity(UserEntity userEntity, CourseEntity courseEntity) {
+        this.userEntity = userEntity;
+        this.courseEntity = courseEntity;
+    }
 }

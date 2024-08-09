@@ -79,4 +79,12 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
+    public UserResponse editUser(UserLoginRequest userLoginRequest, UserEditRequest userEditRequest){
+        User user = userRepository.getById(userEditRequest.getId());
+        user = user.edit(userLoginRequest.getPassword(), userEditRequest);
+        userRepository.save(user);
+
+        return UserConverter.toResponse(user);
+    }
+
 }
