@@ -22,17 +22,10 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.*;
 
 public class UserAuthTest {
-
-    private FakeUserRepository userRepository;
-    private MultipartFile multiPartFile;
-    private FakeS3Service s3Service;
-
-    @BeforeEach
-    void init(){
-        userRepository = new FakeUserRepository();
-        s3Service = new FakeS3Service();
-        multiPartFile = new TestMultiPartFile("image", "test.jpg", "image/jpeg", "Dummy Image Content".getBytes());
-        userRepository.save(User.builder()
+    @Test
+    void UserAuthCreateRequest로_UserAuth를_만들수_있다() throws IOException {
+        //given(상황환경 세팅)
+        User user = User.builder()
                 .id(1L)
                 .name("kim")
                 .address("Seoul")
@@ -43,13 +36,11 @@ public class UserAuthTest {
                 .userStatus(UserStatus.ACTIVE)
                 .roleType(RoleType.USER)
                 .image(null)
-                .build());
-    }
+                .build();
 
+        MultipartFile multiPartFile = new TestMultiPartFile("image", "test.jpg", "image/jpeg", "Dummy Image Content".getBytes());
+        String imageUrl = "www.test.com";
 
-    @Test
-    void UserAuthCreateRequest로_UserAuth를_만들수_있다() throws IOException {
-        //given(상황환경 세팅)
         UserAuthCreateRequest request = UserAuthCreateRequest.builder()
                 .clientId(1L)
                 .authRequestType(AuthRequestType.BOOTCAMP)
@@ -57,8 +48,6 @@ public class UserAuthTest {
                 .build();
 
         //when(상황발생)
-        User user = userRepository.getById(request.getClientId());
-        String imageUrl = s3Service.saveFile(request.getImage());
         UserAuth userAuth = UserAuthConverter.toUserAuth(user, request, imageUrl);
 
         //then(검증)
@@ -70,12 +59,26 @@ public class UserAuthTest {
     @Test
     void 거절을_하면_상태가_DENY로_변경되고_결정시간이_정해진다(){
 
-        User user = userRepository.getById(1L);
+        //given(상황환경 세팅)
+        User user = User.builder()
+                .id(1L)
+                .name("kim")
+                .address("Seoul")
+                .email("kin@anverc.om")
+                .password("123")
+                .phoneNumber("010-1111-1111")
+                .certificationCode("1qw3")
+                .userStatus(UserStatus.ACTIVE)
+                .roleType(RoleType.USER)
+                .image(null)
+                .build();
+
         UserAuth userAuth = UserAuth.builder()
                 .user(user)
                 .authRequestType(AuthRequestType.BOOTCAMP)
                 .authRequestStatus(AuthRequestStatus.PENDING)
                 .build();
+
         ClockHolder clockHolder = new FakeClockHolder(LocalDateTime.of(2024, 8, 8, 12, 0, 0));
 
         //When
