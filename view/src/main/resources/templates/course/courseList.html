@@ -411,23 +411,22 @@
     <tr th:each="course : ${courses}">
         <td>
             <a th:href="@{'/courses/' + ${course.id}}" th:text="${course.name}"></a></td>
-        <td class="subcourse" th:text="${course.subCourse != null ? course.subCourse.name : '프로그램 과정명 없음'}">
-            프로그램 과정명</td>
+        <td class="subcourse" th:text="${course.subCourseName}">프로그램 과정명</td>
         <td class="recruitment-status">
-            <div th:text="${course.recruitmentStatus.description}">모집상태</div>
+            <div th:text="${course.recruitmentStatusDescription}">모집상태</div>
             <div th:text="'~' + ${#temporals.format(course.closingDate, 'yy.MM.dd')}">마감날</div>
         </td>
         <td class="cost" th:text="${course.tuitionType}"></td>
-        <td class="online-offline" th:text="${course.onlineOffline ? '온라인' : '오프라인 ' + course.location}"></td>
+        <td class="online-offline" th:text="${course.onlineOffline + ' ' + course.location}"></td>
         <td class="study-period">
             <div th:text="'수업 시작 날짜: ' + ${#temporals.format(course.startDate, 'yy.MM.dd')}"></div>
             <div th:text="'수업 종료 날짜: ' + ${#temporals.format(course.endDate, 'yy.MM.dd')}"></div>
         </td>
         <td class="participation-time">
-            <span th:text="${course.participationTime.displayName}"></span><br/>
-            <span th:text="${course.participationTime.defaultSchedule}"></span>
+            <span th:text="${course.participationTimeDisplayName}"></span><br/>
+            <span th:text="${course.participationTimeDefaultSchedule}"></span>
         </td>
-        <td class="selection-procedure" th:text="${course.codingTestExempt ? '코딩 테스트 있음' : '코딩 테스트 없음'}"></td>
+        <td class="selection-procedure" th:text="${course.selectionProcedure}"></td>
     </tr>
     </tbody>
 </table>
