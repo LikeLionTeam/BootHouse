@@ -20,13 +20,13 @@ public class CourseSpecification {
     ) {
         return (root, query, criteriaBuilder) -> {
 
-            // Fetch join 설정 -- 연관엔디티 모두 fetch join으로 가져오기!
-            root.fetch("bootcampEntity", JoinType.LEFT);
-            root.fetch("categoryEntity", JoinType.LEFT);
-            root.fetch("subCourseEntity", JoinType.LEFT);
-
-            // distinct 설정 (중복 제거)
-            query.distinct(true);
+//            // Fetch join 설정 -- 연관엔디티 모두 fetch join으로 가져오기!
+//            root.fetch("bootcampEntity", JoinType.LEFT);
+//            root.fetch("categoryEntity", JoinType.LEFT);
+//            root.fetch("subCourseEntity", JoinType.LEFT);
+//
+//            // distinct 설정 (중복 제거)
+//            query.distinct(true);
 
             List<Predicate> predicates = new ArrayList<>();
 

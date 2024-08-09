@@ -44,12 +44,15 @@ public class CourseRepositoryImpl implements CourseRepository {
 
     // 필터조건에 맞는 코스 리스트 반환
     @Override
-    public List<Course> findCoursesByFilters(Long categoryId, CourseFilter courseFilter,
-                                             String sort, String search) {
+    public Page<Course> findCoursesByFilters(Long categoryId, CourseFilter courseFilter,
+                                             String sort, String search,
+                                             Pageable pageable) {
         Specification<CourseEntity> specification = CourseSpecification.filterCourses(categoryId, courseFilter, sort, search);
-        List<CourseEntity> courseEntities = courseJpaRepository.findAll(specification);
 
-        return CourseConverter.toCourseList(courseEntities);
+        // Fetch join을 포함한 실제 쿼리
+        Page<CourseEntity> courseEntityPage = courseJpaRepository.findAll(specification, pageable);
+
+        return courseEntityPage.map(CourseConverter::toCourse);
     }
 
     @Override
