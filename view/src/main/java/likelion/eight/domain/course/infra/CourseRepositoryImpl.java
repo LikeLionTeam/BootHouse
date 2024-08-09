@@ -1,23 +1,18 @@
 package likelion.eight.domain.course.infra;
 
-import jakarta.persistence.criteria.Predicate;
 import likelion.eight.course.CourseEntity;
-import likelion.eight.course.ParticipationTime;
 import likelion.eight.course.ifs.CourseJpaRepository;
 import likelion.eight.domain.course.controller.model.CourseFilter;
 import likelion.eight.domain.course.converter.CourseConverter;
 import likelion.eight.domain.course.model.Course;
 import likelion.eight.domain.course.service.port.CourseRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

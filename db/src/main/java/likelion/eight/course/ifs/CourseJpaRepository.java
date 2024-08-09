@@ -28,11 +28,11 @@ public interface CourseJpaRepository extends JpaRepository<CourseEntity, Long>,
     Optional<CourseEntity> findByIdWithBootcamp(Long courseId);
 
     // 페이징 처리
-    @Query(value = "select c from CourseEntity c " +
-            "join fetch c.bootcampEntity " +
-            "join fetch c.categoryEntity " +
-            "join fetch c.subCourseEntity",
-            countQuery = "select count(c) from CourseEntity c"
-    )
+//    @Query(value = "SELECT DISTINCT c FROM CourseEntity c " +
+//            "JOIN FETCH c.bootcampEntity " +
+//            "JOIN FETCH c.categoryEntity " +
+//            "JOIN FETCH c.subCourseEntity",
+//            countQuery = "SELECT COUNT(c) FROM CourseEntity c")
     Page<CourseEntity> findAll(Specification<CourseEntity> specification, Pageable pageable);
+
 }

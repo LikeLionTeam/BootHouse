@@ -23,7 +23,7 @@ import java.util.stream.IntStream;
 @RequestMapping("/userauth")
 @RequiredArgsConstructor
 @Slf4j
-//@Controller
+@Controller
 public class UserAuthS3Controller {
 
     private final UserAuthS3Service userAuthService;

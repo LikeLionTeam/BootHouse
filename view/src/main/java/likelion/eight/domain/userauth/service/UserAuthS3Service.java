@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 
-//@Service
+@Service
 @Builder
 @RequiredArgsConstructor
 @Transactional
