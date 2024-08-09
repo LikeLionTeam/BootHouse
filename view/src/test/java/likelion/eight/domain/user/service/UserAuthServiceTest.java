@@ -21,7 +21,6 @@ import static org.assertj.core.api.Assertions.*;
 public class UserAuthServiceTest {
 
     private UserAuthS3Service userAuthS3Service;
-    private MultipartFile multiPartFile;
 
     @BeforeEach
     void init(){
@@ -29,7 +28,7 @@ public class UserAuthServiceTest {
         FakeUserRepository userRepository = new FakeUserRepository();
         FakeS3Service s3Service = new FakeS3Service();
         ClockHolder clockHolder = new FakeClockHolder(LocalDateTime.of(2024, 8, 8, 12, 0, 0));
-        multiPartFile = new TestMultiPartFile("image", "test.jpg", "image/jpeg", "Dummy Image Content".getBytes());
+
         this.userAuthS3Service = UserAuthS3Service.builder()
                 .userAuthRepository(userAuthRepository)
                 .userRepository(userRepository)
@@ -60,6 +59,8 @@ public class UserAuthServiceTest {
     @Test
     void UserAuthCreateRequest를_이용하여_UserAuth를_만들수_있다(){
         //given(상황환경 세팅)
+        MultipartFile multiPartFile = new TestMultiPartFile("image", "test.jpg", "image/jpeg", "Dummy Image Content".getBytes());
+
         UserAuthCreateRequest request = UserAuthCreateRequest.builder()
                 .clientId(1L)
                 .authRequestType(AuthRequestType.BOOTCAMP)
