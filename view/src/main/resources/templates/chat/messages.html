@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Messages</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>Messages for <span th:text="${username}" id="currentUsername">User</span></h1>
+
+<h2>Recent Chats</h2>
+<ul id="chatList">
+    <li th:each="chat : ${recentChats}">
+        <a th:href="@{'/messages/' + ${chat.chatroom.id}}" th:text="${chat.chatroom.name}"></a>
+    </li>
+</ul>
+
+<h2>Start New Chat</h2>
+<input type="text" id="targetName" placeholder="Enter user name">
+<button id="startChatBtn">Start Chat</button>
+
+<p id="errorMessage" style="color: red;"></p>
+
+<script th:inline="javascript">
+    $(document).ready(function() {
+        var currentUsername = [[${username}]];
+
+        $('#startChatBtn').click(function() {
+            var targetName = $('#targetName').val();
+
+            if (targetName === currentUsername) {
+                $('#errorMessage').text('자기 자신과는 채팅할 수 없습니다.');
+                return;
+            }
+
+            $.ajax({
+                url: '/messages/startChat',
+                type: 'POST',
+                data: { targetName: targetName },
+                success: function(response) {
+                    if(response.error) {
+                        $('#errorMessage').text(response.error);
+                    } else {
+                        window.location.href = '/messages/' + response.chatroomId;
+                    }
+                },
+                error: function(xhr) {
+                    if (xhr.responseJSON && xhr.responseJSON.error) {
+                        $('#errorMessage').text(xhr.responseJSON.error);
+                    } else {
+                        $('#errorMessage').text('An error occurred. Please try again.');
+                    }
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
