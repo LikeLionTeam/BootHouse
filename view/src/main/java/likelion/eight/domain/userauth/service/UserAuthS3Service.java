@@ -1,8 +1,6 @@
 package likelion.eight.domain.userauth.service;
 
-import likelion.eight.certificationirequest.enums.AuthRequestStatus;
 import likelion.eight.common.domain.exception.CertificationFailedException;
-import likelion.eight.common.service.S3ServiceImpl;
 import likelion.eight.common.service.port.ClockHolder;
 import likelion.eight.common.service.port.S3Service;
 import likelion.eight.domain.user.controller.model.LoginUser;

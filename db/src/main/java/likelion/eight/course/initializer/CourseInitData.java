@@ -58,7 +58,7 @@ public class CourseInitData implements CommandLineRunner {
 //
 //        courseRepository.save(course);
 
-//        BootCampEntity bootCamp = bootCampRepository.findByName("멋쟁이사자처럼");
+        //        BootCampEntity bootCamp = bootCampRepository.findByName("멋쟁이사자처럼");
 //        CategoryEntity category = categoryRepository.findByName("웹개발");
 //        SubCourseEntity subCourse = subCourseRepository.findByName("백엔드");
 //
@@ -81,6 +81,7 @@ public class CourseInitData implements CommandLineRunner {
 //                .build();
 //
 //        courseRepository.save(course);
+
 //
 //        BootCampEntity bootCamp = bootCampRepository.findByName("코드잇");
 //        CategoryEntity category = categoryRepository.findByName("웹개발");
@@ -214,7 +215,7 @@ public class CourseInitData implements CommandLineRunner {
 //                .categoryEntity(category)
 //                .subCourseEntity(subCourse)
 //                .name("데이터분석 부트캠프 16기")
-
+//
 //                .startDate(LocalDate.of(2024, 9, 19))
 //                .endDate(LocalDate.of(2025, 12, 10))
 //                .closingDate(LocalDateTime.of(2024, 9, 4, 0,0))
