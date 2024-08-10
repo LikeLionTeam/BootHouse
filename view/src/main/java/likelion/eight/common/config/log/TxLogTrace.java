@@ -18,7 +18,7 @@ public class TxLogTrace {
 
     private final LogService logService;
     private final ClockHolder clockHolder;
-    private final PointcutCollector pointcutCollector;
+    private final PointcutCollector pointcutCollector; //
 
     @Pointcut("execution(* likelion.eight.domain..*Service.get(..))")
     private void allServiceGetMethod(){}
