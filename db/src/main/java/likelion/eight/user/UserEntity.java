@@ -48,7 +48,4 @@ public class UserEntity extends BaseTimeEntity {
 
     @Column(name = "certification_code")
     private String certificationCode;
-
-    @Lob
-    private byte[] image;
 }

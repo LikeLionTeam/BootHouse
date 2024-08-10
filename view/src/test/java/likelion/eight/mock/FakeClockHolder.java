@@ -20,6 +20,11 @@ public class FakeClockHolder implements ClockHolder {
     }
 
     @Override
+    public long systemMillis() {
+        return 0;
+    }
+
+    @Override
     public long millis() {
         return mills;
     }

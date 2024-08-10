@@ -14,7 +14,7 @@ public class UserLoginRequest {
     @NotBlank
     private String email;
 
-    //@Password TODO 주석풀기
+    @Password
     @NotBlank
     private String password;
 }

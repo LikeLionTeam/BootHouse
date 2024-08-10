@@ -15,12 +15,12 @@ public class UserCreateRequest {
     @NotBlank
     @Email
     private String email;
-    //@Password //TODO
+    @Password
     @NotBlank
     private String password;
     @NotBlank
     private String address;
     @NotBlank
-    //@PhoneNumber
+    @PhoneNumber
     private String phoneNumber;
 }

@@ -9,11 +9,8 @@ import lombok.Data;
 @Builder
 public class UserEditRequest {
 
-    private Long id;
+    private String password;
     private String address;
     private String phoneNumber;
-    private UserStatus userStatus;
-    private RoleType roleType;
-    private  byte[] image;
 
 }

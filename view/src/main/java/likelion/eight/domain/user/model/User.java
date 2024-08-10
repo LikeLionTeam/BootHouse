@@ -24,7 +24,6 @@ public class User {
     private final UserStatus userStatus;
     private final RoleType roleType;
     private final Long lastLoginAt;
-    private final byte[] image;
 
     @Builder
     public User(Long id, String name, String address, String email, String password, String phoneNumber, String certificationCode, UserStatus userStatus, RoleType roleType, Long lastLoginAt, byte[] image) {
@@ -38,7 +37,6 @@ public class User {
         this.userStatus = userStatus;
         this.roleType = roleType;
         this.lastLoginAt = lastLoginAt;
-        this.image = image;
     }
 
     public User login(ClockHolder clockHolder, String password){
@@ -56,7 +54,6 @@ public class User {
                 .userStatus(userStatus)
                 .roleType(roleType)
                 .lastLoginAt(clockHolder.millis())
-                .image(image)
                 .build();
     }
 
@@ -75,13 +72,12 @@ public class User {
                 .userStatus(UserStatus.ACTIVE)
                 .roleType(roleType)
                 .lastLoginAt(lastLoginAt)
-                .image(image)
                 .build();
     }
 
-    public User edit(String password, UserEditRequest request){
-        if (!this.password.equals(password)) {
-            throw new ResourceNotFoundException("비밀번호가 틀렸습니다.");
+    public User edit(UserEditRequest request){
+        if (!this.password.equals(request.getPassword())) {
+            throw new ResourceNotFoundException("비밀번호가 일치 하지 않아 정보 수정이 불가능합니다.");
         }
         return User.builder()
                 .id(id)
@@ -94,7 +90,6 @@ public class User {
                 .userStatus(userStatus)
                 .roleType(roleType)
                 .lastLoginAt(lastLoginAt)
-                .image(image)
                 .build();
     }
 }

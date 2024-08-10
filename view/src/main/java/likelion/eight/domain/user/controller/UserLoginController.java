@@ -3,10 +3,7 @@ package likelion.eight.domain.user.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import likelion.eight.common.annotation.Login;
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
-import likelion.eight.domain.user.controller.model.LoginUser;
-import likelion.eight.domain.user.controller.model.UserCreateRequest;
 import likelion.eight.domain.user.controller.model.UserLoginRequest;
 import likelion.eight.domain.user.controller.model.UserResponse;
 import likelion.eight.domain.user.service.UserService;
@@ -26,9 +23,7 @@ public class UserLoginController {
 
     @GetMapping("/login")
     public String loginForm(
-            Model model
     ){
-        model.addAttribute("request",  new UserLoginRequest());
         return "login/loginForm";
     }
 
