@@ -43,6 +43,7 @@ dependencies {
 
     // 빈후처리기
     implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework:spring-aspects'
 
     //테스트에서 lombok 사용
     testCompileOnly 'org.projectlombok:lombok'

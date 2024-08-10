@@ -22,7 +22,6 @@ public class UserConverter {
                 .lastLoginAt(user.getLastLoginAt())
                 .userStatus(user.getUserStatus())
                 .certificationCode(user.getCertificationCode())
-                .image(user.getImage())
                 .build();
     }
 
@@ -37,7 +36,6 @@ public class UserConverter {
                 .lastLoginAt(userEntity.getLastLoginAt())
                 .userStatus(userEntity.getUserStatus())
                 .certificationCode(userEntity.getCertificationCode())
-                .image(userEntity.getImage())
                 .roleType(userEntity.getRoleType())
                 .build();
     }
@@ -65,7 +63,6 @@ public class UserConverter {
                 .certificationCode(user.getCertificationCode())
                 .userStatus(user.getUserStatus())
                 .roleType(user.getRoleType())
-                .image(user.getImage())
                 .build();
     }
 }

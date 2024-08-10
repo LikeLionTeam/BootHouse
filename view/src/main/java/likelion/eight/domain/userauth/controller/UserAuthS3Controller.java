@@ -2,6 +2,8 @@ package likelion.eight.domain.userauth.controller;
 
 import jakarta.validation.Valid;
 import likelion.eight.certificationirequest.enums.AuthRequestType;
+import likelion.eight.common.domain.exception.ResourceNotFoundException;
+import likelion.eight.domain.user.controller.model.UserResponse;
 import likelion.eight.domain.userauth.controller.model.UserAuthCreateRequest;
 import likelion.eight.domain.userauth.model.UserAuth;
 import likelion.eight.domain.userauth.service.UserAuthS3Service;
@@ -15,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,11 +43,17 @@ public class UserAuthS3Controller {
 
     @PostMapping("{id}/upload")
     public String uploadImage(
-            @Valid @ModelAttribute("request")
-            UserAuthCreateRequest request
+            UserAuthCreateRequest request,
+            BindingResult bindingResult
     ){
-        request.setAuthRequestType(AuthRequestType.BOOTCAMP); // TODO 추후 화면에서 인증요청이 회사 or 부트캠프 선택 해야함
-        userAuthService.create(request);
+        try {
+            userAuthService.create(request);
+
+        } catch (ResourceNotFoundException e) {
+
+            bindingResult.reject("TypeError", e.getMessage());
+            return "user/uploadForm";
+        }
         return "redirect:/";
     }
 
