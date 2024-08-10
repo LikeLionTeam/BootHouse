@@ -6,27 +6,27 @@
 
 </head>
 <body>
-  <h1>Register a Review</h1>
+  <h1>리뷰 등록하기</h1>
   <form th:action="@{/reviews/new/{courseId}(courseId=${course.id})}" th:object="${reviewCreateRequest}" method="post">
-      <label for="title">Title:</label>
+      <label for="title">제목:</label>
       <input type="text" id="title" name="title" required><br><br>
 
-      <label for="oneLineReview">One-Line Review:</label>
+      <label for="oneLineReview">총평:</label>
       <input type="text" id="oneLineReview" name="oneLineReview" required><br><br>
 
-      <label for="advantages">Advantages:</label>
+      <label for="advantages">장점:</label>
       <textarea id="advantages" name="advantages" required></textarea><br><br>
 
-      <label for="disadvantages">Disadvantages:</label>
+      <label for="disadvantages">단점:</label>
       <textarea id="disadvantages" name="disadvantages" required></textarea><br><br>
 
-      <label for="instructorEvaluation">Instructor Evaluation:</label>
+      <label for="instructorEvaluation">강사 평가:</label>
       <textarea id="instructorEvaluation" name="instructorEvaluation" required></textarea><br><br>
 
-      <label for="rating">Rating:</label>
+      <label for="rating">평점:</label>
       <input type="number" id="rating" name="rating" min="1" max="5" required><br><br>
 
-      <input type="submit" value="Submit Review">
+      <input type="submit" value="리뷰 등록하기">
   </form>
 </body>
 </html>
