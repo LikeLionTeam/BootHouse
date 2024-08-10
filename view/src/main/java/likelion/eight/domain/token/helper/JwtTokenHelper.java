@@ -88,7 +88,7 @@ public class JwtTokenHelper implements TokenHelperIfs {
             }else if(e instanceof TokenExpiredException){
                 throw new CertificationFailedException("만료된 토큰 입니다.");
             }else{
-                throw new CertificationFailedException("만료된 토큰 입니다.");
+                throw new CertificationFailedException("잘못된 접근 방식입니다.");
             }
         }
     }

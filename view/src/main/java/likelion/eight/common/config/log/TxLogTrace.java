@@ -59,7 +59,7 @@ public class TxLogTrace {
         }finally {
 
             String methodName = joinPoint.getSignature().toShortString();
-            long executionTime = clockHolder.systemMillis() - startTime; //TODO +100L TestTime
+            long executionTime = clockHolder.systemMillis() - startTime;
             log.info("long executionTime={}", executionTime);
             logService.saveTxLog(methodName, executionTime);
         }

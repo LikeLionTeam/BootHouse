@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import likelion.eight.common.domain.exception.CertificationFailedException;
+import likelion.eight.common.domain.exception.FileStorageException;
 import likelion.eight.common.service.port.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,13 +62,13 @@ public class S3ServiceImpl implements S3Service {
             amazonS3.putObject(bucket, randomFileName, file.getInputStream(), metadata);
         }catch(AmazonS3Exception e){
             log.error("Amazon S3 error while uploading file: " + e.getMessage());
-            throw new CertificationFailedException("추후 전용 예외 생성"); //TODO 500error
+            throw new FileStorageException("이미지 파일 S3 저장실패", e);
         }catch (SdkClientException e){
             log.error("AWS SDK client error while uploading file: " + e.getMessage());
-            throw new CertificationFailedException("추후 전용 예외 생성"); //TODO 500error
+            throw new FileStorageException("이미지 파일 S3 저장실패", e);
         }catch (IOException e){
             log.error("IO error while uploading file: " + e.getMessage());
-            throw new CertificationFailedException("추후 전용 예외 생성"); //TODO 500error
+            throw new FileStorageException("이미지 파일 S3 저장실패", e);
         }
 
         log.info("File upload completed: " + randomFileName);
@@ -80,23 +81,23 @@ public class S3ServiceImpl implements S3Service {
         String fileBucket = urlParts[2].split("\\.")[0];
 
         if(!fileBucket.equals(bucket)){
-            throw new CertificationFailedException("추후 전용 예외 생성"); //TODO 400error
+            throw new CertificationFailedException("입력하신 S3 버킷 경로가 잘못 됐습니다.");
         }
 
         String objectKey = String.join("/", Arrays.copyOfRange(urlParts, 3, urlParts.length));
 
         if(!amazonS3.doesObjectExist(bucket, objectKey)){
-            throw new CertificationFailedException("추후 전용 예외 생성"); //TODO 400error
+            throw new CertificationFailedException("삭제할 이미지가 S3에 존재 하지 않습니다.");
         }
 
         try{
             amazonS3.deleteObject(bucket, objectKey);
         }catch(AmazonS3Exception e){
             log.error("File delete fail : " + e.getMessage());
-            throw new CertificationFailedException("추후 전용 예외 생성"); //TODO 500error
+            throw new FileStorageException("이미지 파일 S3 저장실패", e);
         }catch (SdkClientException e) {
             log.error("AWS SDK client error : " + e.getMessage());
-            throw new CertificationFailedException("추후 전용 예외 생성"); //TODO 500error
+            throw new FileStorageException("이미지 파일 S3 저장실패", e);
         }
 
         log.info("File delete complete: " + objectKey);
@@ -128,7 +129,7 @@ public class S3ServiceImpl implements S3Service {
         List<String> allowedExtensions = Arrays.asList("jpg", "png", "jpeg");
 
         if(!allowedExtensions.contains(fileExtension)){
-            throw new CertificationFailedException("추후 전용 예외 생성"); //TODO 400error
+            throw new CertificationFailedException("업로드 파일확장자 jpg, png, jpeg 만 가능 합니다."); //TODO 400error
         }
 
         return fileExtension;

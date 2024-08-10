@@ -23,7 +23,9 @@ public class UserLoginController {
 
     @GetMapping("/login")
     public String loginForm(
+            Model model
     ){
+        model.addAttribute("request", new UserLoginRequest());
         return "login/loginForm";
     }
 
