@@ -1,15 +1,19 @@
 package likelion.eight.domain.user.model;
 
 import jakarta.servlet.http.HttpServletResponse;
+import likelion.eight.certificationirequest.enums.AuthRequestType;
 import likelion.eight.common.domain.exception.CertificationFailedException;
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import likelion.eight.common.service.CookieService;
 import likelion.eight.common.service.port.ClockHolder;
 import likelion.eight.domain.user.controller.model.UserEditRequest;
+import likelion.eight.domain.user.controller.model.UserFindPasswordRequest;
 import likelion.eight.user.enums.RoleType;
 import likelion.eight.user.enums.UserStatus;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.Objects;
 
 @Getter
 public class User {
@@ -91,5 +95,32 @@ public class User {
                 .roleType(roleType)
                 .lastLoginAt(lastLoginAt)
                 .build();
+    }
+
+    public User changeRoleType(AuthRequestType authRequestType){
+        RoleType role = null;
+        if(Objects.equals(authRequestType, AuthRequestType.COMPANY)){
+            role = RoleType.BOOTCAMP;
+        }else{
+            role = RoleType.COMPANY;
+        }
+
+        return User.builder()
+                .id(id)
+                .name(name)
+                .address(address)
+                .email(email)
+                .password(password)
+                .phoneNumber(phoneNumber)
+                .certificationCode(certificationCode)
+                .userStatus(userStatus)
+                .roleType(role)
+                .lastLoginAt(lastLoginAt)
+                .build();
+    }
+
+    public boolean checkNameAndPhoneNumber(UserFindPasswordRequest request){
+        return Objects.equals(request.getPhoneNumber(), phoneNumber)
+                && Objects.equals(request.getName(), name);
     }
 }

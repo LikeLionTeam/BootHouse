@@ -6,10 +6,7 @@ import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import likelion.eight.common.service.CookieService;
 import likelion.eight.common.service.port.ClockHolder;
 import likelion.eight.common.service.port.UuidHolder;
-import likelion.eight.domain.user.controller.model.UserCreateRequest;
-import likelion.eight.domain.user.controller.model.UserEditRequest;
-import likelion.eight.domain.user.controller.model.UserLoginRequest;
-import likelion.eight.domain.user.controller.model.UserResponse;
+import likelion.eight.domain.user.controller.model.*;
 import likelion.eight.domain.user.converter.UserConverter;
 import likelion.eight.domain.user.model.User;
 import likelion.eight.domain.user.service.port.UserRepository;
@@ -34,9 +31,8 @@ public class UserService {
     public UserResponse createUser(UserCreateRequest request){
         User createUser = UserConverter.toUser(request, uuidHolder);
         createUser = userRepository.save(createUser);
-        certificationService.send(
+        certificationService.sendCode(
                 createUser.getEmail(),
-                createUser.getId(),
                 createUser.getCertificationCode()
         );
         return UserConverter.toResponse(createUser);
@@ -75,15 +71,28 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User findUserById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-    }
-
     public UserResponse editUser(Long id, UserEditRequest userEditRequest){
         User user = userRepository.getById(id);
         user = user.edit(userEditRequest);
         userRepository.save(user);
+
+        return UserConverter.toResponse(user);
+    }
+
+    public void findPassword(UserFindPasswordRequest request){
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("존재 하지 않는 이메일 입니다."));
+
+        if(user.checkNameAndPhoneNumber(request)){
+            certificationService.sendPassword(user.getEmail(), user.getPassword());
+        }else{
+            throw new ResourceNotFoundException("입력하신 핸드폰 번호, 이름 정보가 일치 하지 않습니다");
+        }
+    }
+
+    public UserResponse findEmail(UserFindEmailRequest request){
+        User user = userRepository.findByPhoneAndName(request.getPhoneNumber(), request.getName())
+                .orElseThrow(() -> new ResourceNotFoundException("입력하신 정보와 일치하는 이메일이 존재 하지 않습니다."));
 
         return UserConverter.toResponse(user);
     }
