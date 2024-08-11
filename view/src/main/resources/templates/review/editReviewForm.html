@@ -5,42 +5,42 @@
     <title>Edit Review</title>
 </head>
 <body>
-<h1>Edit Review</h1>
+<h1>리뷰 수정하기</h1>
 <form th:action="@{/review/{id}/edit(id=${review.id})}" th:object="${review}" method="post">
     <input type="hidden" th:field="*{id}" />
 
     <div>
-        <label for="title">Title:</label>
+        <label for="title">제목:</label>
         <input type="text" id="title" th:field="*{title}" />
     </div>
 
     <div>
-        <label for="oneLineReview">One Line Review:</label>
+        <label for="oneLineReview">총평:</label>
         <input type="text" id="oneLineReview" th:field="*{oneLineReview}" />
     </div>
 
     <div>
-        <label for="advantages">Advantages:</label>
+        <label for="advantages">장점:</label>
         <textarea id="advantages" th:field="*{advantages}"></textarea>
     </div>
 
     <div>
-        <label for="disadvantages">Disadvantages:</label>
+        <label for="disadvantages">단점:</label>
         <textarea id="disadvantages" th:field="*{disadvantages}"></textarea>
     </div>
 
     <div>
-        <label for="instructorEvaluation">Instructor Evaluation:</label>
+        <label for="instructorEvaluation">강사 평가:</label>
         <textarea id="instructorEvaluation" th:field="*{instructorEvaluation}"></textarea>
     </div>
 
     <div>
-        <label for="rating">Rating:</label>
+        <label for="rating">평점:</label>
         <input type="number" id="rating" th:field="*{rating}" min="1" max="5" />
     </div>
 
     <div>
-        <button type="submit">Update Review</button>
+        <button type="submit">리뷰 수정하기</button>
     </div>
 </form>
 </body>

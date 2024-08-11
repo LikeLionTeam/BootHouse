@@ -2,9 +2,8 @@ package likelion.eight.domain.user.controller;
 
 import jakarta.validation.Valid;
 import likelion.eight.common.annotation.Login;
-import likelion.eight.domain.user.controller.model.LoginUser;
-import likelion.eight.domain.user.controller.model.UserCreateRequest;
-import likelion.eight.domain.user.controller.model.UserResponse;
+import likelion.eight.common.domain.exception.ResourceNotFoundException;
+import likelion.eight.domain.user.controller.model.*;
 import likelion.eight.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,13 +35,13 @@ public class UserController {
             BindingResult bindingResult
     ){
 
-/*        if(bindingResult.hasErrors()){
+        if(bindingResult.hasErrors()){
             log.info("errors={}",bindingResult);
             return "user/createForm";
-        }*/
-        UserCreateRequest init = init(request);
+        }
+        //UserCreateRequest init = init(request);
 
-        UserResponse user = userService.createUser(init);
+        userService.createUser(request);
         return "redirect:/";
     }
 
@@ -65,6 +64,36 @@ public class UserController {
         log.info("verifyEmail={}", id);
         userService.verifyEmail(id, code);
         return "redirect:/";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String editForm(
+            @Login LoginUser loginUser,
+            Model model
+    ){
+        model.addAttribute("loginUser", loginUser);
+        return "/user/editForm";
+    }
+
+
+    @PostMapping("{id}/edit")
+    public String editUser(
+            @PathVariable Long id,
+            @ModelAttribute("request")
+            UserEditRequest userEditRequest,
+            BindingResult bindingResult
+    ){
+
+        try {
+            userService.editUser(id, userEditRequest);
+
+        } catch (ResourceNotFoundException e) {
+
+            bindingResult.reject("EditError", e.getMessage());
+            return "/user/editForm"; //
+        }
+        return "redirect:/";
+
     }
 
 

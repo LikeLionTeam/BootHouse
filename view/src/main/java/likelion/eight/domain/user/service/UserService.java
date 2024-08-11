@@ -7,6 +7,7 @@ import likelion.eight.common.service.CookieService;
 import likelion.eight.common.service.port.ClockHolder;
 import likelion.eight.common.service.port.UuidHolder;
 import likelion.eight.domain.user.controller.model.UserCreateRequest;
+import likelion.eight.domain.user.controller.model.UserEditRequest;
 import likelion.eight.domain.user.controller.model.UserLoginRequest;
 import likelion.eight.domain.user.controller.model.UserResponse;
 import likelion.eight.domain.user.converter.UserConverter;
@@ -47,7 +48,7 @@ public class UserService {
         return UserConverter.toResponse(user);
     }
 
-    public UserResponse login(HttpServletResponse response, UserLoginRequest loginUser){
+    public UserResponse login(HttpServletResponse response, UserLoginRequest loginUser){ //TODO 메서드이름수정
 
         User user = userRepository.findByEmail(loginUser.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("존재 하지 않는 이메일 입니다."));
@@ -79,12 +80,11 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
-    public UserResponse editUser(UserLoginRequest userLoginRequest, UserEditRequest userEditRequest){
-        User user = userRepository.getById(userEditRequest.getId());
-        user = user.edit(userLoginRequest.getPassword(), userEditRequest);
+    public UserResponse editUser(Long id, UserEditRequest userEditRequest){
+        User user = userRepository.getById(id);
+        user = user.edit(userEditRequest);
         userRepository.save(user);
 
         return UserConverter.toResponse(user);
     }
-
 }
