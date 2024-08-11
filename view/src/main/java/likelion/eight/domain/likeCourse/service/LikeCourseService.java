@@ -8,6 +8,8 @@ import likelion.eight.likeCourse.LikeCourseJpaRepository;
 import likelion.eight.user.UserEntity;
 import likelion.eight.user.ifs.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,18 +21,18 @@ public class LikeCourseService {
     private final LikeCourseJpaRepository likeCourseJpaRepository;
     private final UserJpaRepository userJpaRepository;
 
-    public List<LikeCourseRes> getAllCourseLikes(LoginUser loginUser){
+    public Page<LikeCourseRes> getAllCourseLikes(LoginUser loginUser, Pageable pageable){
         UserEntity user = userJpaRepository.findById(loginUser.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("존재하지않는 사용자"));
-        List<LikeCourseEntity> allCourseLikes = likeCourseJpaRepository.findAllByUserEntity(user);
+        Page<LikeCourseEntity> allCourseLikes = likeCourseJpaRepository.findAllByUserEntity(user,pageable);
 
-        return allCourseLikes.stream().map(likes -> new LikeCourseRes(
+        return allCourseLikes.map(likes -> new LikeCourseRes(
                 likes.getCourseEntity().getName(),
                 likes.getCourseEntity().getSummary(),
                 likes.getCourseEntity().getStartDate(),
                 likes.getCourseEntity().getEndDate(),
                 likes.getCourseEntity().isOnlineOffline(),
                 likes.getCourseEntity().getClosingDate()
-        )).collect(Collectors.toList());
+        ));
     }
 }

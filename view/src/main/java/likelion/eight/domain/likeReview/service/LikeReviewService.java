@@ -10,6 +10,8 @@ import likelion.eight.review.ifs.ReviewJpaRepository;
 import likelion.eight.user.UserEntity;
 import likelion.eight.user.ifs.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,16 +46,16 @@ public class LikeReviewService {
         return "리뷰 좋아요 등록";
     }
 
-    public List<LikeReviewRes> getAllLikeReviews(LoginUser loginUser){
+    public Page<LikeReviewRes> getAllLikeReviews(LoginUser loginUser, Pageable pageable){
         UserEntity user = userJpaRepository.findById(loginUser.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("user", loginUser.getId()));
-        List<LikeReviewEntity> allLikeReviews = likeReviewJpaRepository.findAllByUserEntity(user);
+        Page<LikeReviewEntity> allLikeReviews = likeReviewJpaRepository.findAllByUserEntity(user,pageable);
 
-        return allLikeReviews.stream().map(likes-> new LikeReviewRes(
+        return allLikeReviews.map(likes-> new LikeReviewRes(
                 likes.getReviewEntity().getTitle(),
                 likes.getReviewEntity().getOneLineReview(),
                 likes.getReviewEntity().getRating(),
                 likes.getReviewEntity().getUserEntity().getName()
-        )).collect(Collectors.toList());
+        ));
     }
 }
