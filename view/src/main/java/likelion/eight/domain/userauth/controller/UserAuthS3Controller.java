@@ -2,7 +2,9 @@ package likelion.eight.domain.userauth.controller;
 
 import jakarta.validation.Valid;
 import likelion.eight.certificationirequest.enums.AuthRequestType;
+import likelion.eight.common.annotation.Login;
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
+import likelion.eight.domain.user.controller.model.LoginUser;
 import likelion.eight.domain.user.controller.model.UserResponse;
 import likelion.eight.domain.userauth.controller.model.UserAuthCreateRequest;
 import likelion.eight.domain.userauth.model.UserAuth;
@@ -60,10 +62,11 @@ public class UserAuthS3Controller {
     @GetMapping("/list")
     public String getAuthImages(
             Model model,
+            @Login LoginUser loginUser,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "5") int size
     ){
-        Page<UserAuth> userAuthPage = userAuthService.getUserAuthPage(page, size);
+        Page<UserAuth> userAuthPage = userAuthService.getUserAuthPage(page, size, loginUser);
         int totalPages = userAuthPage.getTotalPages();
         if(totalPages > 0){
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
@@ -77,20 +80,26 @@ public class UserAuthS3Controller {
     }
 
     @PostMapping("/{id}/delete")
-    public String deleteUserAuth(@PathVariable long id) {
+    public String deleteUserAuth(
+            @PathVariable long id
+    ){
         userAuthService.delete(id);
         return "redirect:/userauth/list";
     }
 
     @PostMapping("/{id}/approve")
-    public String approveUserAuth(@PathVariable long id) {
-        userAuthService.approve(id);
+    public String approveUserAuth(
+            @PathVariable long id
+    ){
+        userAuthService.approve(id); // id = userAuthId
         return "redirect:/userauth/list";
     }
 
     @PostMapping("/{id}/deny")
-    public String denyUserAuth(@PathVariable long id) {
-        userAuthService.deny(id);
+    public String denyUserAuth(
+            @PathVariable long id
+    ){
+        userAuthService.deny(id); // id = userAuthId
         return "redirect:/userauth/list";
     }
 }

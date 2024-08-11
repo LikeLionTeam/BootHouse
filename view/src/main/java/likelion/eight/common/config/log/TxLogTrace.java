@@ -18,7 +18,7 @@ public class TxLogTrace {
 
     private final LogService logService;
     private final ClockHolder clockHolder;
-    private final PointcutCollector pointcutCollector;
+    private final PointcutCollector pointcutCollector; //
 
     @Pointcut("execution(* likelion.eight.domain..*Service.get(..))")
     private void allServiceGetMethod(){}
@@ -59,7 +59,7 @@ public class TxLogTrace {
         }finally {
 
             String methodName = joinPoint.getSignature().toShortString();
-            long executionTime = clockHolder.systemMillis() - startTime; //TODO +100L TestTime
+            long executionTime = clockHolder.systemMillis() - startTime;
             log.info("long executionTime={}", executionTime);
             logService.saveTxLog(methodName, executionTime);
         }

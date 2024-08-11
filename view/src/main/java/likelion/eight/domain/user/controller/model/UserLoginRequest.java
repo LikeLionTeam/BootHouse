@@ -14,7 +14,7 @@ public class UserLoginRequest {
     @NotBlank
     private String email;
 
-    @Password
+    //@Password
     @NotBlank
     private String password;
 }
