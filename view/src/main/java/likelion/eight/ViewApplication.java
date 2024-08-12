@@ -10,9 +10,9 @@ import org.springframework.context.annotation.ComponentScan;
 public class ViewApplication {
 
 	public static void main(String[] args) {
-		//SpringApplication.run(ViewApplication.class, args);
+		SpringApplication.run(ViewApplication.class, args);
 
-		ApplicationContext applicationContext = SpringApplication.run(ViewApplication.class, args);
+/*		ApplicationContext applicationContext = SpringApplication.run(ViewApplication.class, args);
 
 		// Get all bean names
 		String[] beanNames = applicationContext.getBeanDefinitionNames();
@@ -24,6 +24,6 @@ public class ViewApplication {
 		for (String beanName : beanNames) {
 			Object bean = applicationContext.getBean(beanName);
 			System.out.println("Bean Name: " + beanName + " | Bean Object: " + bean.getClass().getName());
-		}
+		}*/
 	}
 }
