@@ -31,15 +31,28 @@
         </div>
 
         <div class="mb-3">
+            <label for="name">이름</label>
+            <input type="text" id="name" th:field="*{name}" class="form-control" placeholder="이름" th:errorclass="field-error">
+            <div class="field-error" th:errors="*{name}"></div>
+        </div>
+
+        <div class="mb-3">
             <label for="password">비밀번호</label>
             <input type="password" id="password" th:field="*{password}" class="form-control" placeholder="비밀번호" th:errorclass="field-error">
             <div class="field-error" th:errors="*{password}"></div>
         </div>
 
         <div class="mb-3">
-            <label for="phoneNumber">핸드번 번호</label>
-            <input type="text" id="phoneNumber" th:field="*{phoneNumber}" class="form-control" placeholder="핸드번번호" th:errorclass="field-error">
+            <label for="phoneNumber">핸드폰 번호</label>
+            <input type="text" id="phoneNumber" th:field="*{phoneNumber}" class="form-control" placeholder="핸드폰번호" th:errorclass="field-error">
             <div class="field-error" th:errors="*{phoneNumber}"></div>
+        </div>
+
+
+        <div class="mb-3">
+            <label for="address">주소</label>
+            <input type="text" id="address" th:field="*{address}" class="form-control" placeholder="주소" th:errorclass="field-error">
+            <div class="field-error" th:errors="*{address}"></div>
         </div>
 
 
