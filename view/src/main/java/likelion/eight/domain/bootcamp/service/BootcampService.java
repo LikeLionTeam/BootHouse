@@ -6,6 +6,7 @@ import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import likelion.eight.domain.bootcamp.controller.model.BootcampCreateRequest;
 import likelion.eight.domain.bootcamp.model.Bootcamp;
 import likelion.eight.domain.bootcamp.service.port.BootcampRepository;
+import likelion.eight.domain.bootcamp.service.port.BootcampRepositoryQueryDsl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class BootcampService {
     private final BootcampRepository bootcampRepository;
+    private final BootcampRepositoryQueryDsl bootcampRepositoryQueryDsl;
 
     @Value("${app.upload.url}")
     private String fileDir;
@@ -29,6 +31,15 @@ public class BootcampService {
 
         if (bootcamps.isEmpty()){
             throw new ResourceNotFoundException("현재 등록된 부트캠프가 없습니다.");
+        }
+        return bootcamps;
+    }
+
+    public List<Bootcamp> findAllBootcamps(String searchKeyword){
+        List<Bootcamp> bootcamps = bootcampRepositoryQueryDsl.findByName(searchKeyword);
+
+        if (bootcamps.isEmpty()){
+            throw new ResourceNotFoundException("현재 검색된 부트캠프가 없습니다.");
         }
         return bootcamps;
     }

@@ -8,10 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,8 +34,8 @@ public class BootcampController {
     }
 
     @GetMapping
-    public String showAllBootcamps(Model model){
-        List<Bootcamp> bootcamps = bootcampService.findAllBootcamps();
+    public String showAllBootcamps(@RequestParam(name = "search", required = false)String search, Model model){
+        List<Bootcamp> bootcamps = bootcampService.findAllBootcamps(search);
         model.addAttribute("bootcamps", bootcamps);
 
         return "bootcamp/list";
