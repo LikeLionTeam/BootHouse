@@ -37,10 +37,10 @@ public class TxLogTrace {
     @Pointcut("execution(* likelion.eight.domain..*(..))")
     public void test(){}
 
-    @Around("allServiceGetMethod()")
+    //@Around("allServiceGetMethod()")
     //@Around("execution(* likelion.eight.domain..*(..))")
     //@Around("pointcutCollector.allServiceGetMethod()")
-    //@Around("execution(* likelion.eight.domain..*Service.*(..))")
+    @Around("execution(* likelion.eight.domain..*Service.*(..))")
     public Object transactionLog(ProceedingJoinPoint joinPoint) throws Throwable{
         //long startTime = System.currentTimeMillis();
 
