@@ -4,6 +4,7 @@ import likelion.eight.domain.bootcamp.controller.model.BootcampCreateRequest;
 import likelion.eight.domain.bootcamp.model.Bootcamp;
 import likelion.eight.domain.bootcamp.service.BootcampService;
 import likelion.eight.domain.bootcamp.service.port.BootcampRepository;
+import likelion.eight.domain.course.model.Course;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -39,5 +40,13 @@ public class BootcampController {
         model.addAttribute("bootcamps", bootcamps);
 
         return "bootcamp/list";
+    }
+
+    @GetMapping("/{bootcampId}/courses")
+    public String showCoursesByBootcamp(@PathVariable Long bootcampId, Model model){
+        List<Course> courses = bootcampService.findCourseByBootcampId(bootcampId);
+        model.addAttribute("courses", courses);
+
+        return "bootcamp/courses";
     }
 }

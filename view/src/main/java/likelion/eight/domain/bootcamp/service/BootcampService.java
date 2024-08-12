@@ -7,6 +7,8 @@ import likelion.eight.domain.bootcamp.controller.model.BootcampCreateRequest;
 import likelion.eight.domain.bootcamp.model.Bootcamp;
 import likelion.eight.domain.bootcamp.service.port.BootcampRepository;
 import likelion.eight.domain.bootcamp.service.port.BootcampRepositoryQueryDsl;
+import likelion.eight.domain.course.model.Course;
+import likelion.eight.domain.course.service.port.CourseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -22,6 +25,7 @@ import java.util.UUID;
 public class BootcampService {
     private final BootcampRepository bootcampRepository;
     private final BootcampRepositoryQueryDsl bootcampRepositoryQueryDsl;
+    private final CourseRepository courseRepository;
 
     @Value("${app.upload.url}")
     private String fileDir;
@@ -89,5 +93,13 @@ public class BootcampService {
 
     public String getFilePath(String saveFilename){
         return fileDir + saveFilename;
+    }
+
+    public List<Course> findCourseByBootcampId(Long bootcampId){
+        List<Course> courses = courseRepository.findCourseByBootcampId(bootcampId);
+
+        return Optional.ofNullable(courses)
+                .filter(c -> !c.isEmpty())
+                .orElseThrow(() -> new ResourceNotFoundException("해당 부트캠프에서 주관하는 course는 없습니다."));
     }
 }
