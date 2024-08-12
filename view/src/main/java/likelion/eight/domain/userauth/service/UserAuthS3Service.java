@@ -57,6 +57,11 @@ public class UserAuthS3Service {
     public void approve(long id){
         UserAuth userAuth = userAuthRepository.getById(id);
         userAuth = userAuth.approve(clockHolder);
+
+        User user = userAuth.getUser();
+        user = user.changeRoleType(userAuth.getAuthRequestType());
+
+        userRepository.save(user);
         userAuthRepository.save(userAuth);
     }
 
@@ -64,9 +69,5 @@ public class UserAuthS3Service {
         UserAuth userAuth = userAuthRepository.getById(id);
         userAuth = userAuth.deny(clockHolder);
         userAuthRepository.save(userAuth);
-    }
-
-    public UserAuth getById(long id){
-        return userAuthRepository.getById(id);
     }
 }
