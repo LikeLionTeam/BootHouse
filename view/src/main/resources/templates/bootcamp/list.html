@@ -7,6 +7,13 @@
 <body>
     <h2>Bootcamp 목록</h2>
 
+
+    <!-- 검색 바 추가 -->
+    <form th:action="@{/bootcamps}" method="get">
+        <input type="text" name="search" placeholder="기관명 검색" />
+        <button type="submit">검색</button>
+    </form>
+
     <ul>
         <li th:each="bootcamp : ${bootcamps}">
             <span th:text="${bootcamp.name}"></span> -
