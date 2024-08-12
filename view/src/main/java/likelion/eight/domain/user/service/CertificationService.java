@@ -17,8 +17,8 @@ public class CertificationService {
     }
 
     public void sendPassword(String email, String password){
-        String title = "부트하우스 비밀번호 전송";
-        String content = "비밀번호 : " + password;
+        String title = "부트하우스 임시 비밀번호 발급";
+        String content = "임시 비밀번호 : " + password;
         mailSender.send(email, title, content);
     }
 }
