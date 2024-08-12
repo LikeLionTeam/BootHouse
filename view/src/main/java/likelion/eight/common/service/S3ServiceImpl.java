@@ -3,6 +3,7 @@ package likelion.eight.common.service;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import likelion.eight.common.domain.exception.CertificationFailedException;
 import likelion.eight.common.domain.exception.FileStorageException;
@@ -44,6 +45,7 @@ public class S3ServiceImpl implements S3Service {
             String uploadedUrl = saveFile(multipartFile);
             uploadUrls.add(uploadedUrl);
         }
+
 
         clear();
         return uploadUrls;
