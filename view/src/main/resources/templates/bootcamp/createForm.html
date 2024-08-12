@@ -1,29 +1,101 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Bootcamp 등록</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--    <h2>Bootcamp 등록</h2>-->
+
+<!--    <form id="bootcampForm" th:object="${request}" enctype="multipart/form-data" method="post">-->
+<!--        <label for="name">Name : </label>-->
+<!--        <input th:field="*{name}" id="name" type="text" name="name" required> <br>-->
+
+<!--        <label for="description">Description : </label>-->
+<!--        <textarea th:field="*{description}" id="description" name="description" required></textarea> <br>-->
+
+<!--        <label for="location">Location : </label>-->
+<!--        <input th:field="*{location}" type="text" id="location" name="location" required> <br>-->
+
+<!--        <label for="url">Bootcamp 기관 공식 홈페이지 URL : </label>-->
+<!--        <input th:field="*{url}" type="url" id="url" name="url" required> <br>-->
+
+<!--        <label for="file">Logo 파일 : </label>-->
+<!--        <input th:field="*{file}" id="file" type="file" name="file">-->
+
+<!--        <button type="submit">Submit</button>-->
+<!--    </form>-->
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bootcamp 등록</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-    <h2>Bootcamp 등록</h2>
+<body class="bg-gray-100">
+<div class="container mx-auto px-4 py-8 max-w-2xl">
+    <h2 class="text-2xl font-bold mb-6">Bootcamp 등록</h2>
 
-    <form id="bootcampForm" th:object="${request}" enctype="multipart/form-data" method="post">
-        <label for="name">Name : </label>
-        <input th:field="*{name}" id="name" type="text" name="name" required> <br>
+    <form id="bootcampForm" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+          th:object="${request}" enctype="multipart/form-data" method="post">
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
+                <i class="fas fa-user-circle mr-2"></i>Name
+            </label>
+            <input th:field="*{name}" id="name" type="text" name="name" required
+                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
 
-        <label for="description">Description : </label>
-        <textarea th:field="*{description}" id="description" name="description" required></textarea> <br>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="location">
+                <i class="fas fa-map-marker-alt mr-2"></i>Location
+            </label>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                   id="location" type="text" name="location" required
+                   th:field="*{location}">
+        </div>
 
-        <label for="location">Location : </label>
-        <input th:field="*{location}" type="text" id="location" name="location" required> <br>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="url">
+                <i class="fas fa-link mr-2"></i>Bootcamp 기관 공식 홈페이지 URL
+            </label>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                   id="url" type="url" name="url" required
+                   th:field="*{url}">
+        </div>
 
-        <label for="url">Bootcamp 기관 공식 홈페이지 URL : </label>
-        <input th:field="*{url}" type="url" id="url" name="url" required> <br>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
+                <i class="fas fa-info-circle mr-2"></i>Description
+            </label>
+            <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="description" name="description" rows="4" required
+                      th:field="*{description}">
+            </textarea>
+        </div>
 
-        <label for="file">Logo 파일 : </label>
-        <input th:field="*{file}" id="file" type="file" name="file">
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="file">
+                <i class="fas fa-image mr-2"></i>Logo 파일
+            </label>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                   id="file" type="file" name="file"
+                   th:field="*{file}">
+        </div>
 
-        <button type="submit">Submit</button>
+        <div class="flex items-center justify-between">
+            <button class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                Submit
+            </button>
+        </div>
     </form>
+</div>
+
+<script src="/js/bootcamp/index.js" type="module"></script>
 </body>
 </html>
