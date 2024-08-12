@@ -1,4 +1,3 @@
-
 export function startChat(targetName) {
     return fetch('/messages/startChat', {
         method: 'POST',
