@@ -58,7 +58,7 @@ public class CourseInitData implements CommandLineRunner {
 //
 //        courseRepository.save(course);
 
-        //        BootCampEntity bootCamp = bootCampRepository.findByName("멋쟁이사자처럼");
+//                BootCampEntity bootCamp = bootCampRepository.findByName("멋쟁이사자처럼");
 //        CategoryEntity category = categoryRepository.findByName("웹개발");
 //        SubCourseEntity subCourse = subCourseRepository.findByName("백엔드");
 //
