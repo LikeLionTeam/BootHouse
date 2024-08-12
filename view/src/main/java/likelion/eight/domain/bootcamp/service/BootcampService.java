@@ -1,12 +1,13 @@
 package likelion.eight.domain.bootcamp.service;
 
-import likelion.eight.bootcamp.BootCampEntity;
 import likelion.eight.common.domain.exception.FileStorageException;
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
+import likelion.eight.domain.bootcamp.controller.model.BootCampSearchCond;
+import likelion.eight.domain.bootcamp.controller.model.BootCampSearchResponse;
 import likelion.eight.domain.bootcamp.controller.model.BootcampCreateRequest;
+import likelion.eight.domain.bootcamp.infra.BootcampQueryDslRepository;
 import likelion.eight.domain.bootcamp.model.Bootcamp;
 import likelion.eight.domain.bootcamp.service.port.BootcampRepository;
-import likelion.eight.domain.bootcamp.service.port.BootcampRepositoryQueryDsl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class BootcampService {
     private final BootcampRepository bootcampRepository;
-    private final BootcampRepositoryQueryDsl bootcampRepositoryQueryDsl;
+    private final BootcampQueryDslRepository bootcampRepositoryQueryDsl; // TODO
 
     @Value("${app.upload.url}")
     private String fileDir;
@@ -41,6 +42,11 @@ public class BootcampService {
         if (bootcamps.isEmpty()){
             throw new ResourceNotFoundException("현재 검색된 부트캠프가 없습니다.");
         }
+        return bootcamps;
+    }
+
+    public List<BootCampSearchResponse> findAllBootcamps(BootCampSearchCond cond){
+        List<BootCampSearchResponse> bootcamps = bootcampRepository.findSearchByCond(cond);
         return bootcamps;
     }
 
