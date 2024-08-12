@@ -28,7 +28,6 @@ public class MessageEntity extends BaseTimeEntity {
     @JoinColumn(name = "sender_id", nullable = false)
     private UserEntity sender;
 
-    @Lob
-    @Column(name = "message", columnDefinition = "TEXT", nullable = false)
+    @Column(name = "message", nullable = false)
     private String message;
 }
