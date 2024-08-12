@@ -44,7 +44,7 @@ public class UserService {
         return UserConverter.toResponse(user);
     }
 
-    public UserResponse login(HttpServletResponse response, UserLoginRequest loginUser){ //TODO 메서드이름수정
+    public UserResponse login(HttpServletResponse response, UserLoginRequest loginUser){
 
         User user = userRepository.findByEmail(loginUser.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("존재 하지 않는 이메일 입니다."));
@@ -84,6 +84,8 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("존재 하지 않는 이메일 입니다."));
 
         if(user.checkNameAndPhoneNumber(request)){
+            User tempUser = user.issueTemporaryPassword(uuidHolder.random());
+            userRepository.save(tempUser);
             certificationService.sendPassword(user.getEmail(), user.getPassword());
         }else{
             throw new ResourceNotFoundException("입력하신 핸드폰 번호, 이름 정보가 일치 하지 않습니다");
