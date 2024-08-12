@@ -10,13 +10,15 @@ public class CertificationService {
 
     private final MailSender mailSender;
 
-    public void send(String email, long userId, String certificationCode){
-        String certificationUrl = generateCertificationUrl(userId); // TODO 이메일 인증 URL 설정
-        String title = "인증 코드 발송";
-        String content = "인증코드 : " + certificationCode + " / 링크를 클릭해서 인증코드를 입력 해주세요 : " + certificationUrl;
+    public void sendCode(String email, String certificationCode){
+        String title = "부트하우스 인증 코드 발송";
+        String content = "인증코드 : " + certificationCode;
         mailSender.send(email, title, content);
     }
-    private String generateCertificationUrl(long userId) {
-        return "http://localhost:8080/users/" + userId + "/verify";
+
+    public void sendPassword(String email, String password){
+        String title = "부트하우스 비밀번호 전송";
+        String content = "비밀번호 : " + password;
+        mailSender.send(email, title, content);
     }
 }
