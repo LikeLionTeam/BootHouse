@@ -28,8 +28,10 @@
 <div class="bg-white shadow-md rounded-lg p-8 mb-6">
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-3xl font-bold text-gray-800" th:text="${review.title}">리뷰 제목</h2>
-        <button class="like-button text-gray-400 hover:text-red-500" th:data-review-id="${reviewId}"><i id="likeButton"
-                                                                                                        class="far fa-heart"></i></button></div>
+        <button class="like-button text-gray-400 hover:text-red-500" th:data-review-id="${reviewId}">
+            <i id="likeButton" class="far fa-heart"></i>
+        </button>
+    </div>
 
     <div class="mb-6">
         <p class="text-gray-600 flex items-center">

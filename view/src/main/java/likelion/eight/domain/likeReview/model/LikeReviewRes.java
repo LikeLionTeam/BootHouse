@@ -13,4 +13,6 @@ public class LikeReviewRes {
     private String oneLineReview;
     private Integer rating;
     private String author;
+    private String courseName;
+
 }

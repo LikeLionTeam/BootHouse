@@ -51,11 +51,12 @@ public class LikeReviewService {
                 .orElseThrow(() -> new ResourceNotFoundException("user", loginUser.getId()));
         Page<LikeReviewEntity> allLikeReviews = likeReviewJpaRepository.findAllByUserEntity(user,pageable);
 
-        return allLikeReviews.map(likes-> new LikeReviewRes(
+        return allLikeReviews.map(likes -> new LikeReviewRes(
                 likes.getReviewEntity().getTitle(),
                 likes.getReviewEntity().getOneLineReview(),
                 likes.getReviewEntity().getRating(),
-                likes.getReviewEntity().getUserEntity().getName()
+                likes.getReviewEntity().getUserEntity().getName(),
+                likes.getReviewEntity().getCourseEntity().getName()
         ));
     }
 }
