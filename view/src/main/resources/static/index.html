@@ -3,12 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+<!-- TODO : 네비게이션바 적용하기 (현재 코드 적용이 안됨)-->
+<nav class="bg-white shadow-md mb-6">
+    <div th:replace="fragments/navbar :: navbar"></div>
+</nav>
+
 <div>
     <div class="card-footer">
         <button class="btn btn-info" onclick="location.href='/login'">로그인</button>
     </div>
 </div>
+
+
 </body>
 </html>

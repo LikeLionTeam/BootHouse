@@ -1,82 +1,83 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 <nav th:fragment="navbar" class="bg-white shadow-md">
-    <div class="container mx-auto px-4">
-        <div class="flex justify-between items-center py-4">
-            <!-- 로고 -->
-            <a href="/index.html" class="text-2xl font-bold text-orange-600">BOOTHOUSE</a>
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-center py-4">
+      <!-- 로고 -->
+      <a href="/index.html" class="text-2xl font-bold text-orange-600">BOOTHOUSE</a>
 
-            <!-- 검색 바 -->
-            <div class="mx-4 w-96"> <!-- w-96 클래스로 너비를 고정 -->
-                <input type="text" placeholder="검색"
-                       class="w-full px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-600">
-            </div>
+      <!-- 검색 바 -->
+      <div class="mx-4 w-96"> <!-- w-96 클래스로 너비를 고정 -->
+        <input type="text" placeholder="검색"
+               class="w-full px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-600">
+      </div>
 
-            <!-- 네비게이션 링크 (큰 화면) -->
-            <div class="hidden lg:flex space-x-4">
-                <a th:href="@{/bootcamps}" class="text-gray-600 hover:text-gray-800">부트캠프 리스트</a>
-                <a th:href="@{/boothouse/camps}" class="text-gray-600 hover:text-gray-800">교육기관 리스트</a>
-                <a th:href="@{/notice}" class="text-gray-600 hover:text-gray-800">공지사항</a>
-            </div>
+      <!-- 네비게이션 링크 (큰 화면) -->
+      <div class="hidden lg:flex space-x-4">
+        <a th:href="@{/bootcamps}" class="text-gray-600 hover:text-gray-800">부트캠프 리스트</a>
+        <a th:href="@{/boothouse/camps}" class="text-gray-600 hover:text-gray-800">교육기관 리스트</a>
+        <a th:href="@{/notice}" class="text-gray-600 hover:text-gray-800">공지사항</a>
+      </div>
 
-            <!-- 사용자 메뉴 -->
-            <div class="relative">
-                <button id="userMenuButton" class="flex items-center space-x-2 focus:outline-none">
-                    <img src="https://via.placeholder.com/40" alt="User Avatar" class="w-10 h-10 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20"
-                         fill="currentColor">
-                        <path fill-rule="evenodd"
-                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                              clip-rule="evenodd"/>
-                    </svg>
-                </button>
-                <div id="userMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg hidden">
-                    <!-- 작은 화면에서 보이는 네비게이션 링크 -->
-                    <div class="lg:hidden">
-                        <a th:href="@{/bootcamps}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">부트캠프
-                            리스트</a>
-                        <a th:href="@{/boothouse/camps}"
-                           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">교육기관 리스트</a>
-                        <a th:href="@{/notice}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">공지사항</a>
-                    </div>
-                    <a th:href="@{/likes/course}" class="text-gray-600 hover:text-gray-800">찜 목록</a>
-                    <a th:href="@{/messages}" class="text-gray-600 hover:text-gray-800">메신저</a>
-                    <form th:if="${isLoggedIn}" th:action="@{/logout}" method="post">
-                        <button type="submit"
-                                class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">로그아웃
-                        </button>
-                    </form>
-                    <a th:unless="${isLoggedIn}" th:href="@{/login}"
-                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">로그인</a>
-                </div>
-            </div>
+      <!-- 사용자 메뉴 -->
+      <div class="relative">
+        <button id="userMenuButton" class="flex items-center space-x-2 focus:outline-none">
+          <img src="https://via.placeholder.com/40" alt="User Avatar" class="w-10 h-10 rounded-full">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20"
+               fill="currentColor">
+            <path fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd"/>
+          </svg>
+        </button>
+        <div id="userMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg hidden">
+          <!-- 작은 화면에서 보이는 네비게이션 링크 -->
+          <div class="lg:hidden">
+            <a th:href="@{/bootcamps}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">부트캠프
+              리스트</a>
+            <a th:href="@{/boothouse/camps}"
+               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">교육기관 리스트</a>
+            <a th:href="@{/notice}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">공지사항</a>
+          </div>
+          <a th:href="@{/likes/course}" class="text-gray-600 hover:text-gray-800">찜 목록</a>
+          <a th:href="@{/messages}" class="text-gray-600 hover:text-gray-800">메신저</a>
+          <form th:if="${isLoggedIn}" th:action="@{/logout}" method="post">
+            <button type="submit"
+                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">로그아웃
+            </button>
+          </form>
+          <a th:unless="${isLoggedIn}" th:href="@{/login}"
+             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">로그인</a>
         </div>
+      </div>
     </div>
+  </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const userMenuButton = document.getElementById('userMenuButton');
-            const userMenu = document.getElementById('userMenu');
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const userMenuButton = document.getElementById('userMenuButton');
+      const userMenu = document.getElementById('userMenu');
 
-            if (userMenuButton && userMenu) {
-                userMenuButton.addEventListener('click', function () {
-                    userMenu.classList.toggle('hidden');
-                });
-
-                // Close the menu when clicking outside
-                document.addEventListener('click', function (event) {
-                    if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
-                        userMenu.classList.add('hidden');
-                    }
-                });
-            }
+      if (userMenuButton && userMenu) {
+        userMenuButton.addEventListener('click', function () {
+          userMenu.classList.toggle('hidden');
         });
-    </script>
+
+        // Close the menu when clicking outside
+        document.addEventListener('click', function (event) {
+          if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
+            userMenu.classList.add('hidden');
+          }
+        });
+      }
+    });
+  </script>
+
 </nav>
 </body>
 </html>

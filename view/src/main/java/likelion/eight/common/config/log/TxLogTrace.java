@@ -37,7 +37,7 @@ public class TxLogTrace {
     @Pointcut("execution(* likelion.eight.domain..*(..))")
     public void test(){}
 
-    //@Around("allServiceGetMethod() || allServiceFindMethod()")
+    //@Around("allServiceGetMethod()")
     //@Around("execution(* likelion.eight.domain..*(..))")
     //@Around("pointcutCollector.allServiceGetMethod()")
     @Around("execution(* likelion.eight.domain..*Service.*(..))")

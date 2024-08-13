@@ -1,5 +1,7 @@
 package likelion.eight.domain.bootcamp.controller;
 
+import likelion.eight.domain.bootcamp.controller.model.BootCampSearchCond;
+import likelion.eight.domain.bootcamp.controller.model.BootCampSearchResponse;
 import likelion.eight.domain.bootcamp.controller.model.BootcampCreateRequest;
 import likelion.eight.domain.bootcamp.model.Bootcamp;
 import likelion.eight.domain.bootcamp.service.BootcampService;
@@ -41,6 +43,7 @@ public class BootcampController {
 
         return "bootcamp/list";
     }
+
 
     @GetMapping("/{bootcampId}/courses")
     public String showCoursesByBootcamp(@PathVariable Long bootcampId, Model model){

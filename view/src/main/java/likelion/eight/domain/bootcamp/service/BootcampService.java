@@ -3,7 +3,6 @@ package likelion.eight.domain.bootcamp.service;
 import likelion.eight.common.domain.exception.FileStorageException;
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import likelion.eight.domain.bootcamp.controller.model.BootcampCreateRequest;
-import likelion.eight.domain.bootcamp.infra.BootcampRepositoryQueryDSLImpl;
 import likelion.eight.domain.bootcamp.model.Bootcamp;
 import likelion.eight.domain.bootcamp.service.port.BootcampRepository;
 import likelion.eight.domain.course.model.Course;
@@ -25,6 +24,7 @@ public class BootcampService {
     private final BootcampRepository bootcampRepository;
     private final CourseRepository courseRepository;
 
+
     @Value("${app.upload.url}")
     private String fileDir;
 
@@ -41,6 +41,11 @@ public class BootcampService {
         List<Bootcamp> bootcamps = bootcampRepository.findByName(searchKeyword);
         return bootcamps;
     }
+
+//     public List<BootCampSearchResponse> findAllBootcamps(BootCampSearchCond cond){
+//         List<BootCampSearchResponse> bootcamps = bootcampRepository.findSearchByCond(cond);
+//         return bootcamps;
+//     }
 
     public Bootcamp createBootcamp(BootcampCreateRequest request){
         String name = request.getName();

@@ -1,47 +1,71 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Edit Review</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body>
-<h1>리뷰 수정하기</h1>
-<form th:action="@{/review/{id}/edit(id=${review.id})}" th:object="${review}" method="post">
-    <input type="hidden" th:field="*{id}" />
 
-    <div>
-        <label for="title">제목:</label>
-        <input type="text" id="title" th:field="*{title}" />
-    </div>
+<body class="bg-gray-100 p-6">
 
-    <div>
-        <label for="oneLineReview">총평:</label>
-        <input type="text" id="oneLineReview" th:field="*{oneLineReview}" />
-    </div>
+<nav class="bg-white shadow-md mb-6 p-4 rounded-lg">
+    <div th:replace="fragments/navbar :: navbar"></div>
+</nav>
 
-    <div>
-        <label for="advantages">장점:</label>
-        <textarea id="advantages" th:field="*{advantages}"></textarea>
-    </div>
+<div class="bg-white shadow-md rounded-lg p-6">
+    <h2 class="text-2xl font-semibold mb-6">리뷰 수정</h2>
 
-    <div>
-        <label for="disadvantages">단점:</label>
-        <textarea id="disadvantages" th:field="*{disadvantages}"></textarea>
-    </div>
+    <form th:action="@{/review/{id}/edit(id=${review.id})}" th:object="${review}" method="post" class="space-y-4">
+        <div>
+            <label for="title" class="block text-lg font-medium text-gray-700 mb-2">제목</label>
+            <input type="text" id="title" name="title" th:field="*{title}" required
+                   class="w-full p-3 border border-gray-300 rounded-md" />
+        </div>
 
-    <div>
-        <label for="instructorEvaluation">강사 평가:</label>
-        <textarea id="instructorEvaluation" th:field="*{instructorEvaluation}"></textarea>
-    </div>
+        <div>
+            <label for="oneLineReview" class="block text-lg font-medium text-gray-700 mb-2">한 줄 리뷰</label>
+            <input type="text" id="oneLineReview" name="oneLineReview" th:field="*{oneLineReview}" required
+                   class="w-full p-3 border border-gray-300 rounded-md" />
+        </div>
 
-    <div>
-        <label for="rating">평점:</label>
-        <input type="number" id="rating" th:field="*{rating}" min="1" max="5" />
-    </div>
+        <div>
+            <label for="advantages" class="block text-lg font-medium text-gray-700 mb-2">장점</label>
+            <textarea id="advantages" name="advantages" th:field="*{advantages}" required
+                      class="w-full p-3 border border-gray-300 rounded-md"></textarea>
+        </div>
 
-    <div>
-        <button type="submit">리뷰 수정하기</button>
-    </div>
-</form>
+        <div>
+            <label for="disadvantages" class="block text-lg font-medium text-gray-700 mb-2">단점</label>
+            <textarea id="disadvantages" name="disadvantages" th:field="*{disadvantages}" required
+                      class="w-full p-3 border border-gray-300 rounded-md"></textarea>
+        </div>
+
+        <div>
+            <label for="instructorEvaluation" class="block text-lg font-medium text-gray-700 mb-2">강사 평가</label>
+            <textarea id="instructorEvaluation" name="instructorEvaluation" th:field="*{instructorEvaluation}"
+                      required class="w-full p-3 border border-gray-300 rounded-md"></textarea>
+        </div>
+
+        <div>
+            <label for="rating" class="block text-lg font-medium text-gray-700 mb-2">평점</label>
+            <div class="flex items-center space-x-1">
+                <input type="number" id="rating" name="rating" th:field="*{rating}" min="1" max="5" required
+                       class="w-12 p-3 border border-gray-300 rounded-md" />
+                <span>/ 5</span>
+            </div>
+        </div>
+
+        <div class="flex justify-end space-x-4 mt-6">
+            <button type="submit"
+                    class="bg-orange-500 text-white font-semibold px-6 py-3 rounded-md hover:bg-orange-600">수정하기</button>
+            <a href="/reviews" class="text-gray-500 hover:underline mt-3">취소</a>
+        </div>
+    </form>
+</div>
+
 </body>
+
 </html>

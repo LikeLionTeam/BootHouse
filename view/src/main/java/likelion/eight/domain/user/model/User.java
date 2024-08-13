@@ -123,4 +123,19 @@ public class User {
         return Objects.equals(request.getPhoneNumber(), phoneNumber)
                 && Objects.equals(request.getName(), name);
     }
+
+    public User issueTemporaryPassword(String tempPassword){
+        return User.builder()
+                .id(id)
+                .name(name)
+                .address(address)
+                .email(email)
+                .password(tempPassword)
+                .phoneNumber(phoneNumber)
+                .certificationCode(certificationCode)
+                .userStatus(userStatus)
+                .roleType(roleType)
+                .lastLoginAt(lastLoginAt)
+                .build();
+    }
 }
