@@ -9,14 +9,21 @@
 </head>
 <body class="bg-gray-100">
 <div class="container mx-auto px-4 py-8">
-    <h2 class="text-2xl font-bold mb-6">
+    <!-- 네비게이션 바 -->
+    <nav class="bg-white shadow-md">
+        <div th:replace="fragments/navbar :: navbar"></div>
+    </nav>
+
+    <h2 class="text-2xl font-bold mb-6 mt-6">
         <a href="/bootcamps" th:text="'Bootcamp 목록'"></a>
     </h2>
 
     <!-- 검색창 부분 -->
     <form th:action="@{/bootcamps}" method="get" class="mb-6">
-        <input type="text" name="search" placeholder="기관명 검색" class="py-1" />
-        <button type="submit" class="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded">search</button>
+        <input type="text" name="search" placeholder="기관명 검색"
+               class="py-1 px-4 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-600" />
+        <button type="submit"
+                class="bg-orange-400 text-white text-sm px-3 py-1 rounded-md ml-2">검색</button>
     </form>
 
     <!-- 부트캠프 카드 부분 -->
