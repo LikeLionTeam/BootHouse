@@ -6,6 +6,7 @@ import likelion.eight.domain.user.controller.model.UserResponse;
 import likelion.eight.domain.user.service.UserService;
 import likelion.eight.user.enums.RoleType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -20,6 +21,7 @@ import static likelion.eight.interceptor.AuthorizationInterceptor.ROLE_TYPE;
 
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class UserCookieResolver implements HandlerMethodArgumentResolver {
 
     private final UserService userService;
@@ -39,6 +41,8 @@ public class UserCookieResolver implements HandlerMethodArgumentResolver {
         RequestAttributes requestContext = RequestContextHolder.getRequestAttributes();
         Object userId = requestContext.getAttribute(USER_ID, RequestAttributes.SCOPE_REQUEST);
         Object roleType = requestContext.getAttribute(ROLE_TYPE, RequestAttributes.SCOPE_REQUEST);
+
+        log.info("{} , {} 감지함. ",userId, roleType);
 
         UserResponse userResponse = userService.getById(Long.parseLong(userId.toString()));
 

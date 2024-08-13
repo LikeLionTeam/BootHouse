@@ -1,45 +1,59 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Chat Room</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${chatroom.name}">Chat Room</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-    <style>
-        #chat-messages {
-            height: 300px;
-            overflow-y: scroll;
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-        .message {
-            margin-bottom: 10px;
-        }
-        .sender {
-            font-weight: bold;
-        }
-    </style>
 </head>
-<body>
-<h1 th:text="${chatroom.name}">Chat Room</h1>
-<div id="chat-messages">
-    <div th:each="message : ${messages}" class="message">
-        <span class="sender" th:text="${message.sender.name}"></span>: <span th:text="${message.message}"></span>
+<body class="bg-gray-100">
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="flex items-center justify-between p-4 border-b">
+            <div class="flex items-center">
+                <img src="https://via.placeholder.com/40" alt="User" class="w-10 h-10 rounded-full mr-3">
+                <h2 class="text-lg font-semibold" th:text="${chatroom.name}">Chat Room</h2>
+            </div>
+            <button class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-ellipsis-v"></i>
+            </button>
+        </div>
+        <div id="chat-messages" class="h-96 overflow-y-auto p-4 space-y-4">
+            <!-- 날짜 구분선을 위한 컨테이너 -->
+            <div id="message-container"></div>
+        </div>
+        <div class="p-4 border-t">
+            <div class="flex items-center">
+                <input type="text" id="message-input" placeholder="메시지를 입력하세요." class="flex-grow p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-purple-300">
+                <button id="send-button" class="bg-purple-500 text-white p-2 rounded-r-lg hover:bg-purple-600">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 
-<input type="text" id="message-input" placeholder="Type your message...">
-<button id="send-button">Send</button>
-
 <script th:inline="javascript">
+    /*<![CDATA[*/
     var chatroomId = [[${chatroom.id}]];
     var username = [[${username}]];
     var stompClient = null;
     var token = getCookie('userTokenCode');  // 쿠키에서 토큰 가져오기
+    var messages = /*[[${messages}]]*/ [];
+    /*]]>*/
 
-    window.onload = connect;
+    window.onload = function() {
+        connect();
+        var messageContainer = document.getElementById('message-container');
+        messageContainer.innerHTML = ''; // 기존 메시지 초기화
+        messages.forEach(function(message) {
+            showMessage(message);
+        });
+    };
 
     function connect() {
         var socket = new SockJS('/ws');
@@ -60,12 +74,48 @@
     }
 
     function showMessage(message) {
+        var messageContainer = document.getElementById('message-container');
+        var messageDate = new Date(message.registrationDate);
+        var formattedDate = formatDate(messageDate);
+        var formattedTime = formatTime(messageDate);
+
+        // 날짜 구분선 추가
+        var dateString = messageDate.toDateString();
+        if (!document.getElementById('date-' + dateString)) {
+            var dateDiv = document.createElement('div');
+            dateDiv.id = 'date-' + dateString;
+            dateDiv.className = 'text-center text-gray-500 text-sm my-2';
+            dateDiv.innerText = formattedDate;
+            messageContainer.appendChild(dateDiv);
+        }
+
         var messageElement = document.createElement('div');
-        messageElement.className = 'message';
-        messageElement.innerHTML = '<span class="sender">' + message.sender + '</span>: ' + message.message;
-        document.getElementById('chat-messages').appendChild(messageElement);
+        messageElement.className = message.sender.name === username ? 'flex justify-end' : 'flex justify-start';
+        var innerDiv = document.createElement('div');
+        innerDiv.className = message.sender.name === username ? 'bg-purple-100 rounded-lg p-3 max-w-xs' : 'bg-gray-100 rounded-lg p-3 max-w-xs';
+        innerDiv.innerHTML = `
+                <p class="text-sm">${message.message}</p>
+                <span class="text-xs text-gray-500 block mt-1">${formattedTime}</span>
+            `;
+        messageElement.appendChild(innerDiv);
+        messageContainer.appendChild(messageElement);
+
         var chatMessages = document.getElementById('chat-messages');
         chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function formatDate(date) {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return date.toLocaleDateString('ko-KR', options);
+    }
+
+    function formatTime(date) {
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const ampm = hours >= 12 ? '오후' : '오전';
+        const formattedHours = hours % 12 || 12;
+        const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+        return `${ampm} ${formattedHours}:${formattedMinutes}`;
     }
 
     function sendMessage() {
