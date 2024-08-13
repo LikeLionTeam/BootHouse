@@ -8,4 +8,6 @@ import java.util.List;
 public interface BootcampRepository {
     List<Bootcamp> findAllBootcamps();
     Bootcamp save(Bootcamp bootcamp);
+
+    List<Bootcamp> findByName(String name);
 }

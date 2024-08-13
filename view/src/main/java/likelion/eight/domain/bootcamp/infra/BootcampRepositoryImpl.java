@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BootcampRepositoryImpl implements BootcampRepository {
     private final BootCampJpaRepository bootCampJpaRepository;
+    private final BootcampRepositoryQueryDSLImpl bootcampRepositoryQueryDSL;
     @Override
     public List<Bootcamp> findAllBootcamps() {
         return bootCampJpaRepository.findAll().stream()
@@ -28,5 +29,9 @@ public class BootcampRepositoryImpl implements BootcampRepository {
                 BootcampConverter.toEntity(bootcamp));
 
         return BootcampConverter.toBootcamp(savedBootcampEntity);
+    }
+    @Override
+    public List<Bootcamp> findByName(String name) {
+        return bootcampRepositoryQueryDSL.findByName(name);
     }
 }
