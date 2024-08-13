@@ -2,173 +2,15 @@
 <html lang="ko">
 <head xmlns:th="http://www.thymeleaf.org">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>부트캠프 목록</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-
-        /* 네비게이션 바 */
-        nav {
-            background-color: #4a4a4a;
-            color: white;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        nav ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-        }
-
-        nav ul li {
-            margin-right: 20px;
-        }
-
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-        }
-
-        /* 카테고리 선택 */
-        .category-list {
-            background-color: white;
-            padding: 10px 20px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .category-list ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .category-list ul li {
-            margin-right: 10px;
-            margin-bottom: 5px;
-            padding: 5px 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-
-        /* 선택된 카테고리 스타일 추가 */
-        .category-list ul li.selected {
-            color: purple;
-        }
-
-        /* 필터 섹션 */
-        .filter-section {
-            padding: 20px;
-            background-color: white;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .filter-section p {
-            margin: 0;
-            font-size: 16px;
-        }
-
-        .filter-options {
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-        }
-
-        .filter-options select,
-        .filter-options input,
-        .filter-options button {
-            margin-right: 10px;
-            padding: 5px 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        .filter-options select {
-            width: 150px;
-        }
-
-        .filter-options input {
-            width: 200px;
-        }
-
-        .filter-options button {
-            background-color: #4a90e2;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        /* 프로그램 목록 */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-
-        table thead {
-            background-color: #f1f1f1;
-        }
-
-        table th,
-        table td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-        }
-
-        table th {
-            background-color: #4a4a4a;
-            color: white;
-        }
-
-        table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        table tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        <!-- 데이터 필터링 추가 -->
-        .comparison-menu {
-            display: none;
-            position: absolute;
-            background-color: white;
-            border: 1px solid #ccc;
-            padding: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-        }
-
-        .comparison-menu.show {
-            display: block;
-        }
-
-        .comparison-menu label {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        td a {
-            text-decoration-line: none;
-            color: black;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
         // 카테고리 리스트에서, 카테고리를 선택했을 때
         function selectCategory(event, categoryId) {
             document.querySelectorAll('.category-list ul li').forEach(function (item) {
-               item.classList.remove('selected');
+                item.classList.remove('selected');
             });
             event.target.classList.add('selected');
             window.location.href = '/boothouse/camps?categories=' + categoryId;
@@ -288,98 +130,90 @@
         }
     </script>
 </head>
-<body>
+<body class="bg-gray-100 font-sans">
+
 <!-- 네비게이션 바 -->
-<nav>
-    <ul>
-        <li><a href="/boothouse/camps">부트캠프 리스트</a></li>
-    </ul>
-    <div>
-        <img src="profile-image-url" alt="유저 프로필" style="border-radius: 50%; width: 40px; height: 40px;">
-    </div>
+<nav class="bg-white shadow-md">
+    <div th:replace="fragments/navbar :: navbar"></div>
 </nav>
 
 <!-- 카테고리 선택 -->
-<div class="category-list">
-    <ul>
-        <li th:each="category : ${categories}"
-            th:text="${category.name}"
+<div class="bg-white py-4 px-4 border-b border-gray-200">
+    <ul class="flex flex-wrap space-x-2">
+        <li th:each="category : ${categories}" th:text="${category.name}"
             th:onclick="'selectCategory(event, \'' + ${category.id} + '\')'"
-            >카테고리명
-        </li>
+            class="cursor-pointer py-2 px-4 rounded bg-gray-100 hover:bg-orange-100 text-gray-600"></li>
     </ul>
 </div>
 
-
 <!-- 필터 및 비교 항목 선택 -->
-<div class="filter-section">
-    <div class="filter-options">
-        <!-- 셀렉트 박스 -->
-        <select name="subcourse" onchange="updateCourses()">
+<div class="bg-white py-6 px-4 border-b border-gray-200">
+    <div class="flex flex-wrap gap-4 mb-4">
+        <select name="subcourse" onchange="updateCourses()" class="border border-gray-300 rounded p-2">
             <option value="all">프로그램 과정</option>
             <option th:if="${subCourseList != null}"
                     th:each="subCourse : ${subCourseList}"
                     th:value="${subCourse.id}"
                     th:text="${subCourse.name}">프로그램 과정</option>
-            <option th:if="${subCourseList == null}"
-                    th:text="'관심분야를 먼저 선택해주세요'">
-            </option>
+            <option th:if="${subCourseList == null}" th:text="'관심분야를 먼저 선택해주세요'"></option>
         </select>
-        <select name="online-offline" onchange="updateCourses()">
+        <select name="online-offline" onchange="updateCourses()" class="border border-gray-300 rounded p-2">
             <option value="all">온/오프라인</option>
             <option value="online">온라인</option>
             <option value="offline">오프라인</option>
         </select>
-        <select name="location" onchange="updateCourses()">
+        <select name="location" onchange="updateCourses()" class="border border-gray-300 rounded p-2">
             <option value="all">지역</option>
             <option value="seoul">서울</option>
             <option value="busan">부산</option>
         </select>
-        <select name="cost" onchange="updateCourses()">
+        <select name="cost" onchange="updateCourses()" class="border border-gray-300 rounded p-2">
             <option value="all">비용</option>
             <option value="free">무료 (내배카 필요)</option>
             <option value="paid">유료 (내배카 필요 X)</option>
         </select>
-        <select name="participation-time" onchange="updateCourses()">
+        <select name="participation-time" onchange="updateCourses()" class="border border-gray-300 rounded p-2">
             <option value="all">참여 시간</option>
             <option value="full-time">풀타임</option>
             <option value="part-time">파트타임</option>
         </select>
-        <select name="selection-procedure" onchange="updateCourses()">
+        <select name="selection-procedure" onchange="updateCourses()" class="border border-gray-300 rounded p-2">
             <option value="all">선발절차</option>
             <option value="easy">선발절차에 코딩 없음</option>
             <option value="hard">선발절차에 코딩 있음</option>
         </select>
-        <button type="button" onclick="location.href='http://localhost:8080/boothouse/camps'">초기화버튼</button>
+        <button type="button" onclick="location.href='http://localhost:8080/boothouse/camps'"
+                class="bg-orange-400 text-white px-4 py-2 rounded-md text-sm">초기화</button>
     </div>
 
-    <!-- 비교항목 선택 -- 토글 -->
-    <div class="comparison-options">
-        <button type="button" onclick="toggleComparisonMenu()">비교항목 선택</button>
-        <div id="comparison-menu" class="comparison-menu" style="display:none;">
-            <label><input type="checkbox" value="subcourse" checked onclick="toggleColumn(this)">프로그램 과정명</label>
-            <label><input type="checkbox" value="recruitment-status" checked onclick="toggleColumn(this)"> 모집상태</label>
-            <label><input type="checkbox" value="cost" checked onclick="toggleColumn(this)"> 비용</label>
-            <label><input type="checkbox" value="online-offline" checked onclick="toggleColumn(this)"> 온/오프라인</label>
-            <label><input type="checkbox" value="location" checked onclick="toggleColumn(this)"> 지역</label>
-            <label><input type="checkbox" value="study-period" checked onclick="toggleColumn(this)"> 학습기간</label>
-            <label><input type="checkbox" value="participation-time" checked onclick="toggleColumn(this)"> 참여 시간</label>
-            <label><input type="checkbox" value="selection-procedure" checked onclick="toggleColumn(this)"> 선발절차·키워드</label>
+    <!-- 비교항목 선택 토글 -->
+    <div class="hidden md:block">
+        <button type="button" onclick="toggleComparisonMenu()" class="bg-gray-200 px-4 py-2 rounded">비교항목 선택</button>
+        <div id="comparison-menu" class="hidden bg-white p-4 rounded shadow mt-2">
+            <label class="block"><input type="checkbox" value="subcourse" checked onclick="toggleColumn(this)" class="mr-2">프로그램 과정명</label>
+            <label class="block"><input type="checkbox" value="recruitment-status" checked onclick="toggleColumn(this)" class="mr-2"> 모집상태</label>
+            <label class="block"><input type="checkbox" value="cost" checked onclick="toggleColumn(this)" class="mr-2"> 비용</label>
+            <label class="block"><input type="checkbox" value="online-offline" checked onclick="toggleColumn(this)" class="mr-2"> 온/오프라인</label>
+            <label class="block"><input type="checkbox" value="location" checked onclick="toggleColumn(this)" class="mr-2"> 지역</label>
+            <label class="block"><input type="checkbox" value="study-period" checked onclick="toggleColumn(this)" class="mr-2"> 학습기간</label>
+            <label class="block"><input type="checkbox" value="participation-time" checked onclick="toggleColumn(this)" class="mr-2"> 참여 시간</label>
+            <label class="block"><input type="checkbox" value="selection-procedure" checked onclick="toggleColumn(this)" class="mr-2"> 선발절차</label>
         </div>
     </div>
 </div>
 
 <!-- 프로그램 목록 -->
-<div class="filter-section">
-    <p th:if="${selectedCategory == null}">
-        모집 중인 프로그램 <strong th:text="${count}"></strong>개를 찾았어요.
+<div class="py-6 px-4">
+    <p th:if="${selectedCategory == null}" class="text-lg">
+        모집 중인 프로그램 <strong th:text="${count}" class="text-orange-600"></strong>개를 찾았어요.
     </p>
-    <p th:if="${selectedCategory != null}">
-        모집 중인 <strong th:text="${selectedCategory.name}"></strong> 프로그램 <strong th:text="${count}"></strong>개를 찾았어요.
+    <p th:if="${selectedCategory != null}" class="text-lg">
+        모집 중인 <strong th:text="${selectedCategory.name}" class="text-orange-600"></strong>
+        프로그램 <strong th:text="${count}" class="text-orange-600"></strong>개를 찾았어요.
     </p>
 
-    <div class="filter-options">
-        <select name="sort" onchange="updateCourses()">
+    <div class="flex gap-4 mb-4 mt-4">
+        <select name="sort" onchange="updateCourses()" class="border border-gray-300 rounded p-1 h-10">
             <option value="default">기본정렬</option>
             <option value="deadline">마감 임박순</option>
             <option value="startDate">개강 빠른순</option>
@@ -388,62 +222,106 @@
             <option value="shortDuration">짧은 기간순</option>
             <option value="longDuration">긴 기간순</option>
         </select>
-        <input type="text" placeholder="부트캠프 검색" name="search"/>
-        <button type="button" onclick="updateCourses()">검색</button>
+        <input type="text" placeholder="부트캠프 검색" name="search"
+               class="border border-gray-300 rounded-full p-2 w-2/4 focus:outline-none focus:ring-2 focus:ring-orange-600 h-15"/>
+        <button type="button" onclick="updateCourses()" class="bg-orange-400 text-white px-4 py-1 rounded-md text-sm">검색</button>
     </div>
-<div>
 
+    <!-- 모바일(너비가 짧은 버전)에서는 안보이고, 웹(넓은 버전)에서는 보이게끔 -->
+    <div class="hidden md:block">
+        <table class="min-w-full bg-white shadow rounded-lg overflow-hidden">
+            <thead>
+            <tr class="bg-gray-200 text-gray-600 text-sm leading-normal">
+                <th class="py-3 px-6 text-left">교육과정명</th>
+                <th class="py-3 px-6 text-left subcourse">프로그램 과정명</th>
+                <th class="py-3 px-6 text-left recruitment-status">모집상태</th>
+                <th class="py-3 px-6 text-left cost">비용</th>
+                <th class="py-3 px-6 text-left online-offline">온/오프라인</th>
+                <th class="py-3 px-6 text-left study-period">학습기간</th>
+                <th class="py-3 px-6 text-left participation-time">참여 시간</th>
+                <th class="py-3 px-6 text-left selection-procedure">선발절차</th>
+            </tr>
+            </thead>
+            <tbody class="text-gray-600 text-sm">
+            <tr th:each="course : ${courses}" class="border-b border-gray-200 hover:bg-gray-100">
+                <td class="py-3 px-6">
+                    <a th:href="@{'/courses/' + ${course.id}}" th:text="${course.name}" class="text-black-500 hover:underline"></a>
+                </td>
+                <td class="py-3 px-6 subcourse" th:text="${course.subCourseName}">프로그램 과정명</td>
+                <td class="py-3 px-6 recruitment-status">
+                    <div th:text="${course.recruitmentStatusDescription}">모집상태</div>
+                    <div th:text="'~' + ${#temporals.format(course.closingDate, 'yy.MM.dd')}">마감날</div>
+                </td>
+                <td class="py-3 px-6 cost">
+                    <div th:text="${course.tuitionType}"></div>
+                </td>
+                <td class="py-3 px-6 online-offline"
+                    th:text="${course.onlineOffline + ' ' + course.location}">온/오프라인</td>
+                <td class="py-3 px-6 study-period">
+                    <div th:text="'수업 시작 날짜: ' + ${#temporals.format(course.startDate, 'yy.MM.dd')}"></div>
+                    <div th:text="'수업 종료 날짜: ' + ${#temporals.format(course.endDate, 'yy.MM.dd')}"></div>
+                </td>
+                <td class="py-3 px-6 participation-time">
+                    <span th:text="${course.participationTimeDisplayName}"></span><br/>
+                    <span th:text="${course.participationTimeDefaultSchedule}"></span>
+                </td>
+                <td class="py-3 px-6 selection-procedure">
+                    <div th:text="${course.selectionProcedure}"></div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div> <!-- table -->
 
-<table>
-    <thead>
-    <tr>
-        <th>교육과정명</th> <!-- 교육과정명은 항상 보임 -->
-        <th class="subcourse">프로그램 과정명</th>
-        <th class="recruitment-status">모집상태</th>
-        <th class="cost">비용</th>
-        <th class="online-offline">온/오프라인</th>
-        <th class="study-period">학습기간</th>
-        <th class="participation-time">참여 시간</th>
-        <th class="selection-procedure">선발절차</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="course : ${courses}">
-        <td>
-            <a th:href="@{'/courses/' + ${course.id}}" th:text="${course.name}"></a></td>
-        <td class="subcourse" th:text="${course.subCourseName}">프로그램 과정명</td>
-        <td class="recruitment-status">
-            <div th:text="${course.recruitmentStatusDescription}">모집상태</div>
-            <div th:text="'~' + ${#temporals.format(course.closingDate, 'yy.MM.dd')}">마감날</div>
-        </td>
-        <td class="cost" th:text="${course.tuitionType}"></td>
-        <td class="online-offline" th:text="${course.onlineOffline + ' ' + course.location}"></td>
-        <td class="study-period">
-            <div th:text="'수업 시작 날짜: ' + ${#temporals.format(course.startDate, 'yy.MM.dd')}"></div>
-            <div th:text="'수업 종료 날짜: ' + ${#temporals.format(course.endDate, 'yy.MM.dd')}"></div>
-        </td>
-        <td class="participation-time">
-            <span th:text="${course.participationTimeDisplayName}"></span><br/>
-            <span th:text="${course.participationTimeDefaultSchedule}"></span>
-        </td>
-        <td class="selection-procedure" th:text="${course.selectionProcedure}"></td>
-    </tr>
-    </tbody>
-</table>
+    <!-- 모바일 버전 (카드 형식) -->
+    <div class="block md:hidden">
+        <div class="space-y-4">
+            <div class="bg-white p-4 rounded-lg shadow-md" th:each="course : ${courses}">
+                <div>
+                    <a class="font-bold text-lg text-black-500" th:text="${course.name}" th:href="@{'/courses/' + ${course.id}}">교육과정명</a>
+                </div>
 
-    <!-- 페이지네이션 -->
-    <div class="pagination">
-        <span th:if="${currentPage > 0}">
-            <a th:href="@{'/boothouse/camps?page=' + ${currentPage - 1} + '&size=' + ${size}}">이전</a>
-        </span>
-        <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-            <a th:href="@{'/boothouse/camps?page=' + ${i} + '&size=' + ${size}}"
-               th:text="${i + 1}" th:classappend="${i == currentPage} ? 'active' : ''"></a>
-        </span>
-        <span th:if="${currentPage < totalPages - 1}">
-            <a th:href="@{'/boothouse/camps?page=' + ${currentPage + 1} + '&size=' + ${size}}">다음</a>
-        </span>
+                <div class="flex justify-between mt-2">
+                    <span class="text-sm bg-orange-400 text-white py-1 px-2 rounded-md" th:text="${course.subCourseName}">프로그램 과정명</span>
+                    <p class="text-red-500" th:text="${course.recruitmentStatusDescription}">모집상태</p>
+                </div>
+                <div class="mt-4">
+                    <p class="text-gray-500" th:text="${course.onlineOffline + ' ' + course.location}">온/오프라인</p>
+                </div>
+                <div class="flex justify-start mt-4">
+                    <p class="text-gray-700 font-semibold mr-1">참여 시간 :</p>
+                    <p class="text-gray-500 mr-1" th:text="${course.participationTimeDisplayName}"></p>
+                    <p class="text-gray-500" th:text="${course.participationTimeDefaultSchedule}"></p>
+                </div>
+                <div class="flex justify-start mt-4">
+                    <p class="text-gray-700 font-semibold mr-1">선발 절차 :</p>
+                    <p class="text-gray-500" th:text="${course.selectionProcedure}"></p>
+                </div>
+                <div class="flex justify-start mt-4">
+                    <p class="text-gray-500 mr-1" th:text="${#temporals.format(course.startDate, 'yy.MM.dd')} + '개강 · '"></p>
+                    <p class="text-gray-500" th:text="${course.tuitionType}">비용</p>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+
+<div class="flex justify-center mt-6">
+    <span th:if="${currentPage > 0}" class="mr-2">
+        <a th:href="@{'/boothouse/camps?page=' + ${currentPage - 1} + '&size=' + ${size}}"
+           class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">이전</a>
+    </span>
+    <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}" class="mr-2">
+        <a th:href="@{'/boothouse/camps?page=' + ${i} + '&size=' + ${size}}"
+           th:text="${i + 1}"
+           th:classappend="${i == currentPage} ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'"
+           class="px-4 py-2 rounded"></a>
+    </span>
+    <span th:if="${currentPage < totalPages - 1}" class="ml-2">
+        <a th:href="@{'/boothouse/camps?page=' + ${currentPage + 1} + '&size=' + ${size}}"
+           class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">다음</a>
+    </span>
+</div>
 
 </body>
 </html>
