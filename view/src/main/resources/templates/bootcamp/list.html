@@ -1,23 +1,55 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bootcamp 목록</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-    <h2>Bootcamp 목록</h2>
+<body class="bg-gray-100">
+<div class="container mx-auto px-4 py-8">
+    <!-- 네비게이션 바 -->
+    <nav class="bg-white shadow-md">
+        <div th:replace="fragments/navbar :: navbar"></div>
+    </nav>
 
-    <ul>
-        <li th:each="bootcamp : ${bootcamps}">
-            <span th:text="${bootcamp.name}"></span> -
-            <span th:text="${bootcamp.description}"></span>
-            <br>
-            image 업로드
-            <br>
-            <div th:if="${bootcamp.logo != null}">
-                <img th:src="|/images/${bootcamp.logo}|" alt="Bootcamp Logo" width="300" height="300">
+    <h2 class="text-2xl font-bold mb-6 mt-6">
+        <a href="/bootcamps" th:text="'Bootcamp 목록'"></a>
+    </h2>
+
+    <!-- 검색창 부분 -->
+    <form th:action="@{/bootcamps}" method="get" class="mb-6">
+        <input type="text" name="search" placeholder="기관명 검색"
+               class="py-1 px-4 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-600" />
+        <button type="submit"
+                class="bg-orange-400 text-white text-sm px-3 py-1 rounded-md ml-2">검색</button>
+    </form>
+
+    <!-- 부트캠프 카드 부분 -->
+    <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <li th:each="bootcamp : ${bootcamps}"
+            class="bg-white shadow-md rounded-lg overflow-hidden">
+            <div class="p-4">
+                <h3 class="text-lg font-semibold mb-2">
+                    <a th:href="@{/bootcamps/{bootcampId}/courses (bootcampId=${bootcamp.id})}" th:text="${bootcamp.name}">bootcamp 기관명</a>
+                </h3>
+                <p class="text-sm text-gray-600 mb-2" th:text="${bootcamp.description}">bootcamp 기관 교육철학</p>
+                <div class="text-sm text-gray-500">
+                    <p>
+                        <i class="fas fa-map-marker-alt mr-2 mb-2"></i>
+                        <span th:text="${bootcamp.location}">bootcamp 기관 위치</span>
+                    </p>
+                    <p>
+                        <i class="fas fa-regular fa-link mr-2 mb-2"></i>
+                        <a th:href="${bootcamp.url}" th:text="${bootcamp.url}">bootcamp 홈페이지 url</a>
+                    </p>
+                </div>
             </div>
         </li>
     </ul>
+</div>
+
+
 </body>
 </html>

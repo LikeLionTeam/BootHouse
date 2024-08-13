@@ -1,33 +1,53 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <title>New Post</title>
-    <style>
-        #markdownArea {
-            width: 100%;  /* 너비를 화면에 꽉 차게 설정 */
-            height: 300px; /* 충분한 높이 제공 */
-            margin-bottom: 20px; /* 하단 여백 */
-        }
-        #fileInput, #postType, #importance {
-            margin-bottom: 20px; /* 파일 입력 하단 여백 */
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>새 공지사항 작성</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body>
-<form th:action="@{/notice/save}" th:object="${notice}" method="post" enctype="multipart/form-data">
-    <input type="text" th:field="*{title}" placeholder="Title" style="width: 100%; margin-bottom: 10px;"/><br/>
-    <textarea id="markdownArea" th:field="*{content}" placeholder="Content"></textarea><br/>
-    <select id="postType" th:field="*{postType}">
-        <option value="NOTICE">공지사항</option>
-        <option value="EVENT">이벤트</option>
-    </select><br/>
-    <label>
-        <input type="checkbox" id="importance" th:field="*{importance}"/>
-        중요
-    </label><br/>
-    <input type="file" id="fileInput" multiple onchange="uploadFiles()"/><br/>
-    <button type="submit">Submit</button>
-</form>
+<body class="bg-gray-100">
+
+<nav class="bg-white shadow-md">
+    <div th:replace="fragments/navbar :: navbar"></div>
+</nav>
+
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+    <h1 class="text-3xl font-bold mb-6">새 공지사항 작성</h1>
+
+    <form th:action="@{/notice/save}" th:object="${notice}" method="post" enctype="multipart/form-data" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <div class="mb-4">
+            <input type="text" th:field="*{title}" placeholder="제목" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
+        </div>
+        <div class="mb-4">
+            <textarea id="markdownArea" th:field="*{content}" placeholder="내용" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-64"></textarea>
+        </div>
+        <div class="mb-4">
+            <select id="postType" th:field="*{postType}" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
+                <option value="NOTICE">공지사항</option>
+                <option value="EVENT">이벤트</option>
+            </select>
+        </div>
+        <div class="mb-4">
+            <label class="inline-flex items-center">
+                <input type="checkbox" id="importance" th:field="*{importance}" class="form-checkbox h-5 w-5 text-blue-600"/>
+                <span class="ml-2 text-gray-700">중요</span>
+            </label>
+        </div>
+        <div class="mb-4">
+            <input type="file" id="fileInput" multiple onchange="uploadFiles()" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
+        </div>
+        <div class="flex items-center justify-between">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                저장
+            </button>
+            <a href="/notice" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+                취소
+            </a>
+        </div>
+    </form>
+</div>
 
 <script>
     function insertAtCursor(myField, myValue) {
@@ -78,3 +98,4 @@
 </script>
 </body>
 </html>
+

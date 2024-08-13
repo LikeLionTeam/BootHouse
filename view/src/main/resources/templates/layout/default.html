@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+<!--    <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">V_log</title>-->
+    <!-- 공통 CSS 및 JS 파일 -->
+</head>
+<body>
+<header th:replace="~{fragments/navbar :: navbar}"></header>
+<div layout:fragment="content">
+    <!-- 각 페이지의 내용이 여기에 들어갑니다 -->
+</div>
+<footer>
+    <!-- 공통 푸터 -->
+</footer>
+</body>
+</html>

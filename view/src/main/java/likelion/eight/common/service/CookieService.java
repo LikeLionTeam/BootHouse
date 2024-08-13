@@ -9,10 +9,12 @@ import likelion.eight.domain.token.model.TokenResponse;
 import likelion.eight.domain.token.service.TokenService;
 import likelion.eight.domain.user.model.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CookieService {
 
     public static final String USER_TOKEN_CODE = "userTokenCode";
@@ -101,7 +103,6 @@ public class CookieService {
     // 로그인 여부 확인 메서드 추가
     public boolean isUserLoggedIn(HttpServletRequest request){
         Cookie[] cookies = request.getCookies();
-
         if (cookies != null){
             for (Cookie cookie : cookies) {
                 if (USER_TOKEN_CODE.equals(cookie.getName()) || ADMIN_TOKEN_CODE.equals(cookie.getName()) ){

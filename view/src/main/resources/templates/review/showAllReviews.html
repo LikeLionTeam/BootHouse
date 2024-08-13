@@ -3,24 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>All Reviews</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body>
-<h2>Reviews</h2>
+<body class="bg-gray-100 p-4">
+
+<nav class="bg-white shadow-md mb-6">
+    <div th:replace="fragments/navbar :: navbar"></div>
+</nav>
+
+<h2 class="text-2xl font-semibold mb-4">Reviews</h2>
 
 <!-- 검색 폼 -->
-<form th:action="@{/reviews/search}" method="get">
-    <div>
-        <label for="keyword">검색 : </label>
-        <input type="text" id="keyword" name="keyword" th:value="${searchCondition.keyword}">
-        <button type="submit">검색하기</button>
+<form th:action="@{/reviews/search}" method="get" class="mb-4">
+    <div class="flex items-center space-x-2">
+        <label for="keyword" class="text-lg font-medium">검색 :</label>
+        <input type="text" id="keyword" name="keyword" th:value="${searchCondition.keyword}" class="border border-gray-300 rounded-md p-2 flex-grow">
+        <button type="submit" class="bg-orange-500 text-white rounded-md px-4 py-2">검색하기</button>
     </div>
 </form>
 
 <!-- 정렬 폼 -->
-<form th:action="@{/reviews/sort}" method="get">
-    <div>
-        <label for="sortBy">정렬 : </label>
-        <select id="sortBy" name="sortBy">
+<form th:action="@{/reviews/sort}" method="get" class="mb-6">
+    <div class="flex items-center space-x-2">
+        <label for="sortBy" class="text-lg font-medium">정렬 :</label>
+        <select id="sortBy" name="sortBy" class="border border-gray-300 rounded-md p-2">
             <option value="" th:selected="${sortCondition.sortBy == null}">선택</option>
             <option value="ratingDesc" th:selected="${sortCondition.sortBy == 'ratingDesc'}">높은평점순</option>
             <option value="ratingAsc" th:selected="${sortCondition.sortBy == 'ratingAsc'}">낮은평점순</option>
@@ -28,43 +35,43 @@
             <option value="recent" th:selected="${sortCondition.sortBy == 'recent'}">최근순</option>
             <option value="oldest" th:selected="${sortCondition.sortBy == 'oldest'}">오래된순</option>
         </select>
-        <button type="submit">정렬하기</button>
+        <button type="submit" class="bg-orange-500 text-white rounded-md px-4 py-2">정렬하기</button>
     </div>
 </form>
 
-<table border="1">
+<table class="min-w-full bg-white border border-gray-200">
     <thead>
     <tr>
-        <th>제목</th>
-        <th>총평</th>
+        <th class="px-4 py-2 border-b border-gray-200 text-left">제목</th>
+        <th class="px-4 py-2 border-b border-gray-200 text-left">총평</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="review : ${reviewPage.content}">
-        <td><a th:href="@{/reviews/{id}(id=${review.id})}" th:text="${review.title}">Title</a></td>
-        <td th:text="${review.oneLineReview}">One Line Review</td>
+    <tr th:each="review : ${reviewPage.content}" class="hover:bg-gray-50">
+        <td class="px-4 py-2 border-b border-gray-200">
+            <a th:href="@{/reviews/{id}(id=${review.id})}" th:text="${review.title}" class="text-blue-500 hover:underline">Title</a>
+        </td>
+        <td class="px-4 py-2 border-b border-gray-200" th:text="${review.oneLineReview}">One Line Review</td>
     </tr>
     </tbody>
 </table>
 
 <!-- 페이징 -->
-<div>
-    <span th:text="'Page ' + ${reviewPage.number + 1} + ' of ' + ${reviewPage.totalPages}">Page 1 of 1</span>
-    <ul>
-        <li th:if="${reviewPage.hasPrevious()}">
-            <a th:href="@{/reviews(page=${reviewPage.number - 1}, size=${reviewPage.size})}">이전</a>
+<div class="mt-4">
+    <span th:text="'Page ' + ${reviewPage.number + 1} + ' of ' + ${reviewPage.totalPages}" class="text-gray-600">Page 1 of 1</span>
+    <ul class="inline-flex mt-2">
+        <li th:if="${reviewPage.hasPrevious()}" class="mr-1">
+            <a th:href="@{/reviews(page=${reviewPage.number - 1}, size=${reviewPage.size})}"
+               class="bg-blue-500 text-white px-3 py-1 rounded-md">이전</a>
         </li>
-        <li th:each="i : ${#numbers.sequence(1, reviewPage.totalPages)}"
-            th:classappend="${i == reviewPage.number + 1} ? 'active'">
-            <a th:href="@{/reviews(page=${i - 1}, size=${reviewPage.size})}"
-               th:text="${i}">1</a>
+        <li th:each="i : ${#numbers.sequence(1, reviewPage.totalPages)}" th:classappend="${i == reviewPage.number + 1} ? 'font-bold text-blue-500' : ''" class="mr-1">
+            <a th:href="@{/reviews(page=${i - 1}, size=${reviewPage.size})}" th:text="${i}" class="bg-white border border-gray-300 px-3 py-1 rounded-md hover:bg-gray-100">1</a>
         </li>
-        <li th:if="${reviewPage.hasNext()}">
-            <a th:href="@{/reviews(page=${reviewPage.number + 1}, size=${reviewPage.size})}">다음</a>
+        <li th:if="${reviewPage.hasNext()}" class="ml-1">
+            <a th:href="@{/reviews(page=${reviewPage.number + 1}, size=${reviewPage.size})}"
+               class="bg-blue-500 text-white px-3 py-1 rounded-md">다음</a>
         </li>
     </ul>
 </div>
-
-
 </body>
 </html>

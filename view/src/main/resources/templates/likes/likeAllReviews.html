@@ -1,31 +1,46 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>내가 좋아요한 리뷰 목록</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내가 찜한 리뷰</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body>
-<div class="container mt-5">
-    <h2>내가 좋아한 리뷰</h2>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>리뷰 제목</th>
-            <th>한 줄 평</th>
-            <th>평점</th>
-            <th>작성자</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="review : ${allLikeReviews}">
-            <td th:text="${review.title}">리뷰 제목</td>
-            <td th:text="${review.oneLineReview}">한 줄 평</td>
-            <td th:text="${review.rating}">평점</td>
-            <td th:text="${review.author}">작성자</td>
-        </tr>
-        </tbody>
-    </table>
+<body class="bg-gray-100">
+
+<nav class="bg-white shadow-md">
+    <div th:replace="fragments/navbar :: navbar"></div>
+</nav>
+
+<div class="container mx-auto px-4 py-8">
+
+    <h1 class="text-2xl font-bold mb-6">내가 찜한 항목</h1>
+
+    <!-- 네비게이션 -->
+    <div class="flex space-x-4 mb-6">
+        <a href="/likes/course" class="text-lg font-semibold text-gray-500 hover:text-gray-900 pb-2">찜한 부트캠프</a>
+        <a href="/likes/review" class="text-lg font-semibold text-gray-900 border-b-2 border-gray-900 pb-2">찜한 리뷰</a>
+    </div>
+
+    <div class="space-y-6">
+        <div class="bg-white rounded-lg shadow-md p-6" th:each="review : ${allLikeReviews}">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h2 class="font-bold text-xl mb-2" th:text="${review.title}">리뷰 제목</h2>
+                    <p class="text-gray-600 text-sm"><i class="fas fa-user mr-2"></i>작성자: <span th:text="${review.author}">홍길동</span></p>
+                </div>
+                <button class="text-red-500 hover:text-red-700">
+                    <i class="fas fa-heart"></i>
+                </button>
+            </div>
+            <p class="text-gray-700 mb-4"><i class="fas fa-quote-left mr-2 text-gray-400"></i><span th:text="${review.oneLineReview}">리뷰 내용의 일부분이 여기에 표시됩니다...</span></p>
+            <div class="flex justify-between items-center text-sm text-gray-500">
+                <span><i class="fas fa-laptop-code mr-2"></i>부트캠프: <span th:text="${review.courseName}">Android 개발 부트캠프</span></span>
+                <span><i class="fas fa-star mr-2 text-yellow-400"></i>평점: <span th:text="${review.rating} + '/5'">4.5/5</span></span>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
