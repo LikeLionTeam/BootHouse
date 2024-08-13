@@ -29,13 +29,13 @@
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-3xl font-bold text-gray-800" th:text="${review.title}">리뷰 제목</h2>
         <button class="like-button text-gray-400 hover:text-red-500" th:data-review-id="${reviewId}"><i id="likeButton"
-                                                                        class="far fa-heart"></i></button>
+                                                                                                        class="far fa-heart"></i></button>
     </div>
 
     <div class="mb-6">
         <p class="text-gray-600 flex items-center">
             <i class="fas fa-user mr-2"></i>
-<!--            작성자 엔티티 너어야 함-->
+            <!--            작성자 엔티티 너어야 함-->
             <span th:text="${loginUser.name}">작성자: 홍길동</span>
         </p>
     </div>

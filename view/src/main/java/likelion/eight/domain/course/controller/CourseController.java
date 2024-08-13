@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-public class CourseController {
+public class CourseController  {
     private final CourseService courseService;
     private final CategoryService categoryService;
     private final SubCourseService subCourseService;
