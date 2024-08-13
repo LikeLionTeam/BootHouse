@@ -28,8 +28,10 @@
 <div class="bg-white shadow-md rounded-lg p-8 mb-6">
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-3xl font-bold text-gray-800" th:text="${review.title}">리뷰 제목</h2>
-        <button class="like-button text-gray-400 hover:text-red-500" th:data-review-id="${reviewId}"><i id="likeButton"
-                                                                        class="far fa-heart"></i></button>
+        <button class="like-button text-gray-400 hover:text-red-500" th:data-review-id="${reviewId}">
+            <i class="far fa-heart"></i>
+        </button>
+
     </div>
 
     <div class="mb-6">
@@ -116,31 +118,30 @@
 </div>
 
 <script>
-    const likeButton = document.querySelector('.like-button');
-    let liked = false;
+    document.querySelectorAll('.like-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const icon = button.querySelector('i');
+            const liked = icon.classList.toggle('fas');  // 'fas' 클래스를 토글
+            icon.classList.toggle('far', !liked);  // 'far' 클래스를 토글, liked가 false일 때만 추가
+            button.classList.toggle('liked');
 
-    likeButton.addEventListener('click', () => {
-        liked = !liked;
-        likeButton.classList.toggle('fas');
-        likeButton.classList.toggle('far');
-        likeButton.classList.toggle('liked');
-
-        const reviewId = likeButton.getAttribute('data-review-id');
-        console.log(reviewId);
-        fetch(`/likes/review/${reviewId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ liked })
-        })
-            .then(response => response.text())
-            .then(data => {
-                console.log(data); // 성공 시 처리
+            const reviewId = button.getAttribute('data-review-id');
+            console.log(reviewId);
+            fetch(`/likes/review/${reviewId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ liked })
             })
-            .catch(error => {
-                console.error('Error:', error); // 에러 시 처리
-            });
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data); // 성공 시 처리
+                })
+                .catch(error => {
+                    console.error('Error:', error); // 에러 시 처리
+                });
+        });
     });
 </script>
 
