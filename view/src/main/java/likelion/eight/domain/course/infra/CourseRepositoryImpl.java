@@ -1,5 +1,6 @@
 package likelion.eight.domain.course.infra;
 
+import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import likelion.eight.course.CourseEntity;
 import likelion.eight.course.ifs.CourseJpaRepository;
 import likelion.eight.domain.course.controller.model.CourseFilter;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Repository
@@ -62,5 +64,13 @@ public class CourseRepositoryImpl implements CourseRepository {
         Optional<CourseEntity> courseEntityOptional = courseJpaRepository.findByIdWithBootcamp(courseId);
 
         return CourseConverter.toCourseOptional(courseEntityOptional);
+    }
+    @Override
+    public List<Course> findCourseByBootcampId(Long bootcampId) {
+        List<CourseEntity> courseEntities = courseJpaRepository.findCoursesByBootcampId(bootcampId);
+
+        return courseEntities.stream()
+                .map(CourseConverter::toCourse)
+                .collect(Collectors.toList());
     }
 }

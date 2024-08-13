@@ -10,6 +10,6 @@ public class SystemUuidHolder implements UuidHolder {
 
     @Override
     public String random() {
-        return UUID.randomUUID().toString().substring(0, 6);
+        return UUID.randomUUID().toString().substring(0, 8) + "$";
     }
 }

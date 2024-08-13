@@ -2,6 +2,8 @@ package likelion.eight.domain.bootcamp.infra;
 
 import likelion.eight.bootcamp.BootCampEntity;
 import likelion.eight.bootcamp.ifs.BootCampJpaRepository;
+import likelion.eight.domain.bootcamp.controller.model.BootCampSearchCond;
+import likelion.eight.domain.bootcamp.controller.model.BootCampSearchResponse;
 import likelion.eight.domain.bootcamp.converter.BootcampConverter;
 import likelion.eight.domain.bootcamp.model.Bootcamp;
 import likelion.eight.domain.bootcamp.service.port.BootcampRepository;
@@ -15,6 +17,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BootcampRepositoryImpl implements BootcampRepository {
     private final BootCampJpaRepository bootCampJpaRepository;
+    private final BootcampRepositoryQueryDSLImpl bootcampRepositoryQueryDSL;
+
     @Override
     public List<Bootcamp> findAllBootcamps() {
         return bootCampJpaRepository.findAll().stream()
@@ -29,4 +33,15 @@ public class BootcampRepositoryImpl implements BootcampRepository {
 
         return BootcampConverter.toBootcamp(savedBootcampEntity);
     }
+
+    @Override
+    public List<Bootcamp> findByName(String name) {
+        return bootcampRepositoryQueryDSL.findByName(name);
+
+
+//     @Override
+//     public List<BootCampSearchResponse> findSearchByCond(BootCampSearchCond cond) {
+//         return bootcampQueryDslRepository.findSearchByCond(cond.getName(), cond.getLocation());
+
+//     }
 }

@@ -23,7 +23,7 @@ public class LikeReviewController {
 
     private final LikeReviewService likeReviewService;
 
-    @PostMapping("{reviewId}")
+    @PostMapping("/{reviewId}")
     public ResponseEntity<String> likeReview(@Login LoginUser loginUser, @PathVariable Long reviewId){
         try {
             String result = likeReviewService.likeReview(loginUser, reviewId);

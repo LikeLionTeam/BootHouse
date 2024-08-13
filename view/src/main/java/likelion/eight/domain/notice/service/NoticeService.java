@@ -17,8 +17,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -39,6 +42,7 @@ public class NoticeService {
     @Value("${app.upload.url}")
     private String UPLOAD_DIR;
 
+    @Transactional
     public Long saveNotice(NoticeReq noticeReq, LoginUser loginUser){
         String htmlContent = markdownConverter.convertMarkdownToHtml(noticeReq.getContent());
 
@@ -77,6 +81,7 @@ public class NoticeService {
         }
     }
 
+    @Transactional
     public boolean updateNotice(Long noticeId, NoticeReq noticeReq,LoginUser loginUser) {
 
         UserEntity userEntity = userJpaRepository.findById(loginUser.getId())
@@ -100,6 +105,7 @@ public class NoticeService {
 
 
 
+    @Transactional
     public boolean deleteNotice(Long noticeId,LoginUser loginUser) {
         NoticeEntity notice = noticeJpaRepository.findById(noticeId)
                 .orElseThrow(() -> new ResourceNotFoundException("존재하지않는 notice"));
@@ -133,7 +139,10 @@ public class NoticeService {
     }
 
     public Page<NoticeRes> getAllNotices(Pageable pageable) {
-        Page<NoticeEntity> allNotices = noticeJpaRepository.findAll(pageable);
+
+        Sort sort = Sort.by(Sort.Order.desc("importance"), Sort.Order.desc("registrationDate"));
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+        Page<NoticeEntity> allNotices = noticeJpaRepository.findAll(sortedPageable);
 
         return allNotices.map(notice -> NoticeRes.builder()
                 .noticeId(notice.getId())
@@ -154,6 +163,7 @@ public class NoticeService {
         return noticeOptional.get();
     }
 
+    @Transactional
     public String storeFile(MultipartFile file) {
         try {
             String fileName = UUID.randomUUID() + ".jpg";

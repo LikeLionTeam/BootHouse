@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -102,7 +103,9 @@ public class NoticeController {
     public String getAllNotices(@RequestParam(defaultValue = "0") int page,
                                 Model model,
                                 @Login LoginUser loginUser) {
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("importance").descending().and(Sort.by("registrationDate").descending()));
+
+
         Page<NoticeRes> allNotices = noticeService.getAllNotices(pageable);
         model.addAttribute("notices",allNotices);
         model.addAttribute("isAdmin",loginUser.getRoleType().equals(RoleType.ADMIN));

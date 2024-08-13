@@ -1,5 +1,6 @@
 package likelion.eight.domain.course.controller.model;
 
+import likelion.eight.course.ParticipationTime;
 import likelion.eight.domain.course.model.Course;
 import lombok.Data;
 
@@ -27,6 +28,8 @@ public class CourseDetailDto {
     private String tuitionType;
     private boolean cardRequirement;
     private BigDecimal averageRating;
+    private String defaultSchedule;
+    private boolean codingTestExempt;
 
     public static CourseDetailDto from(Course course){
         CourseDetailDto dto = new CourseDetailDto();
@@ -52,6 +55,10 @@ public class CourseDetailDto {
         dto.setCardRequirement(course.isCardRequirement());
         dto.setAverageRating(course.getAverageRating());
 
+        String defaultSchedule = course.getParticipationTime().getDefaultSchedule().length() > 0 ? course.getParticipationTime().getDefaultSchedule(): course.getParticipationTime().getDisplayName() ;
+        dto.setDefaultSchedule(defaultSchedule);
+
+        dto.setCodingTestExempt(course.isCodingTestExempt());
         return dto;
     }
 }
