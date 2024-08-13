@@ -17,7 +17,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BootcampRepositoryImpl implements BootcampRepository {
     private final BootCampJpaRepository bootCampJpaRepository;
-    private final BootcampQueryDslRepository bootcampQueryDslRepository;
+    private final BootcampRepositoryQueryDSLImpl bootcampRepositoryQueryDSL;
+
     @Override
     public List<Bootcamp> findAllBootcamps() {
         return bootCampJpaRepository.findAll().stream()
@@ -34,7 +35,13 @@ public class BootcampRepositoryImpl implements BootcampRepository {
     }
 
     @Override
-    public List<BootCampSearchResponse> findSearchByCond(BootCampSearchCond cond) {
-        return bootcampQueryDslRepository.findSearchByCond(cond.getName(), cond.getLocation());
-    }
+    public List<Bootcamp> findByName(String name) {
+        return bootcampRepositoryQueryDSL.findByName(name);
+
+
+//     @Override
+//     public List<BootCampSearchResponse> findSearchByCond(BootCampSearchCond cond) {
+//         return bootcampQueryDslRepository.findSearchByCond(cond.getName(), cond.getLocation());
+
+//     }
 }

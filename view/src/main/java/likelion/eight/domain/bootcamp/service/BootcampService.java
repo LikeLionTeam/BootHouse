@@ -2,12 +2,11 @@ package likelion.eight.domain.bootcamp.service;
 
 import likelion.eight.common.domain.exception.FileStorageException;
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
-import likelion.eight.domain.bootcamp.controller.model.BootCampSearchCond;
-import likelion.eight.domain.bootcamp.controller.model.BootCampSearchResponse;
 import likelion.eight.domain.bootcamp.controller.model.BootcampCreateRequest;
-import likelion.eight.domain.bootcamp.infra.BootcampQueryDslRepository;
 import likelion.eight.domain.bootcamp.model.Bootcamp;
 import likelion.eight.domain.bootcamp.service.port.BootcampRepository;
+import likelion.eight.domain.course.model.Course;
+import likelion.eight.domain.course.service.port.CourseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,13 +15,15 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class BootcampService {
     private final BootcampRepository bootcampRepository;
-    private final BootcampQueryDslRepository bootcampRepositoryQueryDsl; // TODO
+    private final CourseRepository courseRepository;
+
 
     @Value("${app.upload.url}")
     private String fileDir;
@@ -37,18 +38,14 @@ public class BootcampService {
     }
 
     public List<Bootcamp> findAllBootcamps(String searchKeyword){
-        List<Bootcamp> bootcamps = bootcampRepositoryQueryDsl.findByName(searchKeyword);
-
-        if (bootcamps.isEmpty()){
-            throw new ResourceNotFoundException("현재 검색된 부트캠프가 없습니다.");
-        }
+        List<Bootcamp> bootcamps = bootcampRepository.findByName(searchKeyword);
         return bootcamps;
     }
 
-    public List<BootCampSearchResponse> findAllBootcamps(BootCampSearchCond cond){
-        List<BootCampSearchResponse> bootcamps = bootcampRepository.findSearchByCond(cond);
-        return bootcamps;
-    }
+//     public List<BootCampSearchResponse> findAllBootcamps(BootCampSearchCond cond){
+//         List<BootCampSearchResponse> bootcamps = bootcampRepository.findSearchByCond(cond);
+//         return bootcamps;
+//     }
 
     public Bootcamp createBootcamp(BootcampCreateRequest request){
         String name = request.getName();
@@ -95,5 +92,13 @@ public class BootcampService {
 
     public String getFilePath(String saveFilename){
         return fileDir + saveFilename;
+    }
+
+    public List<Course> findCourseByBootcampId(Long bootcampId){
+        List<Course> courses = courseRepository.findCourseByBootcampId(bootcampId);
+
+        return Optional.ofNullable(courses)
+                .filter(c -> !c.isEmpty())
+                .orElseThrow(() -> new ResourceNotFoundException("해당 부트캠프에서 주관하는 course는 없습니다."));
     }
 }
