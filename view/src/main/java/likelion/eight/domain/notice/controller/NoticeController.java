@@ -99,6 +99,8 @@ public class NoticeController {
         }
     }
 
+
+
     @GetMapping
     public String getAllNotices(@RequestParam(defaultValue = "0") int page,
                                 Model model,
@@ -109,6 +111,8 @@ public class NoticeController {
         Page<NoticeRes> allNotices = noticeService.getAllNotices(pageable);
         model.addAttribute("notices",allNotices);
         model.addAttribute("isAdmin",loginUser.getRoleType().equals(RoleType.ADMIN));
+//        boolean isAdmin = loginUser != null && RoleType.ADMIN.equals(loginUser.getRoleType());
+//        model.addAttribute("isAdmin", isAdmin);
         return "/notice/viewAllNotice";
     }
 
