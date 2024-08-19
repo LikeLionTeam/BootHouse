@@ -108,8 +108,11 @@
                     <ul class="review-list space-y-4">
                         <th:block th:each="review, iterStat : ${reviews}">
                             <li class="bg-gray-100 border rounded-lg p-4 review-item">
-                                <a class="font-semibold mb-2" th:text="${review.title}"
-                                   th:href="@{/reviews/{id}(id=${review.id})}">리뷰 제목</a>
+                                <a class="font-semibold mb-2"
+                                   th:text="${review.title}"
+                                   th:href="${isUserLoggedIn} ? @{/user/reviews/{id}(id=${review.id})} : @{/reviews/{id}(id=${review.id})}">
+                                    리뷰 제목
+                                </a>
                                 <div class="text-sm text-gray-600" th:text="${review.oneLineReview}">한줄리뷰</div>
                             </li>
                         </th:block>

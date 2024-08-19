@@ -32,13 +32,12 @@
                                                                                                         class="far fa-heart"></i></button>
     </div>
 
-<!--    <div class="mb-6">
+    <div class="mb-6">
         <p class="text-gray-600 flex items-center">
             <i class="fas fa-user mr-2"></i>
-            &lt;!&ndash;            작성자 엔티티 너어야 함&ndash;&gt;
-            <span th:text="${loginUser.name}">작성자: 홍길동</span>
+            <span th:text="${user.name}">작성자: 홍길동</span>
         </p>
-    </div>-->
+    </div>
 
     <table class="w-full mb-6 text-gray-700">
         <tr class="border-b">
@@ -82,19 +81,16 @@
         </p>
         <p class="flex items-center">
             <i class="fas fa-calendar-alt mr-2"></i>
-            등록일: <span
-                th:text="${#temporals.format(review.registrationDate, 'yyyy-MM-dd HH:mm:ss')}">2023-08-11
-                    15:30</span>
+            등록일: <span th:text="${#temporals.format(review.registrationDate, 'yyyy-MM-dd HH:mm:ss')}">2023-08-11 15:30</span>
         </p>
         <p class="flex items-center">
             <i class="fas fa-edit mr-2"></i>
-            수정일: <span
-                th:text="${#temporals.format(review.lastModifiedDate, 'yyyy-MM-dd HH:mm:ss')}">2023-08-11
-                    16:00</span>
+            수정일: <span th:text="${#temporals.format(review.lastModifiedDate, 'yyyy-MM-dd HH:mm:ss')}">2023-08-11 16:00</span>
         </p>
     </div>
 
-    <div class="flex justify-end space-x-4">
+
+    <div th:if="${isUserLoggedIn} and ${user.id} == ${loginUser.id}" class="flex justify-end space-x-4">
         <a th:href="@{/review/{id}/edit(id=${review.id})}"
            class="bg-blue-500 text-white px-6 py-2 rounded-md shadow hover:bg-blue-600 transition duration-150">수정하기</a>
         <form th:action="@{/review/{id}/delete(id=${review.id})}" method="post">
@@ -102,6 +98,7 @@
                     class="bg-red-500 text-white px-6 py-2 rounded-md shadow hover:bg-red-600 transition duration-150">삭제하기</button>
         </form>
     </div>
+
 </div>
 
 <div class="text-center mt-8">
@@ -109,10 +106,12 @@
 </div>
 
 <div th:if="${previousReview != null}" class="text-center mt-4">
-    <a th:href="@{/reviews/{id}(id=${previousReview.id})}" class="text-blue-500 hover:underline">이전 글</a>
+    <a th:href="${isUserLoggedIn} ? @{/user/reviews/{id}(id=${previousReview.id})} : @{/reviews/{id}(id=${previousReview.id})}"
+       class="text-blue-500 hover:underline">이전 글</a>
 </div>
 <div th:if="${nextReview != null}" class="text-center mt-2">
-    <a th:href="@{/reviews/{id}(id=${nextReview.id})}" class="text-blue-500 hover:underline">다음 글</a>
+    <a th:href="${isUserLoggedIn} ? @{/user/reviews/{id}(id=${nextReview.id})} : @{/reviews/{id}(id=${nextReview.id})}"
+       class="text-blue-500 hover:underline">다음 글</a>
 </div>
 
 <script>
