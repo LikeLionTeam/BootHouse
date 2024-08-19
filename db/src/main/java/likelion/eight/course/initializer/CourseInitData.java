@@ -195,7 +195,7 @@ public class CourseInitData implements CommandLineRunner {
 //                .codingTestExempt(true)
 //                .cardRequirement(false)
 //                .onlineOffline(false)
-//                .location("서울") // -- 오프라인이라, 명시함
+//                .location("서울특별시 중구 청계천로 100 시그니쳐타워") // -- 오프라인이라, 명시함
 //                .tuitionType("10") // -- 10만원
 //                .summary("서울에서 오프라인, 풀타임으로 진행되는 유료(10만원) iOS 부트캠프입니다. 선발절차에 코딩테스트는 있습니다.")
 //                .participationTime(ParticipationTime.FULL_TIME)
