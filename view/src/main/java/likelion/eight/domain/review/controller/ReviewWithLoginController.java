@@ -32,6 +32,15 @@ public class ReviewWithLoginController {
     public String createReviewForm(Model model, @PathVariable Long courseId, @Login LoginUser loginUser, RedirectAttributes redirectAttributes) {
 
         Long userId = loginUser.getId();
+
+        log.info("USERID ::::::::::: {}", userId);
+
+        if (userId == null) {
+            model.addAttribute("error", "회원만 리뷰 작성을 할 수 있습니다.");
+
+            return "redirect:/login";
+        }
+
         if (reviewService.existsByUserIdAndCourseId(userId, courseId)) {
 
             model.addAttribute("error", "이미 해당 코스에 대한 리뷰를 작성하였습니다.");

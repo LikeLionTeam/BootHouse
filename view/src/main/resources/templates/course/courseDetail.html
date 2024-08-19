@@ -122,8 +122,8 @@
 
                     <p class="mb-1 ml-4"th:if="${#lists.isEmpty(reviews)}">등록된 리뷰가 없습니다</p>
 
-                    <div class="mt-4 ml-4 text-orange-500 hover:underline">
-                        <a th:text="${'내 리뷰 쓰기'}" th:href="@{/reviews/new/{courseId}(courseId=${course.id})}"></a>
+                    <div th:if="${isUserLoggedIn}" class="mt-4 ml-4 text-orange-500 hover:underline">
+                        <a th:text="'내 리뷰 쓰기'" th:href="@{/reviews/new/{courseId}(courseId=${course.id})}"></a>
                     </div>
                 </div>
             </div>
@@ -131,6 +131,7 @@
     </div>
 
     <!-- 고정된 정보 영역 -->
+    <div class="w-full lg:w-1/3 sticky top-8 h-full">
     <div class="w-full lg:w-1/3 sticky top-8 h-full">
         <div class="bg-white shadow-lg rounded-lg p-6">
             <h2 class="text-2xl font-semibold mb-4" th:text="${course.name}">course name</h2>
