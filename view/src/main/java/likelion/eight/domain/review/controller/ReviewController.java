@@ -31,10 +31,7 @@ import java.util.Optional;
 @Slf4j
 public class ReviewController {
     private final ReviewService reviewService;
-    private final CourseService courseService;
     private final CookieService cookieService;
-    private final UserService userService;
-
 
     @GetMapping()
     public String showAllReviews(
@@ -77,17 +74,21 @@ public class ReviewController {
         reviewService.incrementViewCount(reviewId);
 
         Review review = reviewService.findReviewById(reviewId);
+
         Optional<Review> previousReviewOptional = reviewService.findPreviousReview(reviewId);
         Optional<Review> nextReviewOptional = reviewService.findNextReview(reviewId);
-        UserResponse user = userService.getById(review.getUserId());
+
+        String author = reviewService.getAuthor(review.getUserId());
+        String courseName = reviewService.getCourseName(review.getCourseId());
+
         boolean isUserLoggedIn = cookieService.isUserLoggedIn(request);
 
-        Course course = courseService.findCourseById(review.getCourseId());
 
-        model.addAttribute("course", course);
+        model.addAttribute("courseName", courseName);
         model.addAttribute("review", review);
-        model.addAttribute("user", user);
+        model.addAttribute("author", author);
         model.addAttribute("isUserLoggedIn", isUserLoggedIn);
+
         previousReviewOptional.ifPresent(previousReview -> model.addAttribute("previousReview", previousReview));
         nextReviewOptional.ifPresent(nextReview -> model.addAttribute("nextReview", nextReview));
 

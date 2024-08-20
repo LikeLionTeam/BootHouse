@@ -32,10 +32,7 @@ import java.util.Optional;
 public class ReviewWithLoginController {
 
     private final ReviewService reviewService;
-    private final CourseService courseService;
-    private final UserService userService;
     private final CookieService cookieService;
-
 
     @GetMapping("/user/reviews/{reviewId}")
     public String UserShowReview(@PathVariable Long reviewId, Model model, @Login LoginUser loginUser, HttpServletRequest request) {
@@ -45,14 +42,14 @@ public class ReviewWithLoginController {
         Review review = reviewService.findReviewById(reviewId);
         Optional<Review> previousReviewOptional = reviewService.findPreviousReview(reviewId);
         Optional<Review> nextReviewOptional = reviewService.findNextReview(reviewId);
-        UserResponse user = userService.getById(review.getUserId());
-        Course course = courseService.findCourseById(review.getCourseId());
+        String author = reviewService.getAuthor(review.getUserId());
+        String courseName = reviewService.getCourseName(review.getCourseId());
         boolean isUserLoggedIn = cookieService.isUserLoggedIn(request);
 
 
-        model.addAttribute("course", course);
+        model.addAttribute("courseName", courseName);
         model.addAttribute("review", review);
-        model.addAttribute("user", user);
+        model.addAttribute("author", author);
         model.addAttribute("loginUser", loginUser);
         model.addAttribute("isUserLoggedIn", isUserLoggedIn);
         previousReviewOptional.ifPresent(previousReview -> model.addAttribute("previousReview", previousReview));
@@ -73,14 +70,11 @@ public class ReviewWithLoginController {
             Long reviewId = reviewService.findReviewByCourseIdAndUserId(courseId, userId).getId();
             redirectAttributes.addAttribute("reviewId", reviewId);
 
-            log.info("reviewID ::::: {}", reviewId);
-
             return "redirect:/reviews/{reviewId}";
         }
 
-        Course course = courseService.findCourseById(courseId);
 
-        model.addAttribute("course", course);
+        model.addAttribute("courseId", courseId);
         model.addAttribute("loginUser", loginUser);
         model.addAttribute("reviewCreateRequest", ReviewCreateRequest.builder().build());
 
@@ -99,13 +93,10 @@ public class ReviewWithLoginController {
 
 
     @GetMapping("review/{reviewId}/edit")
-    public String editReviewForm(@PathVariable Long reviewId, Model model, @Login LoginUser loginUser) {
-
-        //TODO : 로그인 유저 = review의 user_id, 일치하면 수정,삭제 가능하도록 파라미터 넘겨 주기
+    public String editReviewForm(@PathVariable Long reviewId, Model model) {
 
         Review review = reviewService.findReviewById(reviewId);
         model.addAttribute("review", review);
-        model.addAttribute("loginUser", loginUser);
         return "review/editReviewForm";
     }
 
@@ -118,7 +109,6 @@ public class ReviewWithLoginController {
 
     @PostMapping("review/{reviewId}/delete")
     public String deleteReview(@PathVariable Long reviewId) {
-        //TODO : 로그인 유저 = review의 user_id, 일치하면 수정,삭제 가능하도록 파라미터 넘겨 주기
 
         reviewService.deleteReview(reviewId);
         return "redirect:/reviews";

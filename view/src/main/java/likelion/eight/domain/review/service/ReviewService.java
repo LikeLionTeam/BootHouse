@@ -3,6 +3,8 @@ package likelion.eight.domain.review.service;
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import likelion.eight.common.service.port.ClockHolder;
 import likelion.eight.course.CourseEntity;
+import likelion.eight.domain.course.controller.CourseController;
+import likelion.eight.domain.course.converter.CourseConverter;
 import likelion.eight.domain.course.service.port.CourseRepository;
 import likelion.eight.domain.review.controller.model.ReviewCreateRequest;
 import likelion.eight.domain.review.controller.model.ReviewSearchCondition;
@@ -111,8 +113,6 @@ public class ReviewService {
         CourseEntity courseEntity = getCourseEntity(review.getCourseId());
         UserEntity userEntity = getUserEntity(review.getUserId());
 
-//        ReviewEntity reviewEntity = ReviewConverter.toReviewEntity(review, courseEntity, userEntity);
-
         reviewEntity.incrementViewCount();
 
         reviewRepository.save(ReviewConverter.toDto(reviewEntity), courseEntity, userEntity);
@@ -151,4 +151,18 @@ public class ReviewService {
         return UserConverter.toEntity(user);
     }
 
+    public String getAuthor(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found : " + userId));
+
+        return user.getName();
+    }
+
+    public String getCourseName(Long courseId) {
+        CourseEntity courseEntity = courseRepository.findByCourseId(courseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Course Not Found : " + courseId));
+
+        return courseEntity.getName();
+
+    }
 }
