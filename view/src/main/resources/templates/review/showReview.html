@@ -28,8 +28,9 @@
 <div class="bg-white shadow-md rounded-lg p-8 mb-6">
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-3xl font-bold text-gray-800" th:text="${review.title}">리뷰 제목</h2>
-        <button class="like-button text-gray-400 hover:text-red-500" th:data-review-id="${reviewId}"><i id="likeButton"
-                                                                                                        class="far fa-heart"></i></button>
+        <button class="like-button text-gray-400 hover:text-red-500" th:data-review-id="${review.id}" th:data-liked="${isLiked}">
+            <i id="likeButton" th:classappend="${isLiked} ? 'fas fa-heart liked' : 'far fa-heart'"></i>
+        </button>
     </div>
 
     <div class="mb-6">
@@ -106,42 +107,59 @@
 </div>
 
 <div th:if="${previousReview != null}" class="text-center mt-4">
-    <a th:href="${isUserLoggedIn} ? @{/user/reviews/{id}(id=${previousReview.id})} : @{/reviews/{id}(id=${previousReview.id})}"
-       class="text-blue-500 hover:underline">이전 글</a>
+    <!-- 조건에 따른 URL을 변수로 설정 -->
+    <th:block th:with="reviewUrl=${isUserLoggedIn} ? '/user/reviews/' + ${previousReview.id} : '/reviews/' + ${previousReview.id}">
+        <a th:href="@{${reviewUrl}}" class="text-blue-500 hover:underline">이전 글</a>
+    </th:block>
 </div>
 <div th:if="${nextReview != null}" class="text-center mt-2">
-    <a th:href="${isUserLoggedIn} ? @{/user/reviews/{id}(id=${nextReview.id})} : @{/reviews/{id}(id=${nextReview.id})}"
-       class="text-blue-500 hover:underline">다음 글</a>
+    <!-- 조건에 따른 URL을 변수로 설정 -->
+    <th:block th:with="reviewUrl=${isUserLoggedIn} ? '/user/reviews/' + ${nextReview.id} : '/reviews/' + ${nextReview.id}">
+        <a th:href="@{${reviewUrl}}" class="text-blue-500 hover:underline">다음 글</a>
+    </th:block>
+
 </div>
 
 <script>
-    const likeButton = document.querySelector('.like-button');
-    let liked = false;
+    document.addEventListener('DOMContentLoaded', () => {
+        // 좋아요 버튼 선택
+        const likeButton = document.querySelector('.like-button');
+        const likeIcon = document.querySelector('#likeButton');
 
-    likeButton.addEventListener('click', () => {
-        liked = !liked;
-        likeButton.classList.toggle('fas');
-        likeButton.classList.toggle('far');
-        likeButton.classList.toggle('liked');
+        let liked = likeButton.dataset.liked === 'true';
+        updateLikeIcon(liked);
 
-        const reviewId = likeButton.getAttribute('data-review-id');
-        console.log(reviewId);
-        fetch(`/likes/review/${reviewId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ liked })
-        })
-            .then(response => response.text())
-            .then(data => {
-                console.log(data); // 성공 시 처리
+        // 좋아요 버튼 클릭 이벤트 리스너 추가
+        likeButton.addEventListener('click', () => {
+            // 리뷰 ID를 데이터 속성에서 읽어옴
+            const reviewId = likeButton.getAttribute('data-review-id');
+
+            // 서버에 POST 요청을 보냄
+            fetch(`/likes/review/${reviewId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
             })
-            .catch(error => {
-                console.error('Error:', error); // 에러 시 처리
-            });
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data); // 서버 응답에 따른 처리 로그
+                    liked = data === "리뷰 좋아요 등록";
+                    updateLikeIcon(liked);
+                })
+                .catch(error => {
+                    console.error('Error:', error); // 오류 처리 로그
+                });
+        });
+        function updateLikeIcon(liked) {
+            // liked 상태에 따라 아이콘 클래스를 조정
+            likeIcon.classList.toggle('liked', liked);
+            likeIcon.classList.toggle('fas', liked);
+            likeIcon.classList.toggle('far', !liked);
+        }
     });
 </script>
+
 
 </body>
 
