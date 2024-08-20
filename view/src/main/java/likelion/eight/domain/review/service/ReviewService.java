@@ -11,9 +11,12 @@ import likelion.eight.domain.review.controller.model.ReviewUpdateRequest;
 import likelion.eight.domain.review.converter.ReviewConverter;
 import likelion.eight.domain.review.model.Review;
 import likelion.eight.domain.review.service.port.ReviewRepository;
+import likelion.eight.domain.user.controller.model.LoginUser;
 import likelion.eight.domain.user.converter.UserConverter;
 import likelion.eight.domain.user.model.User;
 import likelion.eight.domain.user.service.port.UserRepository;
+import likelion.eight.likeReview.LikeReviewEntity;
+import likelion.eight.likeReview.LikeReviewJpaRepository;
 import likelion.eight.review.ReviewEntity;
 import likelion.eight.user.UserEntity;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +35,7 @@ public class ReviewService {
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
     private final ClockHolder clockHolder;
+    private final LikeReviewJpaRepository likeReviewJpaRepository;
 
 
     @Transactional(readOnly = true)
@@ -132,6 +133,18 @@ public class ReviewService {
     @Transactional
     public Page<Review> sortReviews(ReviewSortCondition condition, Pageable pageable) {
         return reviewRepository.sortByCondition(condition.getSortBy(), pageable).map(ReviewConverter::toDto);
+    }
+
+    //좋아요가 되어있는지 확인 -> 로딩시 좋아요되어있으면 색깔로 표시하기위해
+    public Boolean isLiked(Long reviewId, LoginUser loginUser){
+        ReviewEntity review = getReviewEntity(reviewId);
+        UserEntity user = getUserEntity(loginUser.getId());
+        Optional<LikeReviewEntity> isLiked = likeReviewJpaRepository.findByUserEntityAndReviewEntity(user, review);
+        if(isLiked.isPresent()){
+            return true;
+        }
+        return false;
+
     }
 
     // 중복 함수 빼 놓음
