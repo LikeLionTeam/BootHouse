@@ -62,11 +62,14 @@
                             <strong>수업형태:</strong>
                             <span th:text="${course.onlineOffline ? '온라인' : '오프라인'}"></span>
                         </p>
-                        <p class="mb-2" th:if="${!course.onlineOffline}">
-                            <strong>학습장소:</strong>
-                            <span th:text="${course.location}">
-                            </span>
-                        </p>
+                        <!--if문 div로 빼고 p태그 안으로 넣어 지도 넣을수 있게 수정함-->
+                        <div th:if="${!course.onlineOffline}">
+                            <p class="mb-2">
+                                <strong>학습장소:</strong>
+                                <span th:text="${course.location}"></span>
+                            </p>
+                            <div id="map" style="width: 80%; height: 400px;"></div>
+                        </div>
                         <p class="mb-2">
                             <strong>코딩테스트 유무:</strong>
                             <span th:text="${course.codingTestExempt ? '있음' : '없음'}"></span>
@@ -92,7 +95,7 @@
                     </div>
                     <div th:if="${course.cardRequirement}" class="bg-orange-50 border-orange-200 border rounded-lg p-4 mt-4">
                         <p class="text-orange-700"><i class="fas fa-lightbulb mr-2"></i>이 교육은 K-Digital Training 과정이에요.</p>
-                        <p class="text-orange-700 text-sm">내일배움카드 신청에 따라 수강이 불가능할 경우가 있으니 hrd홈에서 과정노등록에 확인해보세요 :)</p>
+                        <p class="text-orange-700 text-sm">내일배움카드 신청에 따라 수강이 불가능할 경우가 있으니 hrd혹은 고용노동부에 확인해보세요 :)</p>
                     </div>
                 </div>
 
@@ -380,6 +383,67 @@
         });
     }
 </script>
+<script th:inline="javascript">
+    fetch('/api/naver/maps-script')
+        .then(function(response) {
+            return response.text();
+        })
+        .then(function(scriptUrl) {
+            var scriptElement = document.createElement('script');
+            scriptElement.src = scriptUrl.trim();  // URL을 src에 할당
+            document.body.appendChild(scriptElement);
+
+            scriptElement.onload = function() {
+                initializeMap();  // 스크립트 로드 완료 후 지도 초기화 함수 호출
+            };
+        });
+
+    function initializeMap() {
+        // 서버에서 넘어온 주소 데이터를 JavaScript 배열로 변환
+        var addresses = /*[[${geocode.addresses}]]*/ [];
+        if (addresses.length > 0) {
+            var x = parseFloat(addresses[0].x);
+            var y = parseFloat(addresses[0].y);
+
+            var course_location = new naver.maps.LatLng(y, x),
+                map = new naver.maps.Map('map', {
+                    center: course_location,
+                    zoom: 15
+                }),
+                marker = new naver.maps.Marker({
+                    map: map,
+                    position: course_location
+                });
+
+            var courseName = /*[[${course.name}]]*/ 'Default Course Name';
+            var course_location = /*[[${course.location}]]*/ 'Default Course Location';
+
+            var contentString = [
+                '<div class="iw_inner custom_info_window">',
+                '    <h3>' + courseName + '</h3>',
+                '    <p>',
+                '        ' + course_location + '<br>',
+                '    </p>',
+                '</div>'
+            ].join('');
+
+            var infowindow = new naver.maps.InfoWindow({
+                content: contentString
+            });
+
+            naver.maps.Event.addListener(marker, "click", function(e) {
+                if (infowindow.getMap()) {
+                    infowindow.close();
+                } else {
+                    infowindow.open(map, marker);
+                }
+            });
+
+            infowindow.open(map, marker);
+        }
+    }
+</script>
+
 
 </body>
 </html>
