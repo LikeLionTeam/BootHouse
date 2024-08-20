@@ -49,12 +49,14 @@
     <tbody>
     <tr th:each="review : ${reviewPage.content}" class="hover:bg-gray-50">
         <td class="px-4 py-2 border-b border-gray-200">
-            <a th:href="@{/reviews/{id}(id=${review.id})}" th:text="${review.title}" class="text-blue-500 hover:underline">Title</a>
+            <a th:href="${isUserLoggedIn} ? @{/user/reviews/{id}(id=${review.id})} : @{/reviews/{id}(id=${review.id})}"
+               th:text="${review.title}" class="text-blue-500 hover:underline">Title</a>
         </td>
         <td class="px-4 py-2 border-b border-gray-200" th:text="${review.oneLineReview}">One Line Review</td>
     </tr>
     </tbody>
 </table>
+
 
 <!-- 페이징 -->
 <div class="mt-4">
