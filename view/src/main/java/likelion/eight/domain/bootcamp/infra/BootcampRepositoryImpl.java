@@ -43,4 +43,3 @@ public class BootcampRepositoryImpl implements BootcampRepository {
 //         return bootcampQueryDslRepository.findSearchByCond(cond.getName(), cond.getLocation());
 
     }
-}
