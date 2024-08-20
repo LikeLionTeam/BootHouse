@@ -8,6 +8,7 @@ import likelion.eight.domain.notice.model.response.NoticeDetailRes;
 import likelion.eight.domain.notice.model.response.NoticeRes;
 import likelion.eight.domain.notice.service.NoticeService;
 import likelion.eight.domain.user.controller.model.LoginUser;
+import likelion.eight.domain.user.service.UserService;
 import likelion.eight.notice.enums.PostType;
 import likelion.eight.user.enums.RoleType;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ import java.util.Map;
 @RequestMapping("/notice")
 public class NoticeController {
     private final NoticeService noticeService;
+    private final UserService userService;
 
     @GetMapping("/new")
     public String newPost(Model model) {
@@ -89,30 +91,33 @@ public class NoticeController {
 
     @GetMapping("/{noticeId}")
     public String getNoticeDetail(@PathVariable Long noticeId,Model model,
-                                  @Login LoginUser loginUser) {
+                                    @Login(required = false) LoginUser loginUser) {
         try {
             NoticeDetailRes noticeDetail = noticeService.getNoticeDetail(noticeId,loginUser);
             model.addAttribute("noticeDetail",noticeDetail);
+
+            boolean isAdmin = loginUser != null && RoleType.ADMIN.equals(loginUser.getRoleType());
+            model.addAttribute("isAdmin", isAdmin);
+
             return "/notice/viewNotice";
         }catch (ResourceNotFoundException e){
             return "redirect:/notice";
         }
     }
 
-
-
     @GetMapping
     public String getAllNotices(@RequestParam(defaultValue = "0") int page,
                                 Model model,
-                                @Login LoginUser loginUser) {
+                                @Login(required = false) LoginUser loginUser
+                                ) {
         Pageable pageable = PageRequest.of(page, 10, Sort.by("importance").descending().and(Sort.by("registrationDate").descending()));
 
-
         Page<NoticeRes> allNotices = noticeService.getAllNotices(pageable);
+        boolean isAdmin = userService.isAdmin(loginUser);
+
         model.addAttribute("notices",allNotices);
-        model.addAttribute("isAdmin",loginUser.getRoleType().equals(RoleType.ADMIN));
-//        boolean isAdmin = loginUser != null && RoleType.ADMIN.equals(loginUser.getRoleType());
-//        model.addAttribute("isAdmin", isAdmin);
+        model.addAttribute("isAdmin", isAdmin);
+//        model.addAttribute("isAdmin",loginUser.getRoleType().equals(RoleType.ADMIN));
         return "/notice/viewAllNotice";
     }
 

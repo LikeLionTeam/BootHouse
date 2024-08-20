@@ -1,6 +1,7 @@
 package likelion.eight.resolver;
 
 import likelion.eight.common.annotation.Login;
+import likelion.eight.common.domain.exception.CertificationFailedException;
 import likelion.eight.domain.user.controller.model.LoginUser;
 import likelion.eight.domain.user.controller.model.UserResponse;
 import likelion.eight.domain.user.service.UserService;
@@ -36,26 +37,58 @@ public class UserCookieResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+                                    NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+        Login loginAnnotation = parameter.getParameterAnnotation(Login.class);
+        boolean isRequired = loginAnnotation != null && loginAnnotation.required(); // required value check
 
         RequestAttributes requestContext = RequestContextHolder.getRequestAttributes();
         Object userId = requestContext.getAttribute(USER_ID, RequestAttributes.SCOPE_REQUEST);
         Object roleType = requestContext.getAttribute(ROLE_TYPE, RequestAttributes.SCOPE_REQUEST);
 
+        if (userId == null) {
+            if (isRequired) {
+                throw new CertificationFailedException("비회원 유저. 유저 정보가 필요하나 제공되지 않습니다.");
+            }
+            return null; // 로그인이 필수가 아닌 경우 null 반환
+        }
+
         log.info("{} , {} 감지함. ",userId, roleType);
 
-        UserResponse userResponse = userService.getById(Long.parseLong(userId.toString()));
+//        UserResponse userResponse = userService.getById(Long.parseLong(userId.toString()));
+//
+//        return LoginUser.builder()
+//                .id(userResponse.getId())
+//                .name(userResponse.getName())
+//                .address(userResponse.getAddress())
+//                .email(userResponse.getEmail())
+//                .phoneNumber(userResponse.getPhoneNumber())
+//                .certificationCode(userResponse.getCertificationCode())
+//                .userStatus(userResponse.getUserStatus())
+//                .roleType((RoleType) roleType)
+//                .image(userResponse.getImage())
+//                .build();
+        try {
+            UserResponse userResponse = userService.getById(Long.parseLong(userId.toString()));
+            return LoginUser.builder()
+                    .id(userResponse.getId())
+                    .name(userResponse.getName())
+                    .address(userResponse.getAddress())
+                    .email(userResponse.getEmail())
+                    .phoneNumber(userResponse.getPhoneNumber())
+                    .certificationCode(userResponse.getCertificationCode())
+                    .userStatus(userResponse.getUserStatus())
+                    .roleType((RoleType) roleType)
+                    .image(userResponse.getImage())
+                    .build();
+        } catch (Exception e) {
+            log.error("Error while resolving user: ", e);
+            if (isRequired) {
+                throw new CertificationFailedException("사용자 정보를 확인할 수 없습니다.");
+            }
+            return null; // 로그인이 필수가 아닌 경우 null 반환
+        }
 
-        return LoginUser.builder()
-                .id(userResponse.getId())
-                .name(userResponse.getName())
-                .address(userResponse.getAddress())
-                .email(userResponse.getEmail())
-                .phoneNumber(userResponse.getPhoneNumber())
-                .certificationCode(userResponse.getCertificationCode())
-                .userStatus(userResponse.getUserStatus())
-                .roleType((RoleType) roleType)
-                .image(userResponse.getImage())
-                .build();
+
     }
 }
