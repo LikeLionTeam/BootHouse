@@ -11,13 +11,13 @@ import likelion.eight.domain.course.controller.model.CourseDto;
 import likelion.eight.domain.course.controller.model.CourseFilter;
 import likelion.eight.domain.course.controller.model.ReviewDto;
 import likelion.eight.domain.course.model.Course;
+import likelion.eight.domain.course.model.map.NaverMapRes;
 import likelion.eight.domain.course.service.CourseService;
+import likelion.eight.domain.course.service.NaverMapService;
 import likelion.eight.domain.review.model.Review;
 import likelion.eight.domain.review.service.port.ReviewRepository;
 import likelion.eight.domain.subcourse.model.SubCourse;
 import likelion.eight.domain.subcourse.service.SubCourseService;
-import likelion.eight.domain.token.service.TokenService;
-import likelion.eight.domain.user.controller.model.LoginUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -27,6 +27,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,7 @@ public class CourseController  {
     private final SubCourseService subCourseService;
     private final ReviewRepository reviewRepository;
     private final CookieService cookieService;
+    private final NaverMapService naverMapService;
 
     // 모집중인 캠프 조회
     @GetMapping("/boothouse/camps")
@@ -93,6 +95,13 @@ public class CourseController  {
         List<Review> reviews = reviewRepository.findByCourseId(courseId);
         boolean isUserLoggedIn = cookieService.isUserLoggedIn(request);
 
+        NaverMapRes geocode = null;
+        try {
+            geocode = naverMapService.getGeocode(course.getLocation());
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+
         course.calculateAverageRating(reviews);
 
         // Review 도메인을 dto로
@@ -106,6 +115,7 @@ public class CourseController  {
         model.addAttribute("course", courseDto);
         model.addAttribute("reviews", reviewDtos);
         model.addAttribute("isUserLoggedIn", isUserLoggedIn);
+        model.addAttribute("geocode",geocode);
 
         return "course/courseDetail";
     }
