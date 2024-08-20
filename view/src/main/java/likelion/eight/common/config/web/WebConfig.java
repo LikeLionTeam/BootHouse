@@ -37,7 +37,9 @@ public class WebConfig implements WebMvcConfigurer {
             "/boothouse/camps",
             "/courses/*",
             "/bootcamps/**",
-            "/images/**"
+            "/images/**",
+            "/reviews/{reviewId}",
+            "/reviews"
     );
 
 
