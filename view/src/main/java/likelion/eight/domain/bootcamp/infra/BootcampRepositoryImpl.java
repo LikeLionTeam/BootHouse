@@ -37,11 +37,9 @@ public class BootcampRepositoryImpl implements BootcampRepository {
     @Override
     public List<Bootcamp> findByName(String name) {
         return bootcampRepositoryQueryDSL.findByName(name);
-
-
+    }
 //     @Override
 //     public List<BootCampSearchResponse> findSearchByCond(BootCampSearchCond cond) {
 //         return bootcampQueryDslRepository.findSearchByCond(cond.getName(), cond.getLocation());
 
     }
-}
