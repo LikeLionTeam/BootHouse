@@ -98,4 +98,11 @@ public class UserService {
 
         return UserConverter.toResponse(user);
     }
+
+    public boolean isAdmin (LoginUser loginuser) {
+        if (loginuser == null) {
+            return false;
+        }
+        return RoleType.ADMIN.equals(loginuser.getRoleType());
+    }
 }
