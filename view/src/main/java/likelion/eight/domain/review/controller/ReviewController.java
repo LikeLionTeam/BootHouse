@@ -3,115 +3,87 @@ package likelion.eight.domain.review.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import likelion.eight.common.annotation.Login;
 import likelion.eight.common.service.CookieService;
-import likelion.eight.domain.course.model.Course;
-import likelion.eight.domain.course.service.CourseService;
+import likelion.eight.domain.review.controller.model.ReviewCreateRequest;
 import likelion.eight.domain.review.controller.model.ReviewSearchCondition;
 import likelion.eight.domain.review.controller.model.ReviewSortCondition;
+import likelion.eight.domain.review.controller.model.ReviewUpdateRequest;
 import likelion.eight.domain.review.model.Review;
 import likelion.eight.domain.review.service.ReviewService;
 import likelion.eight.domain.user.controller.model.LoginUser;
-import likelion.eight.domain.user.controller.model.UserResponse;
-import likelion.eight.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
 
-// 로그인 안한 사용자도 볼 수 있음
-
+// 로그인 안한 사용자
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/reviews")
 @Slf4j
 public class ReviewController {
     private final ReviewService reviewService;
-    private final CourseService courseService;
-    private final CookieService cookieService;
-    private final UserService userService;
 
-
-    @GetMapping("/reviews")
+    @GetMapping()
     public String showAllReviews(
             Model model,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "2") int size,
-            HttpServletRequest request
+            @PageableDefault(page = 0, size = 2, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            @Login(required = false) LoginUser loginUser
     ) {
-
-        Pageable pageable = PageRequest.of(page, size);
-
-        Page<Review> reviewPage = reviewService.findAllReviews(pageable);
-        boolean isUserLoggedIn = cookieService.isUserLoggedIn(request);
-
-        model.addAttribute("reviewPage", reviewPage);
-        model.addAttribute("searchCondition", new ReviewSearchCondition()); // 검색 조건 초기화
-        model.addAttribute("sortCondition", new ReviewSortCondition()); // 정렬 조건 초기화
-        model.addAttribute("isUserLoggedIn", isUserLoggedIn);
-
-        return "review/showAllReviews";
+        return renderReviewPage(model, pageable, new ReviewSearchCondition(), new ReviewSortCondition(),loginUser);
     }
 
-    @GetMapping("/reviews/search")
+    @GetMapping("/search")
     public String searchReviews(
             Model model,
             @RequestParam String keyword,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "2") int size
+            @PageableDefault(page = 0, size = 2, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            @Login(required = false) LoginUser loginUser
     ) {
-
         //검색 기능
         ReviewSearchCondition searchCondition = new ReviewSearchCondition(keyword);
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Review> reviewPage = reviewService.searchReviews(searchCondition, pageable);
 
-        model.addAttribute("reviewPage", reviewPage);
-        model.addAttribute("searchCondition", searchCondition);
-        model.addAttribute("sortCondition", new ReviewSortCondition()); // 정렬 조건 초기화
-
-        return "review/showAllReviews";
+        return renderReviewPage(model, pageable,searchCondition, new ReviewSortCondition(),loginUser);
     }
 
-    @GetMapping("/reviews/sort")
+    @GetMapping("/sort")
     public String sortReviews(
             Model model,
             @RequestParam String sortBy,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "2") int size
+            @PageableDefault(page = 0, size = 2, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            @Login(required = false) LoginUser loginUser
     ) {
         //정렬 기능 :  높은 평점순 / 낮은 평점순 / 조회수 / 최근순 / 오래된순
         ReviewSortCondition sortCondition = new ReviewSortCondition(sortBy);
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Review> reviewPage = reviewService.sortReviews(sortCondition, pageable);
-
-        model.addAttribute("reviewPage", reviewPage);
-        model.addAttribute("sortCondition", sortCondition);
-        model.addAttribute("searchCondition", new ReviewSearchCondition());
-
-        return "review/showAllReviews";
+        return renderReviewPage(model, pageable, new ReviewSearchCondition(), sortCondition, loginUser);
     }
 
-    @GetMapping("/reviews/{reviewId}")
-    public String nonUserShowReview(@PathVariable Long reviewId, Model model, HttpServletRequest request) {
 
-        reviewService.incrementViewCount(reviewId);
+    @GetMapping("/{reviewId}")
+    public String nonUserShowReview(@PathVariable Long reviewId, Model model, @Login(required = false) LoginUser loginUser) {
+
+        reviewService.incrementViewCount(reviewId); //조회수 증가
 
         Review review = reviewService.findReviewById(reviewId);
-        Optional<Review> previousReviewOptional = reviewService.findPreviousReview(reviewId);
-        Optional<Review> nextReviewOptional = reviewService.findNextReview(reviewId);
-        UserResponse user = userService.getById(review.getUserId());
-        boolean isUserLoggedIn = cookieService.isUserLoggedIn(request);
 
-        Course course = courseService.findCourseById(review.getCourseId());
+        Optional<Review> previousReviewOptional = reviewService.findPreviousReview(reviewId); // 이전 글
+        Optional<Review> nextReviewOptional = reviewService.findNextReview(reviewId); // 다음 글
 
-        model.addAttribute("course", course);
+        String author = reviewService.getAuthor(review.getUserId());
+        String courseName = reviewService.getCourseName(review.getCourseId());
+
+        model.addAttribute("courseName", courseName);
         model.addAttribute("review", review);
-        model.addAttribute("user", user);
-        model.addAttribute("isUserLoggedIn", isUserLoggedIn);
+        model.addAttribute("author", author);
+        model.addAttribute("loginUser", loginUser);
+
         previousReviewOptional.ifPresent(previousReview -> model.addAttribute("previousReview", previousReview));
         nextReviewOptional.ifPresent(nextReview -> model.addAttribute("nextReview", nextReview));
 
@@ -119,6 +91,81 @@ public class ReviewController {
         return "review/showReview";
     }
 
+    private String renderReviewPage(Model model,
+                                    Pageable pageable,
+                                    ReviewSearchCondition searchCondition,
+                                    ReviewSortCondition sortCondition, @Login LoginUser loginUser) {
+        Page<Review> reviewPage;
+
+        if (searchCondition.getKeyword() != null && !searchCondition.getKeyword().isEmpty()) {
+            reviewPage = reviewService.searchReviews(searchCondition, pageable);
+        } else if (sortCondition.getSortBy() != null && !sortCondition.getSortBy().isEmpty()) {
+            reviewPage = reviewService.sortReviews(sortCondition, pageable);
+        } else {
+            reviewPage = reviewService.findAllReviews(pageable);
+        }
 
 
+        model.addAttribute("reviewPage", reviewPage);
+        model.addAttribute("searchCondition", searchCondition);
+        model.addAttribute("sortCondition", sortCondition);
+        model.addAttribute("loginUser", loginUser);
+
+        return "review/showAllReviews";
+    }
+
+    @GetMapping("/reviews/new/{courseId}")
+    public String createReviewForm(Model model, @PathVariable Long courseId, @Login LoginUser loginUser, RedirectAttributes redirectAttributes) {
+
+        Long userId = loginUser.getId();
+
+        if (reviewService.existsByUserIdAndCourseId(userId, courseId)) {
+
+            model.addAttribute("error", "이미 해당 코스에 대한 리뷰를 작성하였습니다.");
+
+            Long reviewId = reviewService.findReviewByCourseIdAndUserId(courseId, userId).getId();
+            redirectAttributes.addAttribute("reviewId", reviewId);
+
+            return "redirect:/reviews/{reviewId}";
+        }
+
+
+        model.addAttribute("courseId", courseId);
+        model.addAttribute("loginUser", loginUser);
+        model.addAttribute("reviewCreateRequest", ReviewCreateRequest.builder().build());
+
+        return "review/reviewRegisterForm";
+    }
+
+    @PostMapping("/reviews/new/{courseId}")
+    public String createReview(@ModelAttribute ReviewCreateRequest reviewCreateRequest, @PathVariable Long courseId, @Login(required = false) LoginUser loginUser) {
+
+        Long userId = loginUser.getId();
+
+        reviewService.saveReview(reviewCreateRequest, userId, courseId);
+
+        return "redirect:/reviews";
+    }
+
+    @GetMapping("review/{reviewId}/edit")
+    public String editReviewForm(@PathVariable Long reviewId, Model model) {
+
+        Review review = reviewService.findReviewById(reviewId);
+        model.addAttribute("review", review);
+        return "review/editReviewForm";
+    }
+
+    @PostMapping("review/{reviewId}/edit")
+    public String editReview(@PathVariable Long reviewId, @ModelAttribute ReviewUpdateRequest reviewUpdateRequest, @Login LoginUser loginUser) {
+
+        reviewService.updateReview(reviewId, reviewUpdateRequest);
+        return "redirect:/reviews";
+    }
+
+    @PostMapping("review/{reviewId}/delete")
+    public String deleteReview(@PathVariable Long reviewId) {
+
+        reviewService.deleteReview(reviewId);
+        return "redirect:/reviews";
+    }
 }

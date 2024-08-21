@@ -38,8 +38,6 @@ public class WebConfig implements WebMvcConfigurer {
             "/courses/*",
             "/bootcamps/**",
             "/images/**",
-            "/reviews/{reviewId}",
-            "/reviews",
             "/api/naver/maps-script"
     );
 
