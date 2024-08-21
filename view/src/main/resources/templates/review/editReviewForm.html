@@ -18,7 +18,7 @@
 <div class="bg-white shadow-md rounded-lg p-6">
     <h2 class="text-2xl font-semibold mb-6">리뷰 수정</h2>
 
-    <form th:action="@{/review/{id}/edit(id=${review.id})}" th:object="${review}" method="post" class="space-y-4">
+    <form th:action="@{/reviews/{id}/edit(id=${review.id})}" th:object="${review}" method="post" class="space-y-4">
         <div>
             <label for="title" class="block text-lg font-medium text-gray-700 mb-2">제목</label>
             <input type="text" id="title" name="title" th:field="*{title}" required
