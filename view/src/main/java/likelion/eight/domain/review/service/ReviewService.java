@@ -6,10 +6,7 @@ import likelion.eight.course.CourseEntity;
 import likelion.eight.domain.course.controller.CourseController;
 import likelion.eight.domain.course.converter.CourseConverter;
 import likelion.eight.domain.course.service.port.CourseRepository;
-import likelion.eight.domain.review.controller.model.ReviewCreateRequest;
-import likelion.eight.domain.review.controller.model.ReviewSearchCondition;
-import likelion.eight.domain.review.controller.model.ReviewSortCondition;
-import likelion.eight.domain.review.controller.model.ReviewUpdateRequest;
+import likelion.eight.domain.review.controller.model.*;
 import likelion.eight.domain.review.converter.ReviewConverter;
 import likelion.eight.domain.review.model.Review;
 import likelion.eight.domain.review.service.port.ReviewRepository;
@@ -39,11 +36,49 @@ public class ReviewService {
     private final ClockHolder clockHolder;
     private final LikeReviewJpaRepository likeReviewJpaRepository;
 
-
-    @Transactional(readOnly = true)
-    public Page<Review> findAllReviews(Pageable pageable) {
-        return reviewRepository.findAll(pageable).map(ReviewConverter::toDto);
+    public Page<ReviewAll> getReviewAll(Pageable pageable) {
+        return reviewRepository.findAll(pageable)
+                .map(review -> {
+                    String courseName = getCourseName(review.getCourseEntity().getId());
+                    String author = getAuthor(review.getUserEntity().getId());
+                    return new ReviewAll(ReviewConverter.toDto(review), courseName, author);
+                });
     }
+
+    public Page<ReviewAll> searchReviews(ReviewSearchCondition searchCondition, Pageable pageable) {
+        return reviewRepository.searchByKeyword(searchCondition, pageable)
+                .map(review -> {
+                    String courseName = getCourseName(review.getCourseEntity().getId());
+                    String author = getAuthor(review.getUserEntity().getId());
+                    return new ReviewAll(ReviewConverter.toDto(review), courseName, author);
+                });
+    }
+
+    public Page<ReviewAll> sortReviews(ReviewSortCondition sortCondition, Pageable pageable) {
+        return reviewRepository.sortByCondition(sortCondition, pageable)
+                .map(review -> {
+                    String courseName = getCourseName(review.getCourseEntity().getId());
+                    String author = getAuthor(review.getUserEntity().getId());
+                    return new ReviewAll(ReviewConverter.toDto(review), courseName, author);
+                });
+    }
+
+
+    public String getAuthor(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found : " + userId));
+
+        return user.getName();
+    }
+
+    public String getCourseName(Long courseId) {
+        CourseEntity courseEntity = courseRepository.findByCourseId(courseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Course Not Found : " + courseId));
+
+        return courseEntity.getName();
+
+    }
+
 
     @Transactional(readOnly = true)
     public Review findReviewById(Long id) {
@@ -121,19 +156,6 @@ public class ReviewService {
 
     }
 
-    @Transactional(readOnly = true)
-    public Page<Review> searchReviews(ReviewSearchCondition condition, Pageable pageable) {
-
-        if (condition.getKeyword() == null || condition.getKeyword().isEmpty()) {
-            return findAllReviews(pageable);
-        }
-        return reviewRepository.searchByKeyword(condition.getKeyword(), pageable).map(ReviewConverter::toDto);
-    }
-
-    @Transactional
-    public Page<Review> sortReviews(ReviewSortCondition condition, Pageable pageable) {
-        return reviewRepository.sortByCondition(condition.getSortBy(), pageable).map(ReviewConverter::toDto);
-    }
 
     //좋아요가 되어있는지 확인 -> 로딩시 좋아요되어있으면 색깔로 표시하기위해
     public Boolean isLiked(Long reviewId, LoginUser loginUser){
@@ -164,18 +186,4 @@ public class ReviewService {
         return UserConverter.toEntity(user);
     }
 
-    public String getAuthor(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found : " + userId));
-
-        return user.getName();
-    }
-
-    public String getCourseName(Long courseId) {
-        CourseEntity courseEntity = courseRepository.findByCourseId(courseId)
-                .orElseThrow(() -> new ResourceNotFoundException("Course Not Found : " + courseId));
-
-        return courseEntity.getName();
-
-    }
 }
