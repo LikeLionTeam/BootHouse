@@ -53,6 +53,9 @@ public class UserCookieResolver implements HandlerMethodArgumentResolver {
             return null; // 로그인이 필수가 아닌 경우 null 반환
         }
 
+
+
+
         log.info("{} , {} 감지함. ",userId, roleType);
 
 //        UserResponse userResponse = userService.getById(Long.parseLong(userId.toString()));
