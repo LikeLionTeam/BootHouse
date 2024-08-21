@@ -1,5 +1,6 @@
 package likelion.eight.domain.review.converter;
 
+import likelion.eight.common.index.controller.model.ReviewDto;
 import likelion.eight.common.service.port.ClockHolder;
 import likelion.eight.course.CourseEntity;
 import likelion.eight.domain.review.controller.model.ReviewCreateRequest;
@@ -62,6 +63,12 @@ public class ReviewConverter {
                 .registrationDate(reviewEntity.getRegistrationDate())
                 .lastModifiedDate(reviewEntity.getLastModifiedDate())
                 .build();
+    }
+
+    // index의 ReviewDto를 위해 추가한 컨버팅
+    public static ReviewDto toReviewDto(ReviewEntity reviewEntity){
+        String username = reviewEntity.getUserEntity().getName();
+        return new ReviewDto(toDto(reviewEntity), username);
     }
 
 }

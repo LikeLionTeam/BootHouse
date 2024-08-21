@@ -37,9 +37,12 @@ public class WebConfig implements WebMvcConfigurer {
             "/boothouse/camps",
             "/courses/*",
             "/bootcamps/**",
-//            "/notice",
-            "/images/**"
+            "/images/**",
+            "/reviews/{reviewId}",
+            "/reviews",
+            "/api/naver/maps-script"
     );
+
 
 
     @Override
