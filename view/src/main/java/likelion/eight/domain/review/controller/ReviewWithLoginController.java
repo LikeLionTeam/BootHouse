@@ -45,6 +45,7 @@ public class ReviewWithLoginController {
         String author = reviewService.getAuthor(review.getUserId());
         String courseName = reviewService.getCourseName(review.getCourseId());
         boolean isUserLoggedIn = cookieService.isUserLoggedIn(request);
+        boolean isLiked = reviewService.isLiked(reviewId,loginUser);
 
 
         model.addAttribute("courseName", courseName);
@@ -54,6 +55,7 @@ public class ReviewWithLoginController {
         model.addAttribute("isUserLoggedIn", isUserLoggedIn);
         previousReviewOptional.ifPresent(previousReview -> model.addAttribute("previousReview", previousReview));
         nextReviewOptional.ifPresent(nextReview -> model.addAttribute("nextReview", nextReview));
+        model.addAttribute("isLiked",isLiked);
 
         return "review/showReview";
     }

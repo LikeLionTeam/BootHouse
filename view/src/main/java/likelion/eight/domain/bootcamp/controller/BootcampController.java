@@ -21,20 +21,6 @@ import java.util.List;
 @Slf4j
 public class BootcampController {
     private final BootcampService bootcampService;
-    @GetMapping("/create")
-    public String showRegisterForm(
-            @ModelAttribute(name = "request") BootcampCreateRequest request){
-        return "bootcamp/createForm";
-    }
-
-    @PostMapping("/create")
-    public String createBootcamp(
-            @ModelAttribute(name = "request") BootcampCreateRequest request
-    ){
-        bootcampService.createBootcamp(request);
-
-        return "redirect:/bootcamps";
-    }
 
     @GetMapping
     public String showAllBootcamps(@RequestParam(name = "search", required = false)String search, Model model){
@@ -44,6 +30,11 @@ public class BootcampController {
         return "bootcamp/list";
     }
 
+    @GetMapping("/create")
+    public String showRegisterForm(
+            @ModelAttribute(name = "request") BootcampCreateRequest request){
+        return "bootcamp/createForm";
+    }
 
     @GetMapping("/{bootcampId}/courses")
     public String showCoursesByBootcamp(@PathVariable Long bootcampId, Model model){
@@ -51,5 +42,14 @@ public class BootcampController {
         model.addAttribute("courses", courses);
 
         return "bootcamp/courses";
+    }
+
+    @PostMapping("/create")
+    public String createBootcamp(
+            @ModelAttribute(name = "request") BootcampCreateRequest request
+    ){
+        bootcampService.createBootcamp(request);
+
+        return "redirect:/bootcamps";
     }
 }

@@ -55,18 +55,31 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
                     requestContext.setAttribute(ROLE_TYPE, RoleType.ADMIN, RequestAttributes.SCOPE_REQUEST);
                 }
             }
-            if(accessToken == null){
-                requestContext.removeAttribute(ROLE_TYPE, RequestAttributes.SCOPE_REQUEST);
-                throw new CertificationFailedException("존재 하지 않은 토큰");
+//            if(accessToken == null){
+//                requestContext.removeAttribute(ROLE_TYPE, RequestAttributes.SCOPE_REQUEST);
+//                throw new CertificationFailedException("존재 하지 않은 토큰");
+//            }
+        }
+
+//        Long userId = tokenService.validationToken(accessToken);
+//        if(userId != null){
+//            requestContext.setAttribute(USER_ID, userId, RequestAttributes.SCOPE_REQUEST);
+//            return true;
+//        }
+//
+//        throw new CertificationFailedException("사용자 인증 실패");
+
+        if (accessToken != null) {
+            try {
+                Long userId = tokenService.validationToken(accessToken);
+                requestContext.setAttribute(USER_ID, userId, RequestAttributes.SCOPE_REQUEST);
+                // RoleType 설정 로직
+            } catch (CertificationFailedException e) {
+                log.warn("Invalid token: {}", e.getMessage());
             }
         }
 
-        Long userId = tokenService.validationToken(accessToken);
-        if(userId != null){
-            requestContext.setAttribute(USER_ID, userId, RequestAttributes.SCOPE_REQUEST);
-            return true;
-        }
-
-        throw new CertificationFailedException("사용자 인증 실패");
+        // 사용자의 인증 상태를 확인하지 않고 모든 요청을 통과시켜, 비로그인 사용자도 특정 페이지에 접근 가능하게 함
+        return true;
     }
 }
