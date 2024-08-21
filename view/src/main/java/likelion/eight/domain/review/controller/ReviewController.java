@@ -3,8 +3,10 @@ package likelion.eight.domain.review.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import likelion.eight.common.annotation.Login;
 import likelion.eight.common.service.CookieService;
+import likelion.eight.domain.review.controller.model.ReviewCreateRequest;
 import likelion.eight.domain.review.controller.model.ReviewSearchCondition;
 import likelion.eight.domain.review.controller.model.ReviewSortCondition;
+import likelion.eight.domain.review.controller.model.ReviewUpdateRequest;
 import likelion.eight.domain.review.model.Review;
 import likelion.eight.domain.review.service.ReviewService;
 import likelion.eight.domain.user.controller.model.LoginUser;
@@ -17,6 +19,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
 
@@ -109,5 +112,60 @@ public class ReviewController {
         model.addAttribute("loginUser", loginUser);
 
         return "review/showAllReviews";
+    }
+
+    @GetMapping("/reviews/new/{courseId}")
+    public String createReviewForm(Model model, @PathVariable Long courseId, @Login LoginUser loginUser, RedirectAttributes redirectAttributes) {
+
+        Long userId = loginUser.getId();
+
+        if (reviewService.existsByUserIdAndCourseId(userId, courseId)) {
+
+            model.addAttribute("error", "이미 해당 코스에 대한 리뷰를 작성하였습니다.");
+
+            Long reviewId = reviewService.findReviewByCourseIdAndUserId(courseId, userId).getId();
+            redirectAttributes.addAttribute("reviewId", reviewId);
+
+            return "redirect:/reviews/{reviewId}";
+        }
+
+
+        model.addAttribute("courseId", courseId);
+        model.addAttribute("loginUser", loginUser);
+        model.addAttribute("reviewCreateRequest", ReviewCreateRequest.builder().build());
+
+        return "review/reviewRegisterForm";
+    }
+
+    @PostMapping("/reviews/new/{courseId}")
+    public String createReview(@ModelAttribute ReviewCreateRequest reviewCreateRequest, @PathVariable Long courseId, @Login(required = false) LoginUser loginUser) {
+
+        Long userId = loginUser.getId();
+
+        reviewService.saveReview(reviewCreateRequest, userId, courseId);
+
+        return "redirect:/reviews";
+    }
+
+    @GetMapping("review/{reviewId}/edit")
+    public String editReviewForm(@PathVariable Long reviewId, Model model) {
+
+        Review review = reviewService.findReviewById(reviewId);
+        model.addAttribute("review", review);
+        return "review/editReviewForm";
+    }
+
+    @PostMapping("review/{reviewId}/edit")
+    public String editReview(@PathVariable Long reviewId, @ModelAttribute ReviewUpdateRequest reviewUpdateRequest, @Login LoginUser loginUser) {
+
+        reviewService.updateReview(reviewId, reviewUpdateRequest);
+        return "redirect:/reviews";
+    }
+
+    @PostMapping("review/{reviewId}/delete")
+    public String deleteReview(@PathVariable Long reviewId) {
+
+        reviewService.deleteReview(reviewId);
+        return "redirect:/reviews";
     }
 }
