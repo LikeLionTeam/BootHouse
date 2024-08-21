@@ -1,8 +1,6 @@
 package likelion.eight.domain.review.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import likelion.eight.common.annotation.Login;
-import likelion.eight.common.service.CookieService;
 import likelion.eight.domain.review.controller.model.ReviewCreateRequest;
 import likelion.eight.domain.review.controller.model.ReviewSearchCondition;
 import likelion.eight.domain.review.controller.model.ReviewSortCondition;
@@ -23,7 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
 
-// 로그인 안한 사용자
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/reviews")
@@ -31,7 +29,7 @@ import java.util.Optional;
 public class ReviewController {
     private final ReviewService reviewService;
 
-    @GetMapping()
+    @GetMapping("")
     public String showAllReviews(
             Model model,
             @PageableDefault(page = 0, size = 2, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
@@ -114,30 +112,37 @@ public class ReviewController {
         return "review/showAllReviews";
     }
 
-    @GetMapping("/reviews/new/{courseId}")
+    @GetMapping("/new/{courseId}")
     public String createReviewForm(Model model, @PathVariable Long courseId, @Login LoginUser loginUser, RedirectAttributes redirectAttributes) {
+        log.info("Entering createReviewForm method with courseId: {} and userId: {}", courseId, loginUser.getId());
 
         Long userId = loginUser.getId();
 
-        if (reviewService.existsByUserIdAndCourseId(userId, courseId)) {
+        try {
+            if (reviewService.existsByUserIdAndCourseId(userId, courseId)) {
+                log.info("User {} has already written a review for course {}", userId, courseId);
+                model.addAttribute("error", "이미 해당 코스에 대한 리뷰를 작성하였습니다.");
 
-            model.addAttribute("error", "이미 해당 코스에 대한 리뷰를 작성하였습니다.");
+                Long reviewId = reviewService.findReviewByCourseIdAndUserId(courseId, userId).getId();
+                log.info("Existing review found with id: {}", reviewId);
+                redirectAttributes.addAttribute("reviewId", reviewId);
 
-            Long reviewId = reviewService.findReviewByCourseIdAndUserId(courseId, userId).getId();
-            redirectAttributes.addAttribute("reviewId", reviewId);
+                return "redirect:/reviews/{reviewId}";
+            }
 
-            return "redirect:/reviews/{reviewId}";
+            log.info("Preparing review form for user {} and course {}", userId, courseId);
+            model.addAttribute("courseId", courseId);
+            model.addAttribute("loginUser", loginUser);
+            model.addAttribute("reviewCreateRequest", ReviewCreateRequest.builder().build());
+
+            return "review/reviewRegisterForm";
+        } catch (Exception e) {
+            log.error("Error in createReviewForm method", e);
+            throw e;
         }
-
-
-        model.addAttribute("courseId", courseId);
-        model.addAttribute("loginUser", loginUser);
-        model.addAttribute("reviewCreateRequest", ReviewCreateRequest.builder().build());
-
-        return "review/reviewRegisterForm";
     }
 
-    @PostMapping("/reviews/new/{courseId}")
+    @PostMapping("/new/{courseId}")
     public String createReview(@ModelAttribute ReviewCreateRequest reviewCreateRequest, @PathVariable Long courseId, @Login(required = false) LoginUser loginUser) {
 
         Long userId = loginUser.getId();
@@ -147,7 +152,7 @@ public class ReviewController {
         return "redirect:/reviews";
     }
 
-    @GetMapping("review/{reviewId}/edit")
+    @GetMapping("/{reviewId}/edit")
     public String editReviewForm(@PathVariable Long reviewId, Model model) {
 
         Review review = reviewService.findReviewById(reviewId);
@@ -155,14 +160,14 @@ public class ReviewController {
         return "review/editReviewForm";
     }
 
-    @PostMapping("review/{reviewId}/edit")
+    @PostMapping("/{reviewId}/edit")
     public String editReview(@PathVariable Long reviewId, @ModelAttribute ReviewUpdateRequest reviewUpdateRequest, @Login LoginUser loginUser) {
 
         reviewService.updateReview(reviewId, reviewUpdateRequest);
         return "redirect:/reviews";
     }
 
-    @PostMapping("review/{reviewId}/delete")
+    @PostMapping("/{reviewId}/delete")
     public String deleteReview(@PathVariable Long reviewId) {
 
         reviewService.deleteReview(reviewId);
