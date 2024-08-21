@@ -3,10 +3,7 @@ package likelion.eight.domain.review.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import likelion.eight.common.annotation.Login;
 import likelion.eight.common.service.CookieService;
-import likelion.eight.domain.review.controller.model.ReviewCreateRequest;
-import likelion.eight.domain.review.controller.model.ReviewSearchCondition;
-import likelion.eight.domain.review.controller.model.ReviewSortCondition;
-import likelion.eight.domain.review.controller.model.ReviewUpdateRequest;
+import likelion.eight.domain.review.controller.model.*;
 import likelion.eight.domain.review.model.Review;
 import likelion.eight.domain.review.service.ReviewService;
 import likelion.eight.domain.user.controller.model.LoginUser;
@@ -67,7 +64,7 @@ public class ReviewController {
 
 
     @GetMapping("/{reviewId}")
-    public String nonUserShowReview(@PathVariable Long reviewId, Model model, @Login(required = false) LoginUser loginUser) {
+    public String ShowReview(@PathVariable Long reviewId, Model model, @Login(required = false) LoginUser loginUser) {
 
         reviewService.incrementViewCount(reviewId); //조회수 증가
 
@@ -91,28 +88,6 @@ public class ReviewController {
         return "review/showReview";
     }
 
-    private String renderReviewPage(Model model,
-                                    Pageable pageable,
-                                    ReviewSearchCondition searchCondition,
-                                    ReviewSortCondition sortCondition, @Login LoginUser loginUser) {
-        Page<Review> reviewPage;
-
-        if (searchCondition.getKeyword() != null && !searchCondition.getKeyword().isEmpty()) {
-            reviewPage = reviewService.searchReviews(searchCondition, pageable);
-        } else if (sortCondition.getSortBy() != null && !sortCondition.getSortBy().isEmpty()) {
-            reviewPage = reviewService.sortReviews(sortCondition, pageable);
-        } else {
-            reviewPage = reviewService.findAllReviews(pageable);
-        }
-
-
-        model.addAttribute("reviewPage", reviewPage);
-        model.addAttribute("searchCondition", searchCondition);
-        model.addAttribute("sortCondition", sortCondition);
-        model.addAttribute("loginUser", loginUser);
-
-        return "review/showAllReviews";
-    }
 
     @GetMapping("/reviews/new/{courseId}")
     public String createReviewForm(Model model, @PathVariable Long courseId, @Login LoginUser loginUser, RedirectAttributes redirectAttributes) {
@@ -167,5 +142,28 @@ public class ReviewController {
 
         reviewService.deleteReview(reviewId);
         return "redirect:/reviews";
+    }
+
+
+    private String renderReviewPage(Model model,
+                                    Pageable pageable,
+                                    ReviewSearchCondition searchCondition,
+                                    ReviewSortCondition sortCondition, @Login LoginUser loginUser) {
+        Page<ReviewAll> reviewPage;
+
+        if (searchCondition.getKeyword() != null && !searchCondition.getKeyword().isEmpty()) {
+            reviewPage = reviewService.searchReviews(searchCondition, pageable);
+        } else if (sortCondition.getSortBy() != null && !sortCondition.getSortBy().isEmpty()) {
+            reviewPage = reviewService.sortReviews(sortCondition, pageable);
+        } else {
+            reviewPage = reviewService.getReviewAll(pageable);
+        }
+
+        model.addAttribute("reviewPage", reviewPage);
+        model.addAttribute("searchCondition", searchCondition);
+        model.addAttribute("sortCondition", sortCondition);
+        model.addAttribute("loginUser", loginUser);
+
+        return "review/showAllReviews";
     }
 }

@@ -44,15 +44,27 @@
     <tr>
         <th class="px-4 py-2 border-b border-gray-200 text-left">제목</th>
         <th class="px-4 py-2 border-b border-gray-200 text-left">총평</th>
+        <th class="px-4 py-2 border-b border-gray-200 text-left">작성자</th>
+        <th class="px-4 py-2 border-b border-gray-200 text-left">별점</th>
+        <th class="px-4 py-2 border-b border-gray-200 text-left">조회수</th>
+        <th class="px-4 py-2 border-b border-gray-200 text-left">코스이름</th>
+
     </tr>
     </thead>
     <tbody>
     <tr th:each="review : ${reviewPage.content}" class="hover:bg-gray-50">
         <td class="px-4 py-2 border-b border-gray-200">
-            <a th:href="@{/reviews/{id}(id=${review.id})}"
+            <a th:href="@{/reviews/{id}(id=${review.reviewId})}"
                th:text="${review.title}" class="text-blue-500 hover:underline">Title</a>
         </td>
         <td class="px-4 py-2 border-b border-gray-200" th:text="${review.oneLineReview}">One Line Review</td>
+        <td class="px-4 py-2 border-b border-gray-200" th:text="${review.author}">author</td>
+        <td class="px-4 py-2 border-b border-gray-200" th:text="${review.rating}">rating</td>
+        <td class="px-4 py-2 border-b border-gray-200" th:text="${review.viewCount}">view count</td>
+        <td class="px-4 py-2 border-b border-gray-200" th:text="${review.courseName}">course name</td>
+
+
+
     </tr>
     </tbody>
 </table>

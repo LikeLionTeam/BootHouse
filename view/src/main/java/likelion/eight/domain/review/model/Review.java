@@ -26,6 +26,9 @@ public class Review {
     private String instructorEvaluation;
     private Integer rating;
 
+    private String courseName;
+    private String author;
+
     private Integer viewCount;
     private LocalDateTime registrationDate;
     private LocalDateTime lastModifiedDate;
