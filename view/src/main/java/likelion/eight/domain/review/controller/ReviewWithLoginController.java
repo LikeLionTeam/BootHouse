@@ -3,15 +3,11 @@ package likelion.eight.domain.review.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import likelion.eight.common.annotation.Login;
 import likelion.eight.common.service.CookieService;
-import likelion.eight.domain.course.model.Course;
-import likelion.eight.domain.course.service.CourseService;
 import likelion.eight.domain.review.controller.model.ReviewCreateRequest;
 import likelion.eight.domain.review.controller.model.ReviewUpdateRequest;
 import likelion.eight.domain.review.model.Review;
 import likelion.eight.domain.review.service.ReviewService;
 import likelion.eight.domain.user.controller.model.LoginUser;
-import likelion.eight.domain.user.controller.model.UserResponse;
-import likelion.eight.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -32,33 +28,7 @@ import java.util.Optional;
 public class ReviewWithLoginController {
 
     private final ReviewService reviewService;
-    private final CookieService cookieService;
 
-    @GetMapping("/user/reviews/{reviewId}")
-    public String UserShowReview(@PathVariable Long reviewId, Model model, @Login LoginUser loginUser, HttpServletRequest request) {
-
-        reviewService.incrementViewCount(reviewId);
-
-        Review review = reviewService.findReviewById(reviewId);
-        Optional<Review> previousReviewOptional = reviewService.findPreviousReview(reviewId);
-        Optional<Review> nextReviewOptional = reviewService.findNextReview(reviewId);
-        String author = reviewService.getAuthor(review.getUserId());
-        String courseName = reviewService.getCourseName(review.getCourseId());
-        boolean isUserLoggedIn = cookieService.isUserLoggedIn(request);
-        boolean isLiked = reviewService.isLiked(reviewId,loginUser);
-
-
-        model.addAttribute("courseName", courseName);
-        model.addAttribute("review", review);
-        model.addAttribute("author", author);
-        model.addAttribute("loginUser", loginUser);
-        model.addAttribute("isUserLoggedIn", isUserLoggedIn);
-        previousReviewOptional.ifPresent(previousReview -> model.addAttribute("previousReview", previousReview));
-        nextReviewOptional.ifPresent(nextReview -> model.addAttribute("nextReview", nextReview));
-        model.addAttribute("isLiked",isLiked);
-
-        return "review/showReview";
-    }
 
     @GetMapping("/reviews/new/{courseId}")
     public String createReviewForm(Model model, @PathVariable Long courseId, @Login LoginUser loginUser, RedirectAttributes redirectAttributes) {
