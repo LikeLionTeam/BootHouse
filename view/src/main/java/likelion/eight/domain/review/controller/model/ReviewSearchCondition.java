@@ -21,4 +21,10 @@ public class ReviewSearchCondition {
         this.keyword = keyword;
     }
 
+
+    // 키워드를 반환하는 메서드
+    public String getKeyword() {
+        return keyword;
+    }
+
 }

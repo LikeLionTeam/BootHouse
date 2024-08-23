@@ -2,6 +2,7 @@ package likelion.eight.domain.review.service.port;
 
 import aj.org.objectweb.asm.commons.Remapper;
 import likelion.eight.course.CourseEntity;
+import likelion.eight.domain.review.controller.model.ReviewSearchCondition;
 import likelion.eight.domain.review.controller.model.ReviewSortCondition;
 import likelion.eight.domain.review.controller.model.ReviewUpdateRequest;
 import likelion.eight.domain.review.model.Review;
@@ -18,11 +19,7 @@ public interface ReviewRepository {
 
     Review save(ReviewEntity reviewEntity, CourseEntity courseEntity, UserEntity userEntity);
 
-    Review getById(Long id);
-
     Optional<ReviewEntity> findById(Long id);
-
-    Optional<Review> findReviewByCourseId(Long courseId);
 
     List<Review> findByCourseId(Long courseId);
 
@@ -36,10 +33,10 @@ public interface ReviewRepository {
 
     Optional<Review> findByCourseIdAndUserId(Long courseId, Long userId);
 
-    Page<ReviewEntity> searchByKeyword(String keyword, Pageable pageable);
+    Page<ReviewEntity> searchByKeyword(ReviewSearchCondition reviewSearchCondition, Pageable pageable);
 
 
-    Page<ReviewEntity> sortByCondition(String sortBy, Pageable pageable);
+    Page<ReviewEntity> sortByCondition(ReviewSortCondition reviewSortCondition, Pageable pageable);
 
 
     Optional<ReviewEntity> findPreviousReview(Long reviewId);

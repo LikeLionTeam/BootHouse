@@ -2,15 +2,25 @@ package likelion.eight.domain.user.controller;
 
 import jakarta.validation.Valid;
 import likelion.eight.common.annotation.Login;
+import likelion.eight.common.domain.Log;
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
+import likelion.eight.common.service.port.UuidHolder;
 import likelion.eight.domain.user.controller.model.*;
+import likelion.eight.domain.user.service.CertificationService;
 import likelion.eight.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
@@ -32,20 +42,40 @@ public class UserController {
     public String createUser(
             @Valid @ModelAttribute("request")
             UserCreateRequest request,
-            BindingResult bindingResult
-    ){
+            BindingResult bindingResult,
+            @RequestParam("verificationCode") String verificationCode
+    ) {
 
-        if(bindingResult.hasErrors()){
-            log.info("errors={}",bindingResult);
+        if (bindingResult.hasErrors()) {
+            log.info("errors={}", bindingResult);
             return "user/createForm";
         }
-        //UserCreateRequest init = init(request);
 
-        userService.createUser(request);
-        return "redirect:/";
+        userService.createUser(request, verificationCode);
+        return "redirect:/login";
     }
 
-    @GetMapping("/{id}/verify")
+    @PostMapping("/send-verification-code")
+    public ResponseEntity<?> sendVerificationCode(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+
+        try {
+            // 인증 코드 이메일 전송
+            String certificationCode = userService.sendVerificationCode(email);
+
+            // 인증 코드 클라이언트로 반환
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("code", certificationCode);  // 인증 값 확인하기 위해
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("success", false));
+        }
+    }
+
+    @GetMapping("/verify/{id}")
     public String verifyForm(
             @Login LoginUser loginUser,
             Model model
@@ -56,7 +86,7 @@ public class UserController {
     }
 
 
-    @PostMapping("/{id}/verify")
+    @PostMapping("/verify/{id}")
     public String verifyEmail(
             @PathVariable long id,
             @RequestParam("code") String code

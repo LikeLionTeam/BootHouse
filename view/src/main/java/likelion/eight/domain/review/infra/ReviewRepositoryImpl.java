@@ -2,6 +2,8 @@ package likelion.eight.domain.review.infra;
 
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import likelion.eight.course.CourseEntity;
+import likelion.eight.domain.review.controller.model.ReviewSearchCondition;
+import likelion.eight.domain.review.controller.model.ReviewSortCondition;
 import likelion.eight.domain.review.converter.ReviewConverter;
 import likelion.eight.domain.review.model.Review;
 import likelion.eight.domain.review.service.port.ReviewRepository;
@@ -38,13 +40,6 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     }
 
     @Override
-    public Review getById(Long id) {
-        return reviewJpaRepository.findById(id)
-                .map(ReviewConverter::toDto)
-                .orElseThrow(() -> new ResourceNotFoundException("Review Not Found : " + id));
-    }
-
-    @Override
     public Optional<ReviewEntity> findById(Long id) {
         return reviewJpaRepository.findById(id);
     }
@@ -72,10 +67,6 @@ public class ReviewRepositoryImpl implements ReviewRepository {
         return reviewJpaRepository.existsByUserEntityIdAndCourseEntityId(userId, courseId);
     }
 
-    @Override
-    public Optional<Review> findReviewByCourseId(Long courseId) {
-        return Optional.empty();
-    }
 
     @Override
     public Optional<Review> findByCourseIdAndUserId(Long courseId, Long userId) {
@@ -84,13 +75,15 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     }
 
     @Override
-    public Page<ReviewEntity> searchByKeyword(String keyword, Pageable pageable) {
-        return reviewJpaRepository.searchByKeyword(keyword,pageable);
+    public Page<ReviewEntity> searchByKeyword(ReviewSearchCondition reviewSearchCondition, Pageable pageable) {
+        String keyword = reviewSearchCondition.getKeyword();
+        return reviewJpaRepository.searchByKeyword(keyword, pageable);
     }
 
     @Override
-    public Page<ReviewEntity> sortByCondition(String sortBy, Pageable pageable) {
+    public Page<ReviewEntity> sortByCondition(ReviewSortCondition reviewSortCondition, Pageable pageable) {
 
+        String sortBy = reviewSortCondition.getSortBy();
         return reviewJpaRepository.sortByCondition(sortBy, pageable);
     }
 
