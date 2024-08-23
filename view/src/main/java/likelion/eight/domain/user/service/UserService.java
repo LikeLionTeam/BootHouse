@@ -28,14 +28,30 @@ public class UserService {
     private final CookieService cookieService;
     private final ClockHolder clockHolder;
 
+
     public UserResponse createUser(UserCreateRequest request){
         User createUser = UserConverter.toUser(request, uuidHolder);
         createUser = userRepository.save(createUser);
-        certificationService.sendCode(
-                createUser.getEmail(),
-                createUser.getCertificationCode()
-        );
+
         return UserConverter.toResponse(createUser);
+    }
+
+    public UserResponse createUser(UserCreateRequest request, String verificationCode) {
+
+        User createUser = UserConverter.toUser(request, verificationCode);
+        createUser = userRepository.save(createUser);
+
+        return UserConverter.toResponse(createUser);
+    }
+
+    public String sendVerificationCode(String email) {
+        // 인증 코드 생성
+        String certificationCode = uuidHolder.random();
+
+        // 인증 코드 이메일 전송
+        certificationService.sendCode(email, certificationCode);
+
+        return certificationCode;
     }
 
     public UserResponse getById(long id){
