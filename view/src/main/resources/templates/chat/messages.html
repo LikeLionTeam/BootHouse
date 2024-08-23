@@ -9,50 +9,50 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body class="bg-gray-100">
+<header>
+    <nav class="navbar-wrap bg-white shadow-md">
+        <div th:replace="fragments/navbar :: navbar"></div>
+    </nav>
+</header>
 
-<nav class="bg-white shadow-md">
-    <div th:replace="fragments/navbar :: navbar"></div>
-</nav>
-
-
-<div class="chat-container container mx-auto px-4 py-8 max-w-4xl">
-    <div class="chat-header flex justify-between items-center mb-6">
+<main class="chat-wrap container mx-auto px-4 py-8 max-w-4xl">
+    <section class="chat-header-wrap flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold">Messages for <span th:text="${username}" id="currentUsername">User</span></h1>
-        <button id="newChatBtn" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded">
+        <button id="newChatBtn" class="new-chat-btn bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded">
             <i class="fas fa-comment-medical mr-2"></i>대화하기
         </button>
-    </div>
+    </section>
 
-    <div class="chat-list-container bg-white shadow-md rounded-lg overflow-hidden">
-        <div class="chat-list-header p-4">
+    <section class="chat-list-wrap bg-white shadow-md rounded-lg overflow-hidden">
+        <header class="chat-list-header-wrap p-4">
             <h2 class="text-lg font-semibold">최근 대화</h2>
-        </div>
-        <ul id="chatList" class="chat-list divide-y divide-gray-200">
-            <li th:each="chat : ${recentChats}" class="chat-item flex items-center p-4 hover:bg-gray-50">
-                <i class="chat-avatar fas fa-user-circle text-gray-400 text-3xl mr-3"></i>
-                <div class="chat-content">
-                    <h3 class="chat-name font-semibold">
+        </header>
+        <ul id="chatList" class="chat-list-wrap divide-y divide-gray-200">
+            <li th:each="chat : ${recentChats}" class="chat-item-wrap flex items-center p-4 hover:bg-gray-50">
+                <i class="chat-avatar-wrap fas fa-user-circle text-gray-400 text-3xl mr-3"></i>
+                <div class="chat-content-wrap">
+                    <h3 class="chat-name-wrap font-semibold">
                         <a th:href="@{'/messages/' + ${chat.chatroom.id}}" th:text="${chat.chatroom.name}"></a>
                     </h3>
-                    <p class="chat-preview text-sm text-gray-500">최근 메시지 내용...</p>
+                    <p class="chat-preview-wrap text-sm text-gray-500">최근 메시지 내용...</p>
                 </div>
-                <span class="chat-time ml-auto text-sm text-gray-400">3분 전</span>
+                <time class="chat-time-wrap ml-auto text-sm text-gray-400">3분 전</time>
             </li>
         </ul>
-    </div>
-</div>
+    </section>
+</main>
 
 <template id="newChatModalTemplate">
-    <div id="newChatModal" class="modal-container fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
-        <div class="modal-content bg-white rounded-lg p-8 max-w-md w-full">
-            <h2 class="modal-title text-2xl font-bold mb-4">대화상대 초대하기</h2>
-            <input type="text" id="targetName" class="modal-input w-full p-2 border rounded mb-4" placeholder="Enter user name">
-            <p id="errorMessage" class="modal-error text-red-500 mb-4"></p>
-            <div class="modal-actions flex justify-end mt-4">
-                <button id="cancelBtn" class="modal-cancel-btn bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-2">
+    <div id="newChatModal" class="modal-wrap fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
+        <div class="modal-content-wrap bg-white rounded-lg p-8 max-w-md w-full">
+            <h2 class="modal-title-wrap text-2xl font-bold mb-4">대화상대 초대하기</h2>
+            <input type="text" id="targetName" class="modal-input-wrap w-full p-2 border rounded mb-4" placeholder="Enter user name">
+            <p id="errorMessage" class="modal-error-wrap text-red-500 mb-4"></p>
+            <div class="modal-actions-wrap flex justify-end mt-4">
+                <button id="cancelBtn" class="modal-cancel-btn-wrap bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-2">
                     취소
                 </button>
-                <button id="startChatBtn" class="modal-confirm-btn bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded">
+                <button id="startChatBtn" class="modal-confirm-btn-wrap bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded">
                     확인
                 </button>
             </div>

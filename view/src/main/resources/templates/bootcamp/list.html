@@ -8,48 +8,47 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
-<div class="container mx-auto px-4 py-8">
-    <!-- 네비게이션 바 -->
-    <nav class="bg-white shadow-md">
-        <div th:replace="fragments/navbar :: navbar"></div>
-    </nav>
+<div class="bootcamp-list-wrap container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <header>
+        <nav class="navbar-wrap bg-white shadow-md">
+            <div th:replace="fragments/navbar :: navbar"></div>
+        </nav>
+    </header>
 
-    <h2 class="text-2xl font-bold mb-6 mt-6">
-        <a href="/bootcamps" th:text="'Bootcamp 목록'"></a>
-    </h2>
+    <main class="mt-6">
+        <h1 class="bootcamp-title-wrap text-2xl sm:text-3xl font-bold mb-6">
+            <a href="/bootcamps" class="hover:text-blue-600">Bootcamp 목록</a>
+        </h1>
 
-    <!-- 검색창 부분 -->
-    <form th:action="@{/bootcamps}" method="get" class="mb-6">
-        <input type="text" name="search" placeholder="기관명 검색"
-               class="py-1 px-4 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-600" />
-        <button type="submit"
-                class="bg-orange-400 text-white text-sm px-3 py-1 rounded-md ml-2">검색</button>
-    </form>
+        <form th:action="@{/bootcamps}" method="get" class="search-form-wrap mb-6 flex flex-col sm:flex-row">
+            <input type="text" name="search" placeholder="기관명 검색"
+                   class="search-input-wrap py-2 px-4 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-600 w-full sm:w-auto mb-2 sm:mb-0" />
+            <button type="submit"
+                    class="search-btn-wrap bg-orange-400 hover:bg-orange-500 text-white text-sm px-6 py-2 rounded-full sm:ml-2 w-full sm:w-auto">검색</button>
+        </form>
 
-    <!-- 부트캠프 카드 부분 -->
-    <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <li th:each="bootcamp : ${bootcamps}"
-            class="bg-white shadow-md rounded-lg overflow-hidden">
-            <div class="p-4">
-                <h3 class="text-lg font-semibold mb-2">
-                    <a th:href="@{/bootcamps/{bootcampId}/courses (bootcampId=${bootcamp.id})}" th:text="${bootcamp.name}">bootcamp 기관명</a>
-                </h3>
-                <p class="text-sm text-gray-600 mb-2" th:text="${bootcamp.description}">bootcamp 기관 교육철학</p>
-                <div class="text-sm text-gray-500">
-                    <p>
-                        <i class="fas fa-map-marker-alt mr-2 mb-2"></i>
-                        <span th:text="${bootcamp.location}">bootcamp 기관 위치</span>
-                    </p>
-                    <p>
-                        <i class="fas fa-regular fa-link mr-2 mb-2"></i>
-                        <a th:href="${bootcamp.url}" th:text="${bootcamp.url}">bootcamp 홈페이지 url</a>
-                    </p>
+        <ul class="bootcamp-grid-wrap grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <li th:each="bootcamp : ${bootcamps}"
+                class="bootcamp-item-wrap bg-white shadow-md rounded-lg overflow-hidden">
+                <div class="bootcamp-content-wrap p-4">
+                    <h2 class="bootcamp-name-wrap text-lg font-semibold mb-2">
+                        <a th:href="@{/bootcamps/{bootcampId}/courses (bootcampId=${bootcamp.id})}" th:text="${bootcamp.name}" class="hover:text-blue-600">bootcamp 기관명</a>
+                    </h2>
+                    <p class="bootcamp-description-wrap text-sm text-gray-600 mb-2" th:text="${bootcamp.description}">bootcamp 기관 교육철학</p>
+                    <div class="bootcamp-details-wrap text-sm text-gray-500">
+                        <p class="bootcamp-location-wrap flex items-center mb-1">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            <span th:text="${bootcamp.location}">bootcamp 기관 위치</span>
+                        </p>
+                        <p class="bootcamp-url-wrap flex items-center">
+                            <i class="fas fa-link mr-2"></i>
+                            <a th:href="${bootcamp.url}" th:text="${bootcamp.url}" class="hover:text-blue-600 break-all">bootcamp 홈페이지 url</a>
+                        </p>
+                    </div>
                 </div>
-            </div>
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </main>
 </div>
-
-
 </body>
 </html>

@@ -1,64 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>리뷰 등록</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+<body class="bg-gray-100 p-4 sm:p-6">
+<header>
+    <nav class="navbar-wrap bg-white shadow-md mb-6 p-4 rounded-lg">
+        <div th:replace="fragments/navbar :: navbar"></div>
+    </nav>
+</header>
 
-<body class="bg-gray-100 p-6">
-
-<nav class="bg-white shadow-md mb-6 p-4 rounded-lg">
-    <div th:replace="fragments/navbar :: navbar"></div>
-</nav>
-
-<div class="bg-white shadow-md rounded-lg p-6">
+<main class="review-register-wrap bg-white shadow-md rounded-lg p-4 sm:p-6 max-w-2xl mx-auto">
     <h1 class="text-2xl font-semibold mb-6">리뷰 작성</h1>
-
     <form th:action="@{/reviews/new/{courseId}(courseId=${courseId})}" th:object="${reviewCreateRequest}" method="post" class="space-y-4">
-        <div>
+        <div class="form-group-wrap">
             <label for="title" class="block text-lg font-medium text-gray-700 mb-2">제목</label>
-            <input type="text" id="title" name="title" required class="w-full p-3 border border-gray-300 rounded-md" />
+            <input type="text" id="title" name="title" required class="w-full p-3 border border-gray-300 rounded-md">
         </div>
-
-        <div>
+        <div class="form-group-wrap">
             <label for="oneLineReview" class="block text-lg font-medium text-gray-700 mb-2">한 줄 리뷰</label>
-            <input type="text" id="oneLineReview" name="oneLineReview" required class="w-full p-3 border border-gray-300 rounded-md" />
+            <input type="text" id="oneLineReview" name="oneLineReview" required class="w-full p-3 border border-gray-300 rounded-md">
         </div>
-
-        <div>
+        <div class="form-group-wrap">
             <label for="advantages" class="block text-lg font-medium text-gray-700 mb-2">장점</label>
             <textarea id="advantages" name="advantages" required class="w-full p-3 border border-gray-300 rounded-md"></textarea>
         </div>
-
-        <div>
+        <div class="form-group-wrap">
             <label for="disadvantages" class="block text-lg font-medium text-gray-700 mb-2">단점</label>
             <textarea id="disadvantages" name="disadvantages" required class="w-full p-3 border border-gray-300 rounded-md"></textarea>
         </div>
-
-        <div>
+        <div class="form-group-wrap">
             <label for="instructorEvaluation" class="block text-lg font-medium text-gray-700 mb-2">강사 평가</label>
             <textarea id="instructorEvaluation" name="instructorEvaluation" required class="w-full p-3 border border-gray-300 rounded-md"></textarea>
         </div>
-
-        <div>
+        <div class="form-group-wrap">
             <label for="rating" class="block text-lg font-medium text-gray-700 mb-2">평점</label>
             <div class="flex items-center space-x-1">
-                <input type="number" id="rating" name="rating" min="1" max="5" required class="w-12 p-3 border border-gray-300 rounded-md" />
+                <input type="number" id="rating" name="rating" min="1" max="5" required class="w-16 p-3 border border-gray-300 rounded-md">
                 <span>/ 5</span>
             </div>
         </div>
-
-        <div class="flex justify-end space-x-4 mt-6">
-            <input type="submit" value="작성하기" class="bg-orange-500 text-white font-semibold px-6 py-3 rounded-md cursor-pointer hover:bg-orange-600" />
+        <div class="form-actions-wrap flex justify-end space-x-4 mt-6">
+            <input type="submit" value="작성하기" class="bg-orange-500 text-white font-semibold px-6 py-3 rounded-md cursor-pointer hover:bg-orange-600">
             <a href="/reviews" class="text-gray-500 hover:underline mt-3">취소</a>
         </div>
     </form>
-</div>
-
+</main>
 </body>
-
 </html>
