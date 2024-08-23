@@ -53,6 +53,19 @@ public class UserConverter {
                 .build();
     }
 
+    public static User toUser(UserCreateRequest userCreateRequest, String verificationCode){
+        return User.builder()
+                .name(userCreateRequest.getName())
+                .email(userCreateRequest.getEmail())
+                .password(userCreateRequest.getPassword())
+                .phoneNumber(userCreateRequest.getPhoneNumber())
+                .address(userCreateRequest.getAddress())
+                .roleType(RoleType.USER) // TODO 어드민권한주기
+                .certificationCode(verificationCode)
+                .userStatus(UserStatus.PENDING)
+                .build();
+    }
+
     public static UserResponse toResponse(User user){
         return UserResponse.builder()
                 .id(user.getId())
