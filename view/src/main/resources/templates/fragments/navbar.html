@@ -45,11 +45,23 @@
                         <a th:href="@{/likes/course}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">찜 목록</a>
                         <a th:href="@{/messages}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">메신저</a>
                     </div>
-                    <a href="#" id="loginLogoutLink"
-                       th:text="${isLoggedIn ? '로그아웃' : '로그인'}"
-                       th:attr="data-action=${isLoggedIn ? 'logout' : 'login'}"
-                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">로그인
-                    </a>
+<!--                    <a href="#" id="loginLogoutLink"-->
+<!--                       th:text="${isLoggedIn ? '로그아웃' : '로그인'}"-->
+<!--                       th:attr="data-action=${isLoggedIn ? 'logout' : 'login'}"-->
+<!--                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">로그인-->
+<!--                    </a>-->
+
+                    <div th:if="${isLoggedIn}">
+                        <a th:href="@{/myPage}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">마이페이지</a>
+                        <a href="#" id="loginLogoutLink"
+                           th:text="'로그아웃'"
+                           th:attr="data-action='logout'"
+                           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"></a>
+                    </div>
+                    <div th:unless="${isLoggedIn}">
+                        <a th:href="@{/login}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">로그인</a>
+                    </div>
+
                 </div>
 
             </div>

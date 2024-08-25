@@ -12,6 +12,7 @@ import likelion.eight.domain.user.model.User;
 import likelion.eight.domain.user.service.port.UserRepository;
 import likelion.eight.user.enums.RoleType;
 import lombok.RequiredArgsConstructor;
+import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -89,6 +90,11 @@ public class UserService {
 
     public UserResponse editUser(Long id, UserEditRequest userEditRequest){
         User user = userRepository.getById(id);
+
+        // 현재 비밀번호 확인
+        if (!userEditRequest.getPassword().equals(user.getPassword())) {
+            throw new ResourceNotFoundException("비밀번호가 일치하지 않습니다.");
+        }
         user = user.edit(userEditRequest);
         userRepository.save(user);
 
