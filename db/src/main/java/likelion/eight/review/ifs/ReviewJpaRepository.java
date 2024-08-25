@@ -46,5 +46,6 @@ public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long> {
     Optional<ReviewEntity> findTopByIdLessThanOrderByIdDesc(Long id);
     Optional<ReviewEntity> findTopByIdGreaterThanOrderByIdAsc(Long id);
 
+    List<ReviewEntity> findByUserEntity_Id(Long userId);
 
 }

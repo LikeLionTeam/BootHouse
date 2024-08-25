@@ -55,6 +55,27 @@
     </a>
 </div>
 
+<!-- 내가 쓴 리뷰 목록 -->
+<div class="container mx-auto bg-white shadow-md rounded-lg p-6 mt-6">
+    <h2 class="text-2xl font-bold mb-4">내가 쓴 리뷰</h2>
+
+    <div th:if="${#lists.isEmpty(reviews)}">
+        <p class="text-gray-600">작성된 리뷰가 없습니다.</p>
+    </div>
+
+    <div th:if="${!#lists.isEmpty(reviews)}">
+        <ul>
+            <li th:each="review : ${reviews}" class="border-b border-gray-200 py-4">
+                <a th:href="@{/reviews/{reviewId}(reviewId=${review.id})}">
+                    <h3 class="text-xl font-semibold text-blue-600 hover:underline" th:text="${review.title}"></h3>
+                </a>
+                <p class="text-gray-600 mt-2" th:text="${review.oneLineReview}"></p>
+                <p class="text-sm text-gray-500 mt-1">평점: <span th:text="${review.rating}"></span>/5</p>
+                <p class="text-sm text-gray-500 mt-1" th:text="'조회수: ' + ${review.viewCount}"></p>
+            </li>
+        </ul>
+    </div>
+</div>
 
 </body>
 </html>
