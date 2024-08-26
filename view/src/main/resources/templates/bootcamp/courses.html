@@ -8,40 +8,40 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
-<div class="container mx-auto px-4 py-8">
-  <!-- 네비게이션 바 -->
-  <nav class="bg-white shadow-md">
+<header>
+  <nav class="navbar-wrap bg-white shadow-md">
     <div th:replace="fragments/navbar :: navbar"></div>
   </nav>
+</header>
+<div class="course-list-wrap container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <main class="mt-6">
+    <h1 class="course-title-wrap text-2xl sm:text-3xl font-bold mb-6">Course List</h1>
 
-  <h2 class="text-2xl font-bold mb-6 mt-6">Course List</h2>
-
-  <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <li th:each="course : ${courses}" class="bg-white shadow-md rounded-lg overflow-hidden">
-      <div class="p-4">
-        <h3 class="text-lg font-semibold mb-2">
-          <a th:href="@{/courses/{id} (id=${course.id})}" th:text="${course.name}">Course name</a>
-        </h3>
-        <p class="text-sm text-gray-600 mb-2" th:text="${course.summary}">Course Summary</p>
-        <div class="text-sm text-gray-500">
-          <p>
-            <i class="fas fa-map-marker-alt mr-2"></i>
-            <span th:text="${course.onlineOffline ? '온라인' : '오프라인 ' + course.location}">
-                            Course 온오프라인</span>
-          </p>
-          <p>
-            <i class="far fa-calendar-alt mr-2"></i>
-            <span th:text="${course.startDate} + ' ~ ' + ${course.endDate}"></span>
-          </p>
-          <p>
-            <i class="fas fa-won-sign mr-2"></i>
-            <span th:text="${course.tuitionType == '무료' ? '무료 (내배카 필요)' : course.tuitionType + '만원'}"></span>
-          </p>
-
+    <ul class="course-grid-wrap grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <li th:each="course : ${courses}" class="course-item-wrap bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="course-content-wrap p-4">
+          <h2 class="course-name-wrap text-lg font-semibold mb-2">
+            <a th:href="@{/courses/{id} (id=${course.id})}" th:text="${course.name}" class="hover:text-blue-600">Course name</a>
+          </h2>
+          <p class="course-summary-wrap text-sm text-gray-600 mb-2" th:text="${course.summary}">Course Summary</p>
+          <div class="course-details-wrap text-sm text-gray-500">
+            <p class="course-location-wrap flex items-center mb-1">
+              <i class="fas fa-map-marker-alt mr-2"></i>
+              <span th:text="${course.onlineOffline ? '온라인' : '오프라인 ' + course.location}">Course 온오프라인</span>
+            </p>
+            <p class="course-date-wrap flex items-center mb-1">
+              <i class="far fa-calendar-alt mr-2"></i>
+              <span th:text="${course.startDate} + ' ~ ' + ${course.endDate}"></span>
+            </p>
+            <p class="course-tuition-wrap flex items-center">
+              <i class="fas fa-won-sign mr-2"></i>
+              <span th:text="${course.tuitionType == '무료' ? '무료 (내배카 필요)' : course.tuitionType + '만원'}"></span>
+            </p>
+          </div>
         </div>
-      </div>
-    </li>
-  </ul>
+      </li>
+    </ul>
+  </main>
 </div>
 </body>
 </html>

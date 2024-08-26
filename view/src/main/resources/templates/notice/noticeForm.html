@@ -6,39 +6,41 @@
     <title>새 공지사항 작성</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script type="module" src="/js/notice/index.js"></script>
 </head>
 <body class="bg-gray-100">
+<header>
+    <nav class="navbar-wrap bg-white shadow-md">
+        <div th:replace="fragments/navbar :: navbar"></div>
+    </nav>
+</header>
 
-<nav class="bg-white shadow-md">
-    <div th:replace="fragments/navbar :: navbar"></div>
-</nav>
-
-<div class="container mx-auto px-4 py-8 max-w-4xl">
+<main class="notice-form-wrap container mx-auto px-4 py-8 max-w-4xl">
     <h1 class="text-3xl font-bold mb-6">새 공지사항 작성</h1>
 
-    <form th:action="@{/notice/save}" th:object="${notice}" method="post" enctype="multipart/form-data" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <div class="mb-4">
+    <form th:action="@{/notice/save}" th:object="${notice}" method="post" enctype="multipart/form-data" class="notice-form bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <div class="notice-title-wrap mb-4">
             <input type="text" th:field="*{title}" placeholder="제목" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
         </div>
-        <div class="mb-4">
+        <div class="notice-content-wrap mb-4">
             <textarea id="markdownArea" th:field="*{content}" placeholder="내용" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-64"></textarea>
         </div>
-        <div class="mb-4">
+        <div class="notice-type-wrap mb-4">
             <select id="postType" th:field="*{postType}" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
                 <option value="NOTICE">공지사항</option>
                 <option value="EVENT">이벤트</option>
             </select>
         </div>
-        <div class="mb-4">
+        <div class="notice-importance-wrap mb-4">
             <label class="inline-flex items-center">
                 <input type="checkbox" id="importance" th:field="*{importance}" class="form-checkbox h-5 w-5 text-blue-600"/>
                 <span class="ml-2 text-gray-700">중요</span>
             </label>
         </div>
-        <div class="mb-4">
-            <input type="file" id="fileInput" multiple onchange="uploadFiles()" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
+        <div class="notice-file-upload-wrap mb-4">
+            <input type="file" id="fileInput" multiple class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
         </div>
-        <div class="flex items-center justify-between">
+        <div class="notice-form-actions-wrap flex items-center justify-between">
             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                 저장
             </button>
@@ -47,55 +49,6 @@
             </a>
         </div>
     </form>
-</div>
-
-<script>
-    function insertAtCursor(myField, myValue) {
-        if (document.selection) { // IE 지원
-            myField.focus();
-            var sel = document.selection.createRange();
-            sel.text = myValue;
-        } else if (myField.selectionStart || myField.selectionStart == '0') { // 모질라 및 기타 브라우저
-            var startPos = myField.selectionStart;
-            var endPos = myField.selectionEnd;
-            myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
-            myField.selectionStart = startPos + myValue.length;
-            myField.selectionEnd = startPos + myValue.length;
-        } else {
-            myField.value += myValue; // 커서 위치 정보가 없는 경우, 텍스트 끝에 추가
-        }
-    }
-
-    function uploadFiles() {
-        var fileInput = document.getElementById('fileInput');
-        Array.from(fileInput.files).forEach(file => {
-            var formData = new FormData();
-            formData.append("file", file); // 단일 파일 추가
-
-            fetch('/notice/upload', {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok ' + response.statusText);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.url) {
-                        var markdownArea = document.getElementById('markdownArea');
-                        insertAtCursor(markdownArea, `![](${data.url})\n`); // 커서 위치에 이미지 URL 삽입
-                    }
-                    fileInput.value = ''; // 파일 입력 필드 초기화
-                })
-                .catch(error => {
-                    console.error('Error uploading image:', error);
-                    alert('Error uploading image: ' + error.message);
-                });
-        });
-    }
-</script>
+</main>
 </body>
 </html>
-

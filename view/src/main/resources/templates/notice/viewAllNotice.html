@@ -8,46 +8,54 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body class="bg-gray-100">
+<header>
+    <nav class="bg-white shadow-md">
+        <div th:replace="fragments/navbar :: navbar"></div>
+    </nav>
+</header>
 
-<nav class="bg-white shadow-md">
-    <div th:replace="fragments/navbar :: navbar"></div>
-</nav>
+<main class="notice-container-wrap container mx-auto px-4 py-8 max-w-4xl">
+    <h1 class="notice-title text-3xl font-bold mb-6">공지사항</h1>
 
-<div class="container mx-auto px-4 py-8 max-w-4xl">
-    <h1 class="text-3xl font-bold mb-6">공지사항</h1>
-
-    <div th:if="${isAdmin}" class="mb-4">
-        <a href="/notice/new" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+    <section th:if="${isAdmin}" class="notice-admin-actions-wrap mb-4">
+        <a href="/notice/new" class="notice-create-btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
             새 공지사항 작성
         </a>
-    </div>
+    </section>
 
-    <div class="bg-white shadow-md rounded-lg overflow-hidden">
-        <ul class="divide-y divide-gray-200">
-            <li th:each="notice : ${notices}" class="p-4 hover:bg-gray-50">
-                <a th:href="@{/notice/{noticeId}(noticeId=${notice.noticeId})}" class="block">
-                    <div class="flex items-center">
-                        <span th:if="${notice.importance}" class="text-red-500 mr-2"><i class="fas fa-exclamation-circle"></i></span>
-                        <span th:switch="${notice.postType}" class="font-semibold" th:classappend="${notice.importance ? 'text-red-700' : ''}">
+    <section class="notice-list-wrap bg-white shadow-md rounded-lg overflow-hidden">
+        <ul class="notice-items-wrap divide-y divide-gray-200">
+            <li th:each="notice : ${notices}" class="notice-item-wrap p-4 hover:bg-gray-50">
+                <a th:href="@{/notice/{noticeId}(noticeId=${notice.noticeId})}" class="notice-link block">
+                    <div class="notice-content-wrap flex items-center">
+                            <span th:if="${notice.importance}" class="notice-importance text-red-500 mr-2">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </span>
+                        <span th:switch="${notice.postType}" class="notice-type font-semibold"
+                              th:classappend="${notice.importance ? 'text-red-700' : ''}">
                                 <span th:case="'NOTICE'">[공지사항]</span>
                                 <span th:case="'EVENT'">[이벤트]</span>
                             </span>
-                        <span th:text="${notice.title}" class="ml-2"></span>
+                        <span th:text="${notice.title}" class="notice-title ml-2"></span>
                     </div>
                 </a>
             </li>
         </ul>
-    </div>
+    </section>
 
-    <div class="mt-4 flex justify-between items-center">
-        <a th:if="${notices.hasPrevious()}" th:href="@{/notice(page=${notices.number - 1})}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
+    <nav class="notice-pagination-wrap mt-4 flex justify-between items-center">
+        <a th:if="${notices.hasPrevious()}"
+           th:href="@{/notice(page=${notices.number - 1})}"
+           class="pagination-prev bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
             이전
         </a>
-        <span class="text-gray-700" th:text="${notices.number + 1} + '/' + ${notices.totalPages}"></span>
-        <a th:if="${notices.hasNext()}" th:href="@{/notice(page=${notices.number + 1})}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r">
+        <span class="pagination-info text-gray-700" th:text="${notices.number + 1} + '/' + ${notices.totalPages}"></span>
+        <a th:if="${notices.hasNext()}"
+           th:href="@{/notice(page=${notices.number + 1})}"
+           class="pagination-next bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r">
             다음
         </a>
-    </div>
-</div>
+    </nav>
+</main>
 </body>
 </html>

@@ -1,105 +1,63 @@
-<!DOCTYPE html><html xmlns:th="http://www.thymeleaf.org"><head>
-    <title>UserAuth List</title>
-    <style>
-        /* 모달 스타일 */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            padding-top: 100px;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0,0,0);
-            background-color: rgba(0,0,0,0.9);
-        }
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Auth List</title>
+    <link rel="stylesheet" href="/css/user/images.css">
+</head>
+<body>
+<main class="user-auth-list-wrap">
+    <h1 class="page-title">User Auth List</h1>
 
-        .modal-content {
-            margin: auto;
-            display: block;
-            width: 80%;
-            max-width: 700px;
-        }
+    <table class="user-auth-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>User ID</th>
+            <th>Auth Request Type</th>
+            <th>Image</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="userAuth : ${userAuthPage.content}" class="user-auth-item">
+            <td th:text="${userAuth.id}"></td>
+            <td th:text="${userAuth.user.id}"></td>
+            <td th:text="${userAuth.authRequestType}"></td>
+            <td>
+                <img th:src="${userAuth.imageUrl}" alt="User Image" width="100" class="user-auth-image"/>
+            </td>
+            <td class="action-buttons-wrap">
+                <form th:action="@{/userauth/{id}/approve(id=${userAuth.id})}" method="post">
+                    <button type="submit" class="approve-btn">수락</button>
+                </form>
+                <form th:action="@{/userauth/{id}/deny(id=${userAuth.id})}" method="post">
+                    <button type="submit" class="deny-btn">거절</button>
+                </form>
+                <form th:action="@{/userauth/{id}/delete(id=${userAuth.id})}" method="post">
+                    <button type="submit" class="delete-btn">삭제</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
-        .close {
-            position: absolute;
-            top: 15px;
-            right: 35px;
-            color: #f1f1f1;
-            font-size: 40px;
-            font-weight: bold;
-        }
+    <nav class="pagination-wrap" th:if="${pageNumbers != null}">
+        <ul class="pagination-list">
+            <li th:each="pageNumber : ${pageNumbers}" class="pagination-item">
+                <a th:href="@{/userauth/list(page=${pageNumber - 1}, size=${userAuthPage.size})}"
+                   th:text="${pageNumber}" class="pagination-link"></a>
+            </li>
+        </ul>
+    </nav>
+</main>
 
-        .close:hover,
-        .close:focus {
-            color: #bbb;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    </style></head><body><h1>User Auth List</h1>
-
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>User ID</th>
-        <th>Auth Request Type</th>
-        <th>Image</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="userAuth : ${userAuthPage.content}">
-        <td th:text="${userAuth.id}"></td>
-        <td th:text="${userAuth.user.id}"></td>
-        <td th:text="${userAuth.authRequestType}"></td>
-        <td>
-            <img th:src="${userAuth.imageUrl}" alt="User Image" width="100" class="image"/>
-        </td>
-        <td>
-            <form th:action="@{/userauth/{id}/approve(id=${userAuth.id})}" method="post">
-                <button type="submit">수락</button>
-            </form>
-            <form th:action="@{/userauth/{id}/deny(id=${userAuth.id})}" method="post">
-                <button type="submit">거절</button>
-            </form>
-            <form th:action="@{/userauth/{id}/delete(id=${userAuth.id})}" method="post">
-                <button type="submit">삭제</button>
-            </form>
-        </td>
-    </tr>
-    </tbody></table>
-
-<div>
-    <div th:if="${pageNumbers != null}">
-        <span th:each="pageNumber : ${pageNumbers}">
-            <a th:href="@{/userauth/list(page=${pageNumber - 1}, size=${userAuthPage.size})}"
-               th:text="${pageNumber}"></a>
-        </span>
-    </div></div>
-
-<!-- 이미지 확대를 위한 모달 --><div id="myModal" class="modal">
+<div id="imageModal" class="modal">
     <span class="close">&times;</span>
-    <img class="modal-content" id="img01"></div>
+    <img class="modal-content" id="modalImage" alt="Enlarged user image">
+</div>
 
-<script>
-    // 이미지 클릭 시 모달을 여는 스크립트
-    var modal = document.getElementById("myModal");
-    var modalImg = document.getElementById("img01");
-
-    document.querySelectorAll('.image').forEach(img => {
-        img.onclick = function() {
-            modal.style.display = "block";
-            modalImg.src = this.src;
-        }
-    });
-
-    var span = document.getElementsByClassName("close")[0];
-    span.onclick = function() {
-        modal.style.display = "none";
-    }
-</script>
-
-</body></html>
+<script type="module" src="/js/user/images/index.js"></script>
+</body>
+</html>

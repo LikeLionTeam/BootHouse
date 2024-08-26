@@ -1,29 +1,28 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course Detail</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <script type="module" src="/js/course/courseDetail/index.js"></script>
 </head>
 
-<body class="bg-gray-100" onload="initializeWishlistButton()">
+<body class="bg-gray-100">
+<header>
+    <nav class="navbar-wrap bg-white shadow-md">
+        <div th:replace="fragments/navbar :: navbar"></div>
+    </nav>
+</header>
 
-<!-- 네비게이션 바 -->
-<nav class="bg-white shadow-md">
-    <div th:replace="fragments/navbar :: navbar"></div>
-</nav>
-
-<div class="container mx-auto px-4 py-8 flex flex-col lg:flex-row">
-    <!-- 메인 콘텐츠 영역 -->
-    <div class="w-full lg:w-2/3 lg:pr-4">
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden mb-8">
+<main class="course-detail-wrap container mx-auto px-4 py-8 flex flex-col lg:flex-row">
+    <section class="course-main-content-wrap w-full lg:w-2/3 lg:pr-4">
+        <div class="course-info-wrap bg-white shadow-lg rounded-lg overflow-hidden mb-8">
             <div class="p-6">
-                <h1 class="text-3xl font-bold mb-4 pb-4 border-b">course name</h1>
+                <h1 class="course-title text-3xl font-bold mb-4 pb-4 border-b" th:text="${course.name}">course name</h1>
 
-                <!-- 프로그램 요약-->
-                <div class="mb-8">
+                <div class="course-summary-wrap mb-8">
                     <h2 class="text-xl font-semibold mb-4">프로그램 요약</h2>
                     <div class="bg-gray-50 border rounded-lg p-4">
                         <span class="mb-2 mr-4" th:text="${course.summary}"></span>
@@ -32,8 +31,7 @@
                     </div>
                 </div>
 
-                <!-- 일정 & 수업 -->
-                <div class="mb-8">
+                <div class="course-schedule-wrap mb-8">
                     <h2 class="text-xl font-semibold mb-4">일정 & 수업</h2>
                     <div class="bg-gray-50 border rounded-lg p-4">
                         <p class="mb-2">
@@ -54,21 +52,19 @@
                     </div>
                 </div>
 
-                <!-- 수업 방식 -->
-                <div class="mb-8">
+                <div class="course-method-wrap mb-8">
                     <h2 class="text-xl font-semibold mb-4">수업 방식</h2>
                     <div class="bg-gray-50 border rounded-lg p-4">
                         <p class="mb-2">
                             <strong>수업형태:</strong>
                             <span th:text="${course.onlineOffline ? '온라인' : '오프라인'}"></span>
                         </p>
-                        <!--if문 div로 빼고 p태그 안으로 넣어 지도 넣을수 있게 수정함-->
                         <div th:if="${!course.onlineOffline}">
                             <p class="mb-2">
                                 <strong>학습장소:</strong>
                                 <span th:text="${course.location}"></span>
                             </p>
-                            <div id="map" style="width: 80%; height: 400px;"></div>
+                            <div id="map" class="course-map" style="width: 80%; height: 400px;"></div>
                         </div>
                         <p class="mb-2">
                             <strong>코딩테스트 유무:</strong>
@@ -77,20 +73,17 @@
                     </div>
                 </div>
 
-                <!-- 수강료 & 지원금 -->
-                <div class="mb-8">
+                <div class="course-tuition-wrap mb-8">
                     <h2 class="text-xl font-semibold mb-4">수강료 & 지원금</h2>
                     <div class="bg-gray-50 border rounded-lg p-4">
                         <p class="mb-2">
                             <strong>수강료:</strong>
-                            <span th:text="${course.tuitionType == '무료' ? '무료' : course.tuitionType + '만원'}">
-                            </span>
+                            <span th:text="${course.tuitionType == '무료' ? '무료' : course.tuitionType + '만원'}"></span>
                         </p>
                         <p class="mb-2">
                             <strong>내일배움카드:</strong>
                             <span th:text="${course.cardRequirement ? '필요함' : '불필요함'}"></span>
-                            <i th:if="${course.cardRequirement}"
-                               class="fas fa-info-circle text-orange-500"></i>
+                            <i th:if="${course.cardRequirement}" class="fas fa-info-circle text-orange-500"></i>
                         </p>
                     </div>
                     <div th:if="${course.cardRequirement}" class="bg-orange-50 border-orange-200 border rounded-lg p-4 mt-4">
@@ -99,46 +92,29 @@
                     </div>
                 </div>
 
-                <!-- 수강생 후기 -->
-                <div class="mb-8 course-review">
+                <div class="course-review-wrap mb-8">
                     <h2 class="text-xl font-semibold mb-4">수강생들의 솔직한 후기에요.</h2>
-
                     <p class="mb-1 ml-4">
                         <strong>평균 별점:</strong>
                         <span th:text="${course.averageRating}"></span>
                     </p>
-
                     <ul class="review-list space-y-4">
-                        <th:block th:each="review, iterStat : ${reviews}">
-                            <li class="bg-gray-100 border rounded-lg p-4 review-item">
-                                <a class="font-semibold mb-2"
-                                   th:text="${review.title}"
-                                   th:href="@{/reviews/{id}(id=${review.id})}">
-                                    리뷰 제목
-                                </a>
-                                <div class="text-sm text-gray-600" th:text="${review.oneLineReview}">한줄리뷰</div>
-                            </li>
-                        </th:block>
+                        <li th:each="review : ${reviews}" class="bg-gray-100 border rounded-lg p-4 review-item">
+                            <a class="font-semibold mb-2" th:text="${review.title}" th:href="@{/reviews/{id}(id=${review.id})}">리뷰 제목</a>
+                            <div class="text-sm text-gray-600" th:text="${review.oneLineReview}">한줄리뷰</div>
+                        </li>
                     </ul>
-
-                    <span class="review-more
-                            text-orange-600 hover:text-orange-800 cursor-pointer underline mt-4 block hidden
-                            ml-4">
-                        리뷰 더보기</span>
-
-                    <p class="mb-1 ml-4"th:if="${#lists.isEmpty(reviews)}">등록된 리뷰가 없습니다</p>
-
+                    <span class="review-more text-orange-600 hover:text-orange-800 cursor-pointer underline mt-4 block hidden ml-4">리뷰 더보기</span>
+                    <p class="mb-1 ml-4" th:if="${#lists.isEmpty(reviews)}">등록된 리뷰가 없습니다</p>
                     <div th:if="${isUserLoggedIn}" class="mt-4 ml-4 text-orange-500 hover:underline">
                         <a th:text="'내 리뷰 쓰기'" th:href="@{/reviews/new/{courseId}(courseId=${course.id})}"></a>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- 고정된 정보 영역 -->
-    <div class="w-full lg:w-1/3 sticky top-8 h-full">
-    <div class="w-full lg:w-1/3 sticky top-8 h-full">
+    <aside class="course-sidebar-wrap w-full lg:w-1/3 sticky top-8 h-full">
         <div class="bg-white shadow-lg rounded-lg p-6">
             <h2 class="text-2xl font-semibold mb-4" th:text="${course.name}">course name</h2>
             <ul class="space-y-2">
@@ -158,296 +134,44 @@
                     <strong>수강료:</strong>
                     <span th:text="${course.tuitionType == '무료' ? '무료' : course.tuitionType + '만원'}"></span>
                 </li>
-
                 <li>
                     <p><strong>내일배움카드: <span th:text="${course.isCardRequirement() ? '필요' : '필요 X'}"></span></strong></p>
                 </li>
-
             </ul>
-            <button class="mt-4 w-full bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
-                    id="share-button">공유하기</button>
-            <button class="mt-4 w-full bg-gray-200 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded flex items-center justify-center
-                            wishlist-btn"
-                    id="wishlist-btn"
-                    onclick="wishlistAction()">
+            <button id="shareButton" class="mt-4 w-full bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">공유하기</button>
+            <button id="wishlistBtn" class="mt-4 w-full bg-gray-200 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded flex items-center justify-center wishlist-btn">
                 <i class="fas fa-heart mr-2"></i>
                 찜하기
             </button>
         </div>
 
-        <!-- 공유하기 팝업 (초기 상태는 hidden) -->
-        <div id="share-popup"
-             class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 hidden">
+        <div id="sharePopup" class="share-popup-wrap fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 hidden">
             <div class="bg-white rounded-lg p-6 w-full max-w-md">
                 <div class="flex justify-between items-center mb-4">
                     <h4 class="text-lg font-semibold">공유하기</h4>
-                    <button class="text-gray-500 hover:text-gray-700" onclick="closeSharePopup()">X</button>
+                    <button id="closeSharePopup" class="text-gray-500 hover:text-gray-700">X</button>
                 </div>
                 <p class="mb-4">코스 정보 요약:</p>
-                <p id="course-summary" th:text="${course.summary}" class="mb-4">여기에 코스 정보 요약이 들어갑니다.</p>
+                <p id="courseSummary" th:text="${course.summary}" class="mb-4">여기에 코스 정보 요약이 들어갑니다.</p>
                 <div class="flex flex-col space-y-2">
-                    <button class="bg-yellow-400 hover:bg-yellow-500 text-black py-2 rounded" onclick="shareKaKao()">카카오톡</button>
-                    <button class="bg-blue-600 hover:bg-blue-700 text-white py-2 rounded" onclick="shareFacebook()">페이스북</button>
-                    <button class="bg-blue-400 hover:bg-blue-500 text-white py-2 rounded" onclick="shareX()">X (Twitter)</button>
-                    <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded" onclick="copyToClipboard()">URL 복사</button>
+                    <button id="shareKakao" class="bg-yellow-400 hover:bg-yellow-500 text-black py-2 rounded">카카오톡</button>
+                    <button id="shareFacebook" class="bg-blue-600 hover:bg-blue-700 text-white py-2 rounded">페이스북</button>
+                    <button id="shareX" class="bg-blue-400 hover:bg-blue-500 text-white py-2 rounded">X (Twitter)</button>
+                    <button id="copyUrl" class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded">URL 복사</button>
                 </div>
             </div>
         </div>
-
-    </div>
-</div>
+    </aside>
+</main>
 
 <input type="hidden" id="isUserLoggedIn" th:value="${isUserLoggedIn}">
 <input type="hidden" id="courseId" th:value="${course.id}">
 
-<script src="https://developers.kakao.com/sdk/js/kakao.js"></script><!-- 기존 JS는 여기에서 적용 -->
-<script>
-    function setButtonColor(button, isLiked) {
-        if (isLiked) {
-            if (button.classList.contains('bg-gray-200')) {
-                button.classList.remove('bg-gray-200', 'hover:bg-gray-400', 'text-gray-800');
-                button.classList.add('bg-red-500', 'hover:bg-red-700', 'text-white');
-                button.innerHTML = '<i class="fas fa-heart mr-2"></i>찜 완료';
-            }
-        } else {
-            button.classList.remove('bg-red-500', 'hover:bg-red-700', 'text-white');
-            button.classList.add('bg-gray-200', 'hover:bg-gray-400', 'text-gray-800');
-            button.innerHTML = '<i class="fas fa-heart mr-2"></i>찜하기';
-        }
-    }
-
-    // 초기화 함수 -- 로그인한 유저가, 이미 찜하기 버튼을 이전에 눌렀다면 찜하기 채운 상태로
-    function initializeWishlistButton() {
-        const isUserLoggedIn = document.getElementById('isUserLoggedIn').value === 'true';
-        const courseId = document.getElementById('courseId').value;
-
-        if (isUserLoggedIn){
-            fetch(`/courses/${courseId}/isLiked`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then(response => response.json().then(data => {
-                const wishlistBtn = document.getElementById('wishlist-btn');
-                setButtonColor(wishlistBtn, data.isLiked === 'true');
-            })).catch(error => {
-                console.error('Error :: ', error);
-            });
-        }
-    }
-
-    // 리뷰 더보기 + 접기 부분 JS
-    document.addEventListener("DOMContentLoaded", function() {
-        const reviews = document.querySelectorAll(".course-review .review-list .review-item");
-        const reviewMoreBtn = document.querySelector(".review-more");
-
-        // 리뷰 개수가 3개 초과일 경우
-        if (reviews.length > 3) {
-            // 처음에는 첫 3개 리뷰만 보여주고 나머지는 숨기기
-            reviews.forEach((review, index) => {
-                if (index >= 3) review.classList.add("hidden");
-            });
-
-            // "리뷰 더보기" 버튼 보이기
-            reviewMoreBtn.classList.remove("hidden");
-
-            // "리뷰 더보기" 버튼 클릭 시 이벤트 핸들러
-            reviewMoreBtn.addEventListener("click", function() {
-                // "리뷰 더보기"에서 "리뷰 접기"로 텍스트 및 동작 변경
-                if (reviewMoreBtn.textContent === "리뷰 더보기") {
-                    reviews.forEach(review => review.classList.remove("hidden")); // 모든 리뷰 보이기
-                    reviewMoreBtn.textContent = "리뷰 접기"; // 버튼 텍스트를 "리뷰 접기"로 변경
-                } else {
-                    // 다시 3개 리뷰만 보이고 나머지는 숨기기
-                    reviews.forEach((review, index) => {
-                        if (index >= 3) review.classList.add("hidden");
-                    });
-                    reviewMoreBtn.textContent = "리뷰 더보기"; // 버튼 텍스트를 "리뷰 더보기"로 변경
-                }
-            });
-        }
-    });
-
-    // 찜하기 버튼 클릭시 동작
-    function wishlistAction(){
-        const isUserLoggedIn = document.getElementById('isUserLoggedIn').value === 'true'; // 문자열 -> boolean 타입으로 변환하기 위한 수식
-        const courseId = document.getElementById('courseId').value;
-        const button = document.querySelector('.wishlist-btn');
-
-        if (isUserLoggedIn){
-            // 유저가 로그인한 상태
-            fetch(`/courses/${courseId}/like`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then(response => response.text().then(message => {
-                alert(message);
-
-                if (message.includes("추가")){
-                    setButtonColor(button, true);
-                } else {
-                    setButtonColor(button, false);
-                }
-            })).catch(error => {
-                console.error('Error :: ', error);
-            });
-
-        } else {
-            // 유저 로그인 안함
-            if (confirm('로그인/회원가입을 하시겠어요?')){
-                window.location.href = '/login';
-            }
-        }
-    }
-
-    // 공유하기 기능 관련 JS
-    // 공유하기 팝업을 보여주는 함수
-    function showSharePopup() {
-        document.getElementById('share-popup').classList.remove('hidden');
-    }
-
-    // 공유하기 팝업을 닫는 함수
-    function closeSharePopup() {
-        document.getElementById('share-popup').classList.add('hidden');
-    }
-
-    // 공유하기 버튼 클릭 이벤트 리스너
-    document.getElementById('share-button').addEventListener('click', showSharePopup);
-
-    // 나머지 SNS 공유 및 URL 복사 기능은 그대로 사용
-    function shareFacebook(){
-        const url = encodeURI(window.location.href);
-        window.open("http://www.facebook.com/sharer/sharer.php?u=" + url); // 페이스북은 주소를 넘기면 됨
-    }
-
-    function shareX(){
-        const url = encodeURI(window.location.href);
-        const text = '부트캠프 프로그램 공유';
-        window.open("https://twitter.com/intent/tweet?text=" + text + "&url=" + url); // 텍스트문자와 주소를 넘기면 됨
-    }
-
-    // 링크복사
-    function copyToClipboard() {
-        const url = window.location.href; // 현재 링크를 가져오는 코드
-        navigator.clipboard.writeText(url).then(() => {
-            alert('URL이 복사되었습니다.'); // 크롬에서는 navigator 객체가, 페이지보안시(localhost 혹은 HTTPS)에서만 작동함
-        });
-    }
-
-    // kakao
-    Kakao.init('2a85e9b7261e20602098df66e58fb0a5');
-    // 키 값이 초기화되었는지 확인
-    console.log('카카오 초기화:', Kakao.isInitialized());
-    function shareKaKao(){
-        if (!Kakao.isInitialized()) {
-            console.error('Kakao SDK가 초기화되지 않았습니다.');
-            return;
-        }
-
-        // 현재 링크 가져오기
-        var currentURL = window.location.href;
-
-        //alert('currentURL :: ' + currentURL)
-        // 타이틀을 가져오는 부분
-        var title = '[부트하우스] 2024년 국비지원, 부트캠프 모음!';
-
-        // 설명을 가져오는 부분
-        var description = '모든 부트캠프들의 정보를 한눈에 비교하고, 리뷰 및 후기들을 확인해보세요!';
-
-        // 제품 이미지를 가져오는 부분
-        var imageurl = 'https://ifh.cc/g/b6Nn12.jpg'; // 유효한 이미지 URL
-
-        window.Kakao.Link.sendDefault({
-            objectType: 'feed',
-            content: {
-                title: title,
-                description: description,
-                imageUrl: imageurl,
-                link: {
-                    mobileWebUrl: currentURL,
-                    webUrl: currentURL,
-                },
-            },
-            buttons: [
-                {
-                    title: '웹으로 이동',
-                    link: {
-                        mobileWebUrl: currentURL,
-                        webUrl: currentURL,
-                    },
-                },
-            ],
-            // 카카오톡 미설치 시 카카오톡 설치 경로이동
-            installTalk: true,
-        }, function(response) {
-            console.log('카카오톡 공유 성공', response);
-        }, function(error) {
-            console.error('카카오톡 공유 실패', error);
-        });
-    }
-</script>
+<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 <script th:inline="javascript">
-    fetch('/api/naver/maps-script')
-        .then(function(response) {
-            return response.text();
-        })
-        .then(function(scriptUrl) {
-            var scriptElement = document.createElement('script');
-            scriptElement.src = scriptUrl.trim();  // URL을 src에 할당
-            document.body.appendChild(scriptElement);
-
-            scriptElement.onload = function() {
-                initializeMap();  // 스크립트 로드 완료 후 지도 초기화 함수 호출
-            };
-        });
-
-    function initializeMap() {
-        // 서버에서 넘어온 주소 데이터를 JavaScript 배열로 변환
-        var addresses = /*[[${geocode.addresses}]]*/ [];
-        if (addresses.length > 0) {
-            var x = parseFloat(addresses[0].x);
-            var y = parseFloat(addresses[0].y);
-
-            var course_location = new naver.maps.LatLng(y, x),
-                map = new naver.maps.Map('map', {
-                    center: course_location,
-                    zoom: 15
-                }),
-                marker = new naver.maps.Marker({
-                    map: map,
-                    position: course_location
-                });
-
-            var courseName = /*[[${course.name}]]*/ 'Default Course Name';
-            var course_location = /*[[${course.location}]]*/ 'Default Course Location';
-
-            var contentString = [
-                '<div class="iw_inner custom_info_window">',
-                '    <h3>' + courseName + '</h3>',
-                '    <p>',
-                '        ' + course_location + '<br>',
-                '    </p>',
-                '</div>'
-            ].join('');
-
-            var infowindow = new naver.maps.InfoWindow({
-                content: contentString
-            });
-
-            naver.maps.Event.addListener(marker, "click", function(e) {
-                if (infowindow.getMap()) {
-                    infowindow.close();
-                } else {
-                    infowindow.open(map, marker);
-                }
-            });
-
-            infowindow.open(map, marker);
-        }
-    }
+    var addresses = /*[[${geocode.addresses}]]*/ [];
+    var courseName = /*[[${course.name}]]*/ 'Default Course Name';
+    var courseLocation = /*[[${course.location}]]*/ 'Default Course Location';
 </script>
-
-
 </body>
 </html>
