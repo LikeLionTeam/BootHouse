@@ -45,14 +45,14 @@
         <label class="block text-lg font-medium text-gray-700">Role Type:</label>
         <p th:text="${loginUser.roleType}" class="text-gray-900"></p>
     </div>
-</div>
 
-<!-- 회원 정보 수정하기 버튼 -->
-<div class="mt-6">
-    <a th:href="@{/users/{id}/edit(id=${loginUser.id})}"
-       class="bg-blue-500 text-white font-semibold px-6 py-3 rounded-md shadow hover:bg-blue-600 transition duration-150">
-        회원 정보 수정하기
-    </a>
+    <!-- 회원 정보 수정하기 버튼 -->
+    <div class="mt-6">
+        <a th:href="@{/users/{id}/edit(id=${loginUser.id})}"
+           class="bg-blue-500 text-white font-semibold px-6 py-3 rounded-md shadow hover:bg-blue-600 transition duration-150">
+            회원 정보 수정하기
+        </a>
+    </div>
 </div>
 
 <!-- 내가 쓴 리뷰 목록 -->

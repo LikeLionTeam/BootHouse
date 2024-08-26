@@ -1,6 +1,7 @@
 package likelion.eight.domain.user.controller;
 
 import likelion.eight.common.annotation.Login;
+import likelion.eight.domain.course.service.CourseService;
 import likelion.eight.domain.review.model.Review;
 import likelion.eight.domain.review.service.ReviewService;
 import likelion.eight.domain.user.controller.model.LoginUser;
@@ -27,7 +28,6 @@ public class MyPageController {
             Model model) {
 
         List<Review> reviews = reviewService.findByUserId(loginUser.getId());
-
 
         model.addAttribute("loginUser", loginUser);
         model.addAttribute("reviews", reviews);
