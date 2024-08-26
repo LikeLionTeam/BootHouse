@@ -8,12 +8,13 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
+<header>
+    <nav class="navbar-wrap bg-white shadow-md">
+        <div th:replace="fragments/navbar :: navbar"></div>
+    </nav>
+</header>
 <div class="bootcamp-list-wrap container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <header>
-        <nav class="navbar-wrap bg-white shadow-md">
-            <div th:replace="fragments/navbar :: navbar"></div>
-        </nav>
-    </header>
+
 
     <main class="mt-6">
         <h1 class="bootcamp-title-wrap text-2xl sm:text-3xl font-bold mb-6">

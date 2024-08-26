@@ -1,159 +1,109 @@
 <!DOCTYPE html>
-
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>Review Details</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        .like-button {
-            font-size: 24px;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .liked {
-            color: red;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/css/review/showReview.css">
 </head>
-
 <body class="bg-gray-50 min-h-screen p-6">
+<header>
+    <nav class="bg-white shadow-md mb-6 p-4 rounded-lg">
+        <div th:replace="fragments/navbar :: navbar"></div>
+    </nav>
+</header>
 
-<nav class="bg-white shadow-md mb-6 p-4 rounded-lg">
-    <div th:replace="fragments/navbar :: navbar"></div>
-</nav>
+<main class="review-detail-wrap">
+    <article class="review-content-wrap bg-white shadow-md rounded-lg p-8 mb-6">
+        <header class="review-header-wrap flex justify-between items-center mb-6">
+            <h1 class="review-title text-3xl font-bold text-gray-800" th:text="${review.title}">리뷰 제목</h1>
+            <button class="like-button text-gray-400 hover:text-red-500" th:data-review-id="${review.id}" th:data-liked="${isLiked}">
+                <i id="likeButton" th:classappend="${isLiked} ? 'fas fa-heart liked' : 'far fa-heart'"></i>
+            </button>
+        </header>
 
-<div class="bg-white shadow-md rounded-lg p-8 mb-6">
-    <div class="flex justify-between items-center mb-6">
-        <h2 class="text-3xl font-bold text-gray-800" th:text="${review.title}">리뷰 제목</h2>
-        <button class="like-button text-gray-400 hover:text-red-500" th:data-review-id="${review.id}" th:data-liked="${isLiked}">
-            <i id="likeButton" th:classappend="${isLiked} ? 'fas fa-heart liked' : 'far fa-heart'"></i>
-        </button>
+        <div class="review-author-wrap mb-6">
+            <p class="text-gray-600 flex items-center">
+                <i class="fas fa-user mr-2"></i>
+                <span th:text="${author}">작성자: 홍길동</span>
+            </p>
+        </div>
+
+        <table class="review-details-wrap w-full mb-6 text-gray-700">
+            <tr class="border-b">
+                <th class="py-4 text-left font-semibold text-gray-600 w-1/4">총평</th>
+                <td class="py-4" th:text="${review.oneLineReview}">한 줄 리뷰 내용.</td>
+            </tr>
+            <tr class="border-b">
+                <th class="py-4 text-left font-semibold text-gray-600">장점</th>
+                <td class="py-4" th:text="${review.advantages}">장점 내용...</td>
+            </tr>
+            <tr class="border-b">
+                <th class="py-4 text-left font-semibold text-gray-600">단점</th>
+                <td class="py-4" th:text="${review.disadvantages}">단점 내용...</td>
+            </tr>
+            <tr class="border-b">
+                <th class="py-4 text-left font-semibold text-gray-600">강사 평가</th>
+                <td class="py-4" th:text="${review.instructorEvaluation}">강사 평가 내용...</td>
+            </tr>
+            <tr>
+                <th class="py-4 text-left font-semibold text-gray-600">별점</th>
+                <td class="py-4">
+                    <div class="flex items-center" th:text="${review.rating}">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-gray-300"></i>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <footer class="review-footer-wrap text-gray-500 text-sm mb-6 space-y-2">
+            <p class="flex items-center">
+                <i class="fas fa-folder-open mr-2"></i>
+                <span th:text="${courseName}">부트캠프: Android 기본 부트캠프</span>
+            </p>
+            <p class="flex items-center">
+                <i class="fas fa-eye mr-2"></i>
+                조회수: <span th:text="${review.viewCount}">100</span>
+            </p>
+            <p class="flex items-center">
+                <i class="fas fa-calendar-alt mr-2"></i>
+                등록일: <span th:text="${#temporals.format(review.registrationDate, 'yyyy-MM-dd HH:mm:ss')}">2023-08-11 15:30</span>
+            </p>
+            <p class="flex items-center">
+                <i class="fas fa-edit mr-2"></i>
+                수정일: <span th:text="${#temporals.format(review.lastModifiedDate, 'yyyy-MM-dd HH:mm:ss')}">2023-08-11 16:00</span>
+            </p>
+        </footer>
+
+        <div th:if="${loginUser} and ${review.getUserId()} == ${loginUser.getId()}" class="review-actions-wrap flex justify-end space-x-4">
+            <a th:href="@{/reviews/{id}/edit(id=${review.id})}"
+               class="edit-review-btn bg-blue-500 text-white px-6 py-2 rounded-md shadow hover:bg-blue-600 transition duration-150">수정하기</a>
+            <form th:action="@{/reviews/{id}/delete(id=${review.id})}" method="post">
+                <button type="submit"
+                        class="delete-review-btn bg-red-500 text-white px-6 py-2 rounded-md shadow hover:bg-red-600 transition duration-150">삭제하기</button>
+            </form>
+        </div>
+    </article>
+
+    <div class="review-navigation-wrap text-center mt-8">
+        <a href="/reviews" class="text-blue-500 hover:underline">모든 리뷰 보기</a>
     </div>
 
-    <div class="mb-6">
-        <p class="text-gray-600 flex items-center">
-            <i class="fas fa-user mr-2"></i>
-            <span th:text="${author}">작성자: 홍길동</span>
-        </p>
-    </div>
+    <nav class="review-pagination-wrap">
+        <div th:if="${previousReview != null}" class="text-center mt-4">
+            <a th:href="@{/reviews/{id}(id=${previousReview.id})}" class="text-blue-500 hover:underline">이전 글</a>
+        </div>
+        <div th:if="${nextReview != null}" class="text-center mt-2">
+            <a th:href="@{/reviews/{id}(id=${nextReview.id})}" class="text-blue-500 hover:underline">다음 글</a>
+        </div>
+    </nav>
+</main>
 
-    <table class="w-full mb-6 text-gray-700">
-        <tr class="border-b">
-            <th class="py-4 text-left font-semibold text-gray-600 w-1/4">총평</th>
-            <td class="py-4" th:text="${review.oneLineReview}">한 줄 리뷰 내용.</td>
-        </tr>
-        <tr class="border-b">
-            <th class="py-4 text-left font-semibold text-gray-600">장점</th>
-            <td class="py-4" th:text="${review.advantages}">장점 내용...</td>
-        </tr>
-        <tr class="border-b">
-            <th class="py-4 text-left font-semibold text-gray-600">단점</th>
-            <td class="py-4" th:text="${review.disadvantages}">단점 내용...</td>
-        </tr>
-        <tr class="border-b">
-            <th class="py-4 text-left font-semibold text-gray-600">강사 평가</th>
-            <td class="py-4" th:text="${review.instructorEvaluation}">강사 평가 내용...</td>
-        </tr>
-        <tr>
-            <th class="py-4 text-left font-semibold text-gray-600">별점</th>
-            <td class="py-4">
-                <div class="flex items-center" th:text="${review.rating}">
-                    <i class="fas fa-star text-yellow-400"></i>
-                    <i class="fas fa-star text-yellow-400"></i>
-                    <i class="fas fa-star text-yellow-400"></i>
-                    <i class="fas fa-star text-yellow-400"></i>
-                    <i class="fas fa-star text-gray-300"></i>
-                </div>
-            </td>
-        </tr>
-    </table>
-
-    <div class="text-gray-500 text-sm mb-6 space-y-2">
-        <p class="flex items-center">
-            <i class="fas fa-folder-open mr-2"></i>
-            <span th:text="${courseName}">부트캠프: Android 기본 부트캠프</span>
-        </p>
-        <p class="flex items-center">
-            <i class="fas fa-eye mr-2"></i>
-            조회수: <span th:text="${review.viewCount}">100</span>
-        </p>
-        <p class="flex items-center">
-            <i class="fas fa-calendar-alt mr-2"></i>
-            등록일: <span th:text="${#temporals.format(review.registrationDate, 'yyyy-MM-dd HH:mm:ss')}">2023-08-11 15:30</span>
-        </p>
-        <p class="flex items-center">
-            <i class="fas fa-edit mr-2"></i>
-            수정일: <span th:text="${#temporals.format(review.lastModifiedDate, 'yyyy-MM-dd HH:mm:ss')}">2023-08-11 16:00</span>
-        </p>
-    </div>
-
-
-    <div th:if="${loginUser} and ${review.getUserId()} == ${loginUser.getId()}" class="flex justify-end space-x-4">
-        <a th:href="@{/reviews/{id}/edit(id=${review.id})}"
-           class="bg-blue-500 text-white px-6 py-2 rounded-md shadow hover:bg-blue-600 transition duration-150">수정하기</a>
-        <form th:action="@{/reviews/{id}/delete(id=${review.id})}" method="post">
-            <button type="submit"
-                    class="bg-red-500 text-white px-6 py-2 rounded-md shadow hover:bg-red-600 transition duration-150">삭제하기</button>
-        </form>
-    </div>
-
-</div>
-
-<div class="text-center mt-8">
-    <a href="/reviews" class="text-blue-500 hover:underline">모든 리뷰 보기</a>
-</div>
-
-<div th:if="${previousReview != null}" class="text-center mt-4">
-    <a th:href="@{/reviews/{id}(id=${previousReview.id})}" class="text-blue-500 hover:underline">이전 글</a>
-</div>
-<div th:if="${nextReview != null}" class="text-center mt-2">
-    <a th:href="@{/reviews/{id}(id=${nextReview.id})}" class="text-blue-500 hover:underline">다음 글</a>
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // 좋아요 버튼 선택
-        const likeButton = document.querySelector('.like-button');
-        const likeIcon = document.querySelector('#likeButton');
-
-        let liked = likeButton.dataset.liked === 'true';
-        updateLikeIcon(liked);
-
-        // 좋아요 버튼 클릭 이벤트 리스너 추가
-        likeButton.addEventListener('click', () => {
-            // 리뷰 ID를 데이터 속성에서 읽어옴
-            const reviewId = likeButton.getAttribute('data-review-id');
-
-            // 서버에 POST 요청을 보냄
-            fetch(`/likes/review/${reviewId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            })
-                .then(response => response.text())
-                .then(data => {
-                    console.log(data); // 서버 응답에 따른 처리 로그
-                    liked = data === "리뷰 좋아요 등록";
-                    updateLikeIcon(liked);
-                })
-                .catch(error => {
-                    console.error('Error:', error); // 오류 처리 로그
-                });
-        });
-        function updateLikeIcon(liked) {
-            // liked 상태에 따라 아이콘 클래스를 조정
-            likeIcon.classList.toggle('liked', liked);
-            likeIcon.classList.toggle('fas', liked);
-            likeIcon.classList.toggle('far', !liked);
-        }
-    });
-</script>
-
-
+<script type="module" src="/js/review/showReview/index.js"></script>
 </body>
-
 </html>

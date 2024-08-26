@@ -1,154 +1,90 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>회원 가입</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        .container {
-            max-width: 560px;
-        }
-
-        .field-error {
-            border-color: #ef4444;
-            color: #ef4444;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/css/user/createForm.css">
 </head>
-
 <body class="bg-gray-100 p-6">
-<div class="container mx-auto bg-white shadow-md rounded-lg p-6">
-    <h4 class="text-2xl font-semibold mb-6 text-center">회원 가입</h4>
+<main class="signup-wrap container mx-auto bg-white shadow-md rounded-lg p-6">
+    <h1 class="signup-title text-2xl font-semibold mb-6 text-center">회원 가입</h1>
 
-    <form action="" th:action th:object="${request}" method="post">
-
+    <form action="" th:action th:object="${request}" method="post" id="signupForm" class="signup-form-wrap">
         <input type="hidden" id="hiddenVerificationCode" name="verificationCode">
 
-
-        <div th:if="${#fields.hasGlobalErrors()}" class="mb-4">
+        <div th:if="${#fields.hasGlobalErrors()}" class="global-errors-wrap mb-4">
             <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">전체 오류 메시지</p>
         </div>
 
-        <div class="mb-4 flex items-center">
-            <div class="flex-1">
+        <section class="email-verification-wrap mb-4 flex items-center">
+            <div class="email-input-wrap flex-1">
                 <label for="email" class="block text-lg font-medium text-gray-700 mb-2">Email</label>
                 <input type="email" id="email" th:field="*{email}" class="w-full p-3 border border-gray-300 rounded-md"
                        placeholder="Email" th:errorclass="field-error">
                 <div class="field-error text-sm mt-1" th:errors="*{email}"></div>
             </div>
-            <div class="ml-4">
-                <button class="bg-orange-500 text-white font-semibold px-4 py-2 rounded-md shadow hover:bg-blue-600 transition duration-150"
-                        type="button" onclick="sendEmailVerification()">이메일 확인</button>
+            <div class="verification-button-wrap ml-4">
+                <button id="sendVerificationBtn" class="bg-orange-500 text-white font-semibold px-4 py-2 rounded-md shadow hover:bg-blue-600 transition duration-150"
+                        type="button">이메일 확인</button>
             </div>
-        </div>
+        </section>
 
-        <!-- 인증 코드 입력 폼 -->
-        <div id="verification-code-section" class="mb-4 flex items-center hidden">
-            <div class="flex-1">
+        <section id="verificationCodeSection" class="verification-code-wrap mb-4 flex items-center hidden">
+            <div class="verification-input-wrap flex-1">
                 <label for="verificationCode" class="block text-lg font-medium text-gray-700 mb-2">인증 코드</label>
                 <input type="text" id="verificationCode" class="w-full p-3 border border-gray-300 rounded-md"
                        placeholder="인증 코드">
             </div>
-            <div class="ml-4">
-                <button class="bg-green-500 text-white font-semibold px-4 py-2 rounded-md shadow hover:bg-green-600 transition duration-150"
-                        type="button" onclick="verifyCode()">코드 확인</button>
+            <div class="verification-button-wrap ml-4">
+                <button id="verifyCodeBtn" class="bg-green-500 text-white font-semibold px-4 py-2 rounded-md shadow hover:bg-green-600 transition duration-150"
+                        type="button">코드 확인</button>
             </div>
-        </div>
+        </section>
 
-        <div class="mb-4">
+        <section class="name-wrap mb-4">
             <label for="name" class="block text-lg font-medium text-gray-700 mb-2">이름</label>
             <input type="text" id="name" th:field="*{name}" class="w-full p-3 border border-gray-300 rounded-md"
                    placeholder="이름" th:errorclass="field-error">
             <div class="field-error text-sm mt-1" th:errors="*{name}"></div>
-        </div>
+        </section>
 
-        <div class="mb-4">
+        <section class="password-wrap mb-4">
             <label for="password" class="block text-lg font-medium text-gray-700 mb-2">비밀번호</label>
             <input type="password" id="password" th:field="*{password}"
                    class="w-full p-3 border border-gray-300 rounded-md" placeholder="비밀번호"
                    th:errorclass="field-error">
             <div class="field-error text-sm mt-1" th:errors="*{password}"></div>
-        </div>
+        </section>
 
-        <div class="mb-4">
+        <section class="phone-number-wrap mb-4">
             <label for="phoneNumber" class="block text-lg font-medium text-gray-700 mb-2">핸드폰 번호</label>
             <input type="text" id="phoneNumber" th:field="*{phoneNumber}"
                    class="w-full p-3 border border-gray-300 rounded-md" placeholder="핸드폰번호"
                    th:errorclass="field-error">
             <div class="field-error text-sm mt-1" th:errors="*{phoneNumber}"></div>
-        </div>
+        </section>
 
-        <div class="mb-4">
+        <section class="address-wrap mb-4">
             <label for="address" class="block text-lg font-medium text-gray-700 mb-2">주소</label>
             <input type="text" id="address" th:field="*{address}" class="w-full p-3 border border-gray-300 rounded-md"
                    placeholder="주소" th:errorclass="field-error">
             <div class="field-error text-sm mt-1" th:errors="*{address}"></div>
-        </div>
+        </section>
 
         <hr class="my-6">
 
-        <div class="flex space-x-4">
-            <button class="w-full bg-orange-500 text-white font-semibold px-6 py-3 rounded-md shadow hover:bg-orange-600 transition duration-150"
-                    type="submit">회원 가입</button>
+        <footer class="form-actions-wrap flex space-x-4">
+            <button id="submitBtn" class="w-full bg-orange-500 text-white font-semibold px-6 py-3 rounded-md shadow hover:bg-orange-600 transition duration-150"
+                    type="submit" disabled>회원 가입</button>
             <button class="w-full bg-gray-300 text-gray-700 font-semibold px-6 py-3 rounded-md shadow hover:bg-gray-400 transition duration-150"
                     th:onclick="|location.href='@{/}'|" type="button">취소</button>
-        </div>
+        </footer>
     </form>
-</div>
+</main>
 
-<script>
-    let sentCode = null;
-
-    function sendEmailVerification() {
-        const email = document.getElementById('email').value;
-
-        if (email) {
-            // AJAX 요청을 사용하여 서버에 이메일 전송
-            fetch('/users/send-verification-code', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email: email })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('인증 코드가 전송되었습니다.');
-                        sentCode = data.code;  // 서버에서 반환된 인증 코드를 저장
-                        document.getElementById('verification-code-section').classList.remove('hidden');
-                    } else {
-                        alert('인증 코드 전송에 실패했습니다.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('오류가 발생했습니다.');
-                });
-        } else {
-            alert('이메일을 입력하세요.');
-        }
-    }
-
-    function verifyCode() {
-        const userCode = document.getElementById('verificationCode').value;
-
-        if (userCode === sentCode) {
-            alert('인증이 성공적으로 완료되었습니다!');
-            document.getElementById('hiddenVerificationCode').value = userCode;  // 숨겨진 필드에 인증 코드 설정
-            document.getElementById('submitBtn').disabled = false;  // 가입 버튼 활성화
-        } else {
-            alert('인증 코드가 일치하지 않습니다. 다시 시도하세요.');
-            document.getElementById('submitBtn').disabled = true;  // 가입 버튼 비활성화
-        }
-    }
-
-</script>
-
+<script type="module" src="/js/user/createForm/index.js"></script>
 </body>
-
 </html>
