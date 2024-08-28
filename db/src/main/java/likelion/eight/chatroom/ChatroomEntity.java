@@ -25,8 +25,6 @@ public class ChatroomEntity extends BaseTimeEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    // created, updated.
-
     @ManyToMany
     @JoinTable(
             name = "chatroom_users",
@@ -42,5 +40,4 @@ public class ChatroomEntity extends BaseTimeEntity {
         }
         this.users.add(user);
     }
-
 }

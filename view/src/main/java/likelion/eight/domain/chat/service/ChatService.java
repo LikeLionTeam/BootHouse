@@ -1,21 +1,24 @@
 package likelion.eight.domain.chat.service;
 
 import likelion.eight.chatlist.ChatListEntity;
-import likelion.eight.chatroom.ChatroomEntity;
-import likelion.eight.domain.chat.model.ChatMessage;
-import likelion.eight.message.MessageEntity;
-import likelion.eight.user.UserEntity;
 import likelion.eight.chatlist.ifs.ChatListJpaRepository;
+import likelion.eight.chatroom.ChatroomEntity;
 import likelion.eight.chatroom.ifs.ChatroomJpaRepository;
+import likelion.eight.domain.chat.infrastructure.ChatRoomRedisRepository;
+import likelion.eight.domain.chat.model.ChatMessage;
+import likelion.eight.domain.chat.model.ChatRoom;
+import likelion.eight.message.MessageEntity;
 import likelion.eight.message.ifs.MessageJpaRepository;
+import likelion.eight.user.UserEntity;
 import likelion.eight.user.ifs.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +28,9 @@ public class ChatService {
     private final ChatroomJpaRepository chatroomRepository;
     private final MessageJpaRepository messageRepository;
     private final UserJpaRepository userRepository;
+    private final RedisTemplate<String, ChatMessage> redisTemplate;
+    private final ChatRoomRedisRepository chatRoomRedisRepository;
+
 
     @Transactional(readOnly = true)
     public List<ChatListEntity> getChatList(String name) {
@@ -43,45 +49,50 @@ public class ChatService {
     }
 
     @Transactional
-    public Long getOrCreateChatroom(String name1, String name2) {
-        log.info("Getting or creating chatroom for users: {} and {}", name1, name2);
-        UserEntity user1 = userRepository.findByName(name1)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        UserEntity user2 = userRepository.findByName(name2)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public Long getOrCreateChatroom(List<String> usernames) {
+        List<UserEntity> users = userRepository.findAllByNameIn(usernames);
+        if (users.size() != usernames.size()) {
+            throw new RuntimeException("One or more users not found");
+        }
 
-        return chatroomRepository.findByUsersContainingAndUsersContaining(user1, user2)
-                .map(ChatroomEntity::getId)
-                .orElseGet(() -> {
-                    ChatroomEntity newChatroom = createChatroom(name1, name2);
-                    return newChatroom.getId();
-                });
+        List<ChatroomEntity> existingChatrooms = chatroomRepository.findByUsersContaining(users, users.size());
+
+        if (!existingChatrooms.isEmpty()) {
+            return existingChatrooms.get(0).getId();
+        }
+
+        // 기존 채팅방이 없으면 새로 생성
+        ChatroomEntity newChatroom = createChatroom(usernames);
+        return newChatroom.getId();
     }
 
     @Transactional
-    public ChatroomEntity createChatroom(String name1, String name2) {
-        log.info("Creating chatroom for users: {} and {}", name1, name2);
-        UserEntity user1 = userRepository.findByName(name1)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        UserEntity user2 = userRepository.findByName(name2)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public ChatroomEntity createChatroom(List<String> usernames) {
+        List<UserEntity> users = userRepository.findAllByNameIn(usernames);
+        if (users.size() != usernames.size()) {
+            throw new RuntimeException("One or more users not found");
+        }
 
         ChatroomEntity chatroom = ChatroomEntity.builder()
-                .name(user1.getName() + ", " + user2.getName())
+                .name(String.join(", ", usernames))
                 .build();
-        chatroom.addUser(user1);
-        chatroom.addUser(user2);
+        users.forEach(chatroom::addUser);
         chatroomRepository.save(chatroom);
 
-        ChatListEntity chatList1 = ChatListEntity.builder()
-                .user(user1)
-                .chatroom(chatroom)
-                .build();
-        ChatListEntity chatList2 = ChatListEntity.builder()
-                .user(user2)
-                .chatroom(chatroom)
-                .build();
-        chatListRepository.saveAll(Arrays.asList(chatList1, chatList2));
+        users.forEach(user -> {
+            ChatListEntity chatList = ChatListEntity.builder()
+                    .user(user)
+                    .chatroom(chatroom)
+                    .build();
+            chatListRepository.save(chatList);
+        });
+
+        // Redis에 채팅방 정보 저장
+        ChatRoom redisChatRoom = new ChatRoom();
+        redisChatRoom.setId(chatroom.getId().toString());
+        redisChatRoom.setName(chatroom.getName());
+        redisChatRoom.setUsers(users.stream().map(UserEntity::getName).collect(Collectors.toSet()));
+        chatRoomRedisRepository.save(redisChatRoom);
 
         return chatroom;
     }
@@ -122,6 +133,21 @@ public class ChatService {
                 .message(chatMessage.getMessage())
                 .build();
 
-        return messageRepository.save(messageEntity);
+        // Redis에 메시지 저장
+        String redisKey = "chat:room:" + chatMessage.getChatroomId();
+        redisTemplate.opsForList().rightPush(redisKey, chatMessage);
+        log.info("Message saved to Redis, key: {}", redisKey);
+
+        // JPA를 통해 DB에 메시지 저장
+        MessageEntity savedMessage = messageRepository.save(/* ... */);
+        log.info("Message saved to DB, id: {}", savedMessage.getId());
+
+        return savedMessage;
+    }
+
+    // Redis에서 최근 메시지 조회
+    public List<ChatMessage> getRecentMessagesFromRedis(Long chatroomId, int count) {
+        String redisKey = "chat:room:" + chatroomId;
+        return redisTemplate.opsForList().range(redisKey, -count, -1);
     }
 }

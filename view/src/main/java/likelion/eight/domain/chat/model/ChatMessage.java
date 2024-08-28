@@ -11,4 +11,7 @@ public class ChatMessage {
     private Long chatroomId;
     private String sender;
     private String message;
+
+    private long timestamp;
+
 }

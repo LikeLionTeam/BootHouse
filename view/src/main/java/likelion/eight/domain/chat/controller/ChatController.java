@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -50,7 +51,7 @@ public class ChatController {
     @PostMapping("/new")
     public String newChat(@RequestParam String username, @Login LoginUser loginUser) {
         log.info("Creating new chat between: {} and {}", loginUser.getName(), username);
-        var chatroom = chatService.createChatroom(loginUser.getName(), username);
+        var chatroom = chatService.createChatroom(Arrays.asList(loginUser.getName(), username));
         return "redirect:/messages/" + chatroom.getId();
     }
 
@@ -64,7 +65,7 @@ public class ChatController {
         }
 
         try {
-            Long chatroomId = chatService.getOrCreateChatroom(loginUser.getName(), targetName);
+            Long chatroomId = chatService.getOrCreateChatroom(Arrays.asList(loginUser.getName(), targetName));
             log.info("Chat started/resumed in chatroom: {}", chatroomId);
             return ResponseEntity.ok(new ChatroomResponse(chatroomId));
         } catch (RuntimeException e) {

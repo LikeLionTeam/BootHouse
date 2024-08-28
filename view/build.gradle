@@ -58,6 +58,10 @@ dependencies {
     // websocket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.data:spring-data-redis'
+
     //markdown
     implementation 'com.vladsch.flexmark:flexmark-all:0.62.2'
 
