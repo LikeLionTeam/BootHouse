@@ -135,12 +135,16 @@ public class ChatService {
 
         // Redis에 메시지 저장
         String redisKey = "chat:room:" + chatMessage.getChatroomId();
-        redisTemplate.opsForList().rightPush(redisKey, chatMessage);
-        log.info("Message saved to Redis, key: {}", redisKey);
+        try {
+            redisTemplate.opsForList().rightPush(redisKey, chatMessage);
+            log.info("Message saved to Redis. Key: {}", redisKey);
+        } catch (Exception e) {
+            log.error("Failed to save message to Redis", e);
+        }
 
         // JPA를 통해 DB에 메시지 저장
-        MessageEntity savedMessage = messageRepository.save(/* ... */);
-        log.info("Message saved to DB, id: {}", savedMessage.getId());
+        MessageEntity savedMessage = messageRepository.save(messageEntity);
+        log.info("Message saved to DB. ID: {}", savedMessage.getId());
 
         return savedMessage;
     }
