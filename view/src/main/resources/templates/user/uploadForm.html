@@ -3,21 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>사용자 인증 정보 생성</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body>
+<body class="bg-gray-100 p-6">
 
-<h2>사용자 인증 정보 생성</h2>
+<div class="container mx-auto bg-white shadow-md rounded-lg p-6">
+    <h2 class="text-2xl font-bold mb-6">사용자 인증 정보 생성</h2>
 
-<form action="" th:action method="post" enctype="multipart/form-data">
-    <input type="hidden" name="clientId" th:value="${id}">
+    <form th:action method="post" enctype="multipart/form-data" class="space-y-6">
+        <input type="hidden" name="clientId" th:value="${id}">
 
-    <div>
-        <label for="image">이미지:</label>
-        <input type="file" id="image" name="image" accept="image/*">
-    </div>
+        <div>
+            <label for="authRequestType">인증 유형:</label>
+            <select id="authRequestType" name="authRequestType" class="w-full p-3 border border-gray-300 rounded-md">
+                <option th:value="${T(likelion.eight.certificationirequest.enums.AuthRequestType).BOOTCAMP}">부트캠프</option>
+                <option th:value="${T(likelion.eight.certificationirequest.enums.AuthRequestType).COMPANY}">회사</option>
+            </select>
+        </div>
 
-    <button type="submit">제출</button>
-</form>
+        <div>
+            <label for="course" class="block text-lg font-medium text-gray-700">코스 선택:</label>
+            <select id="course" name="courseId" class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                <option value="" disabled selected>코스를 선택하세요</option>
+                <option th:each="course : ${courses}" th:value="${course.id}" th:text="${course.name}"></option>
+            </select>
+        </div>
+
+        <div>
+            <label for="image" class="block text-lg font-medium text-gray-700">이미지:</label>
+            <input type="file" id="image" name="image" accept="image/*" class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+
+        <div>
+            <button type="submit" class="w-full bg-blue-500 text-white font-semibold px-6 py-3 rounded-md shadow hover:bg-blue-600 transition duration-150">제출</button>
+        </div>
+    </form>
+</div>
 
 </body>
 </html>

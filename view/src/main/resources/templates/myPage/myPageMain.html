@@ -18,37 +18,32 @@
 
     <div class="mb-4">
         <label class="block text-lg font-medium text-gray-700">Name:</label>
-        <p th:text="${loginUser.name}" class="text-gray-900"></p>
+        <p th:text="${user.name}" class="text-gray-900"></p>
     </div>
 
     <div class="mb-4">
         <label class="block text-lg font-medium text-gray-700">Address:</label>
-        <p th:text="${loginUser.address}" class="text-gray-900"></p>
+        <p th:text="${user.address}" class="text-gray-900"></p>
     </div>
 
     <div class="mb-4">
         <label class="block text-lg font-medium text-gray-700">Email:</label>
-        <p th:text="${loginUser.email}" class="text-gray-900"></p>
+        <p th:text="${user.email}" class="text-gray-900"></p>
     </div>
 
     <div class="mb-4">
         <label class="block text-lg font-medium text-gray-700">Phone Number:</label>
-        <p th:text="${loginUser.phoneNumber}" class="text-gray-900"></p>
-    </div>
-
-    <div class="mb-4">
-        <label class="block text-lg font-medium text-gray-700">User Status:</label>
-        <p th:text="${loginUser.userStatus}" class="text-gray-900"></p>
+        <p th:text="${user.phoneNumber}" class="text-gray-900"></p>
     </div>
 
     <div class="mb-4">
         <label class="block text-lg font-medium text-gray-700">Role Type:</label>
-        <p th:text="${loginUser.roleType}" class="text-gray-900"></p>
+        <p th:text="${user.roleType}" class="text-gray-900"></p>
     </div>
 
     <!-- 회원 정보 수정하기 버튼 -->
     <div class="mt-6">
-        <a th:href="@{/users/{id}/edit(id=${loginUser.id})}"
+        <a th:href="@{/users/{id}/edit(id=${user.getId})}"
            class="bg-blue-500 text-white font-semibold px-6 py-3 rounded-md shadow hover:bg-blue-600 transition duration-150">
             회원 정보 수정하기
         </a>
@@ -75,6 +70,34 @@
             </li>
         </ul>
     </div>
+</div>
+
+<!-- 내 코스 모음 -->
+<div class="container mx-auto bg-white shadow-md rounded-lg p-6 mt-6">
+    <h2 class="text-2xl font-bold mb-4">내 코스</h2>
+
+    <div th:if="${#lists.isEmpty(courses)}">
+        <p class="text-gray-600">등록된 코스가 없습니다.</p>
+    </div>
+
+    <div th:if="${!#lists.isEmpty(courses)}">
+        <ul>
+            <li th:each="course : ${courses}" class="border-b border-gray-200 py-4">
+                <a th:href="@{/courses/{courseId}(courseId=${course.id})}" class="text-xl font-semibold text-blue-600 hover:underline">
+                    <h3 th:text="${course.name}"></h3>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<!-- 코스 인증하기 버튼 -->
+<div class="mt-6">
+    <a th:href="@{/userAuth/{userId}/upload(userId=${user.getId})}"
+       class="bg-green-500 text-white font-semibold px-6 py-3 rounded-md shadow hover:bg-green-600 transition duration-150">
+        코스 인증하기
+    </a>
 </div>
 
 </body>

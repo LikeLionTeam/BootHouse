@@ -1,13 +1,12 @@
 package likelion.eight.domain.course.converter;
 
-import likelion.eight.category.CategoryEntity;
 import likelion.eight.course.CourseEntity;
 import likelion.eight.domain.bootcamp.converter.BootcampConverter;
 import likelion.eight.domain.category.converter.CategoryConverter;
-import likelion.eight.domain.category.model.Category;
 import likelion.eight.domain.course.model.Course;
 import likelion.eight.domain.subcourse.converter.SubCourseConverter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,6 +31,7 @@ public class CourseConverter {
                 .participationTime(course.getParticipationTime())
                 .maxParticipants(course.getMaxParticipants())
                 .averageRating(course.getAverageRating())
+                .users(new ArrayList<>())
                 .build();
     }
 
@@ -68,3 +68,4 @@ public class CourseConverter {
     }
 
 }
+

@@ -73,4 +73,13 @@ public class CourseRepositoryImpl implements CourseRepository {
                 .map(CourseConverter::toCourse)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Course> getAllCourse() {
+        List<CourseEntity> AllCourse = courseJpaRepository.findAll();
+
+        return AllCourse.stream()
+                .map(CourseConverter::toCourse)
+                .collect(Collectors.toList());
+    }
 }

@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.*;
 
 @Slf4j
-//@Service
+@Service
 @RequiredArgsConstructor
 public class S3ServiceImpl implements S3Service {
 

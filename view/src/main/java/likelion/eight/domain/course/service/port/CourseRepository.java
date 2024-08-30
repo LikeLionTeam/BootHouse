@@ -26,4 +26,6 @@ public interface CourseRepository {
 
     Optional<CourseEntity> findByCourseId(Long courseId);
     List<Course> findCourseByBootcampId(Long bootcampId);
+
+    List<Course> getAllCourse();
 }

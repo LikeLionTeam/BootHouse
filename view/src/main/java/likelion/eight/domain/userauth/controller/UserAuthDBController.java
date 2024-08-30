@@ -2,6 +2,8 @@ package likelion.eight.domain.userauth.controller;
 
 import jakarta.validation.Valid;
 import likelion.eight.certificationirequest.enums.AuthRequestType;
+import likelion.eight.domain.course.model.Course;
+import likelion.eight.domain.course.service.CourseService;
 import likelion.eight.domain.userauth.controller.model.UserAuthCreateRequest;
 import likelion.eight.domain.userauth.model.UserAuth;
 import likelion.eight.domain.userauth.service.UserAuthService;
@@ -19,13 +21,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.IntStream;
 
-//@RequestMapping("/userauth")
+@RequestMapping("/userAuth")
 @RequiredArgsConstructor
 @Slf4j
 //@Controller
 public class UserAuthDBController {
 
     private final UserAuthService userAuthService;
+    private final CourseService courseService;
 
 
     @GetMapping("{id}/upload")
@@ -33,6 +36,9 @@ public class UserAuthDBController {
             @PathVariable long id,
             Model model
     ){
+        List<Course> courses = courseService.getAllCourse();
+
+        model.addAttribute("courses", courses);
         model.addAttribute("id", id);
         return "user/uploadForm";
     }
@@ -42,9 +48,9 @@ public class UserAuthDBController {
             @Valid @ModelAttribute("request")
             UserAuthCreateRequest request
     ){
-        request.setAuthRequestType(AuthRequestType.BOOTCAMP); // TODO 추후 화면에서 인증요청이 회사 or 부트캠프 선택 해야함
+//        request.setAuthRequestType(AuthRequestType.BOOTCAMP); // TODO 추후 화면에서 인증요청이 회사 or 부트캠프 선택 해야함
         UserAuth userAuth = userAuthService.create(request);
-        return "redirect:/";
+        return "redirect:/myPage";
     }
 
 /*    @GetMapping("{id}/image")
@@ -78,14 +84,15 @@ public class UserAuthDBController {
 
     @PostMapping("/{id}/approve")
     public String approveUserAuth(@PathVariable long id) {
+
         userAuthService.approve(id);
-        return "redirect:/userauth/list";
+        return "redirect:/userAuth/list";
     }
 
     @PostMapping("/{id}/deny")
     public String denyUserAuth(@PathVariable long id) {
         userAuthService.deny(id);
-        return "redirect:/userauth/list";
+        return "redirect:/userAuth/list";
     }
 
 }

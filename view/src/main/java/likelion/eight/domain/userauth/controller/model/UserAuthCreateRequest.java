@@ -12,5 +12,6 @@ public class UserAuthCreateRequest {
     private long clientId;
     private AuthRequestType authRequestType;
     private MultipartFile image;
+    private Long courseId;
 
 }
