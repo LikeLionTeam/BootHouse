@@ -11,6 +11,7 @@ import lombok.experimental.SuperBuilder;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 @Table(name = "courses")
@@ -89,4 +90,5 @@ public class CourseEntity extends BaseTimeEntity {
         return maxParticipants;
     }
 }
+
 

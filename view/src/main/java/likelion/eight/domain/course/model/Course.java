@@ -81,7 +81,7 @@ public class Course {
         this.recruitmentStatus = determineRecruitmentStatus(this.closingDate);
     }
 
-    private RecruitmentStatus determineRecruitmentStatus(LocalDateTime closingDate) {
+    public static RecruitmentStatus determineRecruitmentStatus(LocalDateTime closingDate) {
         LocalDate now = LocalDate.now();
 
         if (now.isBefore(closingDate.toLocalDate())){

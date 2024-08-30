@@ -1,6 +1,7 @@
 package likelion.eight.domain.category.converter;
 
 import likelion.eight.category.CategoryEntity;
+import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import likelion.eight.domain.category.model.Category;
 
 import java.util.List;
@@ -16,6 +17,10 @@ public class CategoryConverter {
     }
 
     public static Category toCategory(CategoryEntity categoryEntity){
+        if (categoryEntity == null){
+            throw new ResourceNotFoundException("CategoryEntity가 null입니다.");
+        }
+
         return Category.builder()
                 .id(categoryEntity.getId())
                 .name(categoryEntity.getName())
