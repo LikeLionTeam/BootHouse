@@ -57,6 +57,7 @@ public class UserEntity extends BaseTimeEntity {
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserCourseEntity> courses = new ArrayList<>();
 
+    public void addCourse(UserCourseEntity course) {
         if (courses == null) {
             courses = new ArrayList<>();  // 이 줄은 기본적으로 필요하지 않지만, 안전하게 추가
         }

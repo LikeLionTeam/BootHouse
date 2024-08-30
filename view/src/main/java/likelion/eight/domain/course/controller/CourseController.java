@@ -18,6 +18,9 @@ import likelion.eight.domain.review.model.Review;
 import likelion.eight.domain.review.service.port.ReviewRepository;
 import likelion.eight.domain.subcourse.model.SubCourse;
 import likelion.eight.domain.subcourse.service.SubCourseService;
+import likelion.eight.domain.user.controller.model.LoginUser;
+import likelion.eight.domain.userCourse.model.UserCourse;
+import likelion.eight.domain.userCourse.service.UserCourseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -41,6 +44,7 @@ public class CourseController  {
     private final ReviewRepository reviewRepository;
     private final CookieService cookieService;
     private final NaverMapService naverMapService;
+    private final UserCourseService userCourseService;
 
     // 모집중인 캠프 조회
     @GetMapping("/boothouse/camps")
@@ -88,12 +92,25 @@ public class CourseController  {
 
     // course 자세히보기
     @GetMapping("/courses/{id}")
-    public String getCourseDetail(@PathVariable(name = "id")Long courseId,
+    public String getCourseDetail(@PathVariable(name = "id") Long courseId,
                                   Model model,
-                                  HttpServletRequest request){
+                                  HttpServletRequest request,
+                                  @Login(required = false) LoginUser loginUser) {
+
         Course course = courseService.findCourseById(courseId);
         List<Review> reviews = reviewRepository.findByCourseId(courseId);
         boolean isUserLoggedIn = cookieService.isUserLoggedIn(request);
+        boolean isCourseAuth = false;
+
+        if (isUserLoggedIn == true) {
+            List<Long> courseIdsByUserId = userCourseService.findCourseIdsByUserId(loginUser.getId());
+
+            for (Long userCourseId : courseIdsByUserId) {
+                if (userCourseId.equals(courseId)) {
+                    isCourseAuth = true;
+                }
+            }
+        }
 
         NaverMapRes geocode = null;
         try {
@@ -115,7 +132,8 @@ public class CourseController  {
         model.addAttribute("course", courseDto);
         model.addAttribute("reviews", reviewDtos);
         model.addAttribute("isUserLoggedIn", isUserLoggedIn);
-        model.addAttribute("geocode",geocode);
+        model.addAttribute("geocode", geocode);
+        model.addAttribute("isCourseAuth", isCourseAuth);
 
         return "course/courseDetail";
     }
