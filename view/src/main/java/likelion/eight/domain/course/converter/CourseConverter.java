@@ -1,6 +1,7 @@
 package likelion.eight.domain.course.converter;
 
 import likelion.eight.category.CategoryEntity;
+import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import likelion.eight.course.CourseEntity;
 import likelion.eight.domain.bootcamp.converter.BootcampConverter;
 import likelion.eight.domain.category.converter.CategoryConverter;
@@ -36,6 +37,10 @@ public class CourseConverter {
     }
 
     public static Course toCourse(CourseEntity courseEntity){
+        if (courseEntity == null){
+            throw new ResourceNotFoundException("CourseEntity가 null입니다.");
+        }
+
         return Course.builder()
                 .id(courseEntity.getId())
                 .bootcamp(BootcampConverter.toBootcamp(courseEntity.getBootcampEntity()))
