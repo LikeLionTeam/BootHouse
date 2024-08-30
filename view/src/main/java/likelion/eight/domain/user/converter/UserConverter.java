@@ -8,6 +8,8 @@ import likelion.eight.user.UserEntity;
 import likelion.eight.user.enums.RoleType;
 import likelion.eight.user.enums.UserStatus;
 
+import java.util.ArrayList;
+
 public class UserConverter {
 
     public static UserEntity toEntity(User user){
@@ -22,8 +24,10 @@ public class UserConverter {
                 .lastLoginAt(user.getLastLoginAt())
                 .userStatus(user.getUserStatus())
                 .certificationCode(user.getCertificationCode())
+                .courses(new ArrayList<>())
                 .build();
     }
+
 
     public static User toUser(UserEntity userEntity){
         return User.builder()

@@ -4,19 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>사용자 인증 정보 생성</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body>
-<main class="upload-container-wrap container mt-5">
-    <h1>사용자 인증 정보 생성</h1>
-    <form id="uploadForm" th:action="@{/upload}" method="post" enctype="multipart/form-data" class="mt-4">
+
+<body class="bg-gray-100 p-6">
+
+<div class="upload-container-wrap container mx-auto bg-white shadow-md rounded-lg p-6">
+    <h2 class="text-2xl font-bold mb-6">사용자 인증 정보 생성</h2>
+
+    <form id="uploadForm" th:action method="post" enctype="multipart/form-data" class="space-y-6">
         <input type="hidden" name="clientId" th:value="${id}">
-        <div class="upload-input-wrap mb-3">
-            <label for="uploadImage" class="form-label">이미지:</label>
-            <input type="file" id="uploadImage" name="image" accept="image/*" class="form-control">
+
+        <div class="upload-input-wrap">
+            <label for="authRequestType">인증 유형:</label>
+            <select id="authRequestType" name="authRequestType" class="w-full p-3 border border-gray-300 rounded-md">
+                <option th:value="${T(likelion.eight.certificationirequest.enums.AuthRequestType).BOOTCAMP}">부트캠프</option>
+                <option th:value="${T(likelion.eight.certificationirequest.enums.AuthRequestType).COMPANY}">회사</option>
+            </select>
         </div>
-        <button type="submit" class="btn btn-primary">제출</button>
+
+        <div>
+            <label for="course" class="block text-lg font-medium text-gray-700">코스 선택:</label>
+            <select id="course" name="courseId" class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                <option value="" disabled selected>코스를 선택하세요</option>
+                <option th:each="course : ${courses}" th:value="${course.id}" th:text="${course.name}"></option>
+            </select>
+        </div>
+
+        <div>
+            <label for="image" class="block text-lg font-medium text-gray-700">이미지:</label>
+            <input type="file" id="uploadImage" name="image" accept="image/*" class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        </div>
+
+        <div>
+            <button type="submit" class="w-full bg-blue-500 text-white font-semibold px-6 py-3 rounded-md shadow hover:bg-blue-600 transition duration-150">제출</button>
+        </div>
     </form>
-</main>
+</div>
+
 </body>
+  
 </html>

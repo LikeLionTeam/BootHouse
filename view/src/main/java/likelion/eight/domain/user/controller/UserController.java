@@ -4,9 +4,7 @@ import jakarta.validation.Valid;
 import likelion.eight.common.annotation.Login;
 import likelion.eight.common.domain.Log;
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
-import likelion.eight.common.service.port.UuidHolder;
 import likelion.eight.domain.user.controller.model.*;
-import likelion.eight.domain.user.service.CertificationService;
 import likelion.eight.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
@@ -99,30 +96,35 @@ public class UserController {
     @GetMapping("/{id}/edit")
     public String editForm(
             @Login LoginUser loginUser,
-            Model model
-    ){
+            Model model,
+            UserEditRequest request
+    ) {
+
+        request.setAddress(loginUser.getAddress());
+        request.setPhoneNumber(loginUser.getPhoneNumber());
+
+        model.addAttribute("request", request);
         model.addAttribute("loginUser", loginUser);
-        return "/user/editForm";
+        return "/user/editUserForm";
     }
 
 
-    @PostMapping("{id}/edit")
+    @PostMapping("/{id}/edit")
     public String editUser(
-            @PathVariable Long id,
             @ModelAttribute("request")
             UserEditRequest userEditRequest,
-            BindingResult bindingResult
-    ){
+            Model model
+            ,@Login LoginUser loginUser
+    ) {
 
         try {
-            userService.editUser(id, userEditRequest);
+            userService.editUser(loginUser.getId(), userEditRequest);
 
         } catch (ResourceNotFoundException e) {
-
-            bindingResult.reject("EditError", e.getMessage());
-            return "/user/editForm"; //
+            model.addAttribute("EditError", e.getMessage());
+            return "/user/editUserForm";
         }
-        return "redirect:/";
+        return "redirect:/myPage";
 
     }
 

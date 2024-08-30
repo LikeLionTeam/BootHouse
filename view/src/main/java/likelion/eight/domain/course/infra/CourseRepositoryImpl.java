@@ -76,6 +76,14 @@ public class CourseRepositoryImpl implements CourseRepository {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<Course> getAllCourse() {
+        List<CourseEntity> AllCourse = courseJpaRepository.findAll();
+
+        return AllCourse.stream()
+                .map(CourseConverter::toCourse)
+                .collect(Collectors.toList());
+      
     // QueryDSL로 필요한 칼럼 개수의 Course만 반환
     @Override
     public Page<CourseDto> findCoursesByFiltersQueryDSL(Long categoryId,

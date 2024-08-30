@@ -5,12 +5,16 @@ import likelion.eight.BaseTimeEntity;
 import likelion.eight.SubCourseEntity.SubCourseEntity;
 import likelion.eight.bootcamp.BootCampEntity;
 import likelion.eight.category.CategoryEntity;
+import likelion.eight.userCourse.UserCourseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import java.time.temporal.ChronoUnit;
 
 @Entity
@@ -77,6 +81,17 @@ public class CourseEntity extends BaseTimeEntity {
     @Column(precision = 3, scale = 2) // 가능값 : 9.99, 0.01, 불가능값 : 10.00
     private BigDecimal averageRating; // 해당 프로그램 평균별점 (리뷰로부터 계산)
 
+    @OneToMany(mappedBy = "courseEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserCourseEntity> users = new ArrayList<>();
+
+    public void addUser(UserCourseEntity userCourse) {
+        if (userCourse == null) {
+            throw new IllegalArgumentException("UserCourseEntity cannot be null");
+        }
+        users.add(userCourse);
+        userCourse.setCourseEntity(this);
+    }
+
     // 모집정원이 있는지 없는지 판단로직
     public boolean hasNoLimit(){
         return maxParticipants == -1;
@@ -89,6 +104,8 @@ public class CourseEntity extends BaseTimeEntity {
         }
         return maxParticipants;
     }
+
+
 }
 
 

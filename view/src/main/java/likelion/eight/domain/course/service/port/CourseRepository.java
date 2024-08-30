@@ -32,6 +32,8 @@ public interface CourseRepository {
     Optional<CourseEntity> findByCourseId(Long courseId);
     List<Course> findCourseByBootcampId(Long bootcampId);
 
+    List<Course> getAllCourse();
+  
     // 추가한 QueryDSL 메서드
     Page<CourseDto> findCoursesByFiltersQueryDSL(
             Long categoryId,

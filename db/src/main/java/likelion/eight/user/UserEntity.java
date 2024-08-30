@@ -4,8 +4,13 @@ import jakarta.persistence.*;
 import likelion.eight.BaseTimeEntity;
 import likelion.eight.user.enums.RoleType;
 import likelion.eight.user.enums.UserStatus;
+import likelion.eight.userCourse.UserCourseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "users")
@@ -48,4 +53,16 @@ public class UserEntity extends BaseTimeEntity {
 
     @Column(name = "certification_code")
     private String certificationCode;
+
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserCourseEntity> courses = new ArrayList<>();
+
+    public void addCourse(UserCourseEntity course) {
+        if (courses == null) {
+            courses = new ArrayList<>();  // 이 줄은 기본적으로 필요하지 않지만, 안전하게 추가
+        }
+        courses.add(course);
+        course.setUserEntity(this);
+    }
+
 }

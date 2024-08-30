@@ -1,10 +1,8 @@
 package likelion.eight.domain.user.model;
 
-import jakarta.servlet.http.HttpServletResponse;
 import likelion.eight.certificationirequest.enums.AuthRequestType;
 import likelion.eight.common.domain.exception.CertificationFailedException;
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
-import likelion.eight.common.service.CookieService;
 import likelion.eight.common.service.port.ClockHolder;
 import likelion.eight.domain.user.controller.model.UserEditRequest;
 import likelion.eight.domain.user.controller.model.UserFindPasswordRequest;
@@ -100,9 +98,9 @@ public class User {
     public User changeRoleType(AuthRequestType authRequestType){
         RoleType role = null;
         if(Objects.equals(authRequestType, AuthRequestType.COMPANY)){
-            role = RoleType.BOOTCAMP;
-        }else{
             role = RoleType.COMPANY;
+        }else{
+            role = RoleType.BOOTCAMP;
         }
 
         return User.builder()
@@ -118,6 +116,7 @@ public class User {
                 .lastLoginAt(lastLoginAt)
                 .build();
     }
+
 
     public boolean checkNameAndPhoneNumber(UserFindPasswordRequest request){
         return Objects.equals(request.getPhoneNumber(), phoneNumber)
@@ -138,4 +137,7 @@ public class User {
                 .lastLoginAt(lastLoginAt)
                 .build();
     }
+
 }
+
+

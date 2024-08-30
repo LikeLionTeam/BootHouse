@@ -41,6 +41,10 @@ public class CourseService {
                 .orElseThrow(() -> new ResourceNotFoundException("No open courses found."));
     }
 
+    public List<Course> getAllCourse() {
+        return courseRepository.getAllCourse();
+    }
+
     public List<Course> findByOpenCoursesByCategory(Long categoryId){
         List<Course> courses = courseRepository.findByOpenCoursesByCategory(categoryId);
         return Optional.ofNullable(courses)

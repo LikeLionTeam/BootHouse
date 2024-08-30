@@ -107,10 +107,21 @@
                     <span class="review-more text-orange-600 hover:text-orange-800 cursor-pointer underline mt-4 block hidden ml-4">리뷰 더보기</span>
                     <p class="mb-1 ml-4" th:if="${#lists.isEmpty(reviews)}">등록된 리뷰가 없습니다</p>
                     <div th:if="${isUserLoggedIn}" class="mt-4 ml-4 text-orange-500 hover:underline">
+
+                    <span class="review-more
+                            text-orange-600 hover:text-orange-800 cursor-pointer underline mt-4 block hidden
+                            ml-4">
+                        리뷰 더보기
+                    </span>
+
+                    <p class="mb-1 ml-4"th:if="${#lists.isEmpty(reviews)}">등록된 리뷰가 없습니다</p>
+
+                    <div th:if="${isCourseAuth}" class="mt-4 ml-4 text-orange-500 hover:underline">
                         <a th:text="'내 리뷰 쓰기'" th:href="@{/reviews/new/{courseId}(courseId=${course.id})}"></a>
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </section>
 

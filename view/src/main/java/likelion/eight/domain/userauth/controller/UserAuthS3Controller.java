@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import likelion.eight.certificationirequest.enums.AuthRequestType;
 import likelion.eight.common.annotation.Login;
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
+import likelion.eight.domain.course.model.Course;
+import likelion.eight.domain.course.service.CourseService;
 import likelion.eight.domain.user.controller.model.LoginUser;
 import likelion.eight.domain.user.controller.model.UserResponse;
 import likelion.eight.domain.userauth.controller.model.UserAuthCreateRequest;
@@ -25,20 +27,23 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.IntStream;
 
-@RequestMapping("/userauth")
+@RequestMapping("/userAuth")
 @RequiredArgsConstructor
 @Slf4j
-//@Controller
+@Controller
 public class UserAuthS3Controller {
 
     private final UserAuthS3Service userAuthService;
-
+    private final CourseService courseService;
 
     @GetMapping("{id}/upload")
     public String uploadForm(
             @PathVariable long id,
             Model model
     ){
+        List<Course> courses = courseService.getAllCourse();
+
+        model.addAttribute("courses", courses);
         model.addAttribute("id", id);
         return "user/uploadForm";
     }
@@ -56,7 +61,7 @@ public class UserAuthS3Controller {
             bindingResult.reject("TypeError", e.getMessage());
             return "user/uploadForm";
         }
-        return "redirect:/";
+        return "redirect:/myPage";
     }
 
     @GetMapping("/list")
@@ -84,15 +89,16 @@ public class UserAuthS3Controller {
             @PathVariable long id
     ){
         userAuthService.delete(id);
-        return "redirect:/userauth/list";
+        return "redirect:/userAuth/list";
     }
 
     @PostMapping("/{id}/approve")
     public String approveUserAuth(
-            @PathVariable long id
+            @PathVariable long id,
+            @RequestParam long courseId
     ){
-        userAuthService.approve(id); // id = userAuthId
-        return "redirect:/userauth/list";
+        userAuthService.approve(id, courseId); // id = userAuthId
+        return "redirect:/userAuth/list";
     }
 
     @PostMapping("/{id}/deny")
@@ -100,6 +106,6 @@ public class UserAuthS3Controller {
             @PathVariable long id
     ){
         userAuthService.deny(id); // id = userAuthId
-        return "redirect:/userauth/list";
+        return "redirect:/userAuth/list";
     }
 }
