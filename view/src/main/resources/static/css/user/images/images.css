@@ -1,0 +1,94 @@
+.user-auth-list-wrap {
+    padding: 20px;
+}
+
+.page-title {
+    margin-bottom: 20px;
+}
+
+.user-auth-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.user-auth-table th,
+.user-auth-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.user-auth-table th {
+    background-color: #f2f2f2;
+}
+
+.user-auth-image {
+    cursor: pointer;
+}
+
+.action-buttons-wrap {
+    display: flex;
+    gap: 10px;
+}
+
+.approve-btn,
+.deny-btn,
+.delete-btn {
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.approve-btn { background-color: #4CAF50; color: white; }
+.deny-btn { background-color: #f44336; color: white; }
+.delete-btn { background-color: #808080; color: white; }
+
+.pagination-wrap {
+    margin-top: 20px;
+}
+
+.pagination-list {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+}
+
+.pagination-item {
+    margin-right: 10px;
+}
+
+.pagination-link {
+    text-decoration: none;
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.9);
+}
+
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+}
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}

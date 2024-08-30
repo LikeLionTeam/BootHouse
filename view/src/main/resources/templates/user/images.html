@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
@@ -87,24 +88,25 @@
                                 class="bg-gray-500 text-white py-1 px-4 rounded-md hover:bg-gray-600 transition duration-150">삭제</button>
                     </form>
                 </div>
+
             </td>
         </tr>
         </tbody>
     </table>
 
     <!-- 페이지 네비게이션 -->
-    <div class="mt-4">
-        <div th:if="${pageNumbers != null}" class="flex space-x-2">
-                <span th:each="pageNumber : ${pageNumbers}">
+    <div class="pagination-wrap mt-4">
+        <div th:if="${pageNumbers != null}" class="pagination-list flex space-x-2">
+                <span th:each="pageNumber : ${pageNumbers}" class="pagination-item">
                     <a th:href="@{/userauth/list(page=${pageNumber - 1}, size=${userAuthPage.size})}"
                        th:text="${pageNumber}"
-                       class="bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600 transition duration-150"></a>
+                       class="pagination-link bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600 transition duration-150"></a>
                 </span>
         </div>
     </div>
-
+  
     <!-- 이미지 확대를 위한 모달 -->
-    <div id="myModal" class="modal">
+    <div id="myModal" class="modal-wrap">
         <span class="close">&times;</span>
         <img class="modal-content" id="img01">
     </div>

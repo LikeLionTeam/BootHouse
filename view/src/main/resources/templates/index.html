@@ -2,58 +2,53 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>부트하우스</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+<header>
+    <nav class="bg-white shadow-md">
+        <div th:replace="fragments/navbar :: navbar"></div>
+    </nav>
+</header>
 
-<nav class="bg-white shadow-md">
-    <div th:replace="fragments/navbar :: navbar"></div>
-</nav>
+<main class="main-content-wrap">
+    <section class="notice-section-wrap bg-orange-500 text-white p-4 flex justify-center items-center mt-4 mx-4 rounded-lg shadow-xl">
+        <i class="fas fa-bullhorn mr-2" aria-hidden="true"></i>
+        <a href="/notice" class="notice-link">최신 부트캠프 공지사항을 확인하세요!</a>
+    </section>
 
-
-<!-- 공지사항 섹션 -->
-<div class="bg-orange-500 text-white p-4 flex justify-center items-center mt-4 mx-4 rounded-lg shadow-xl">
-    <i class="fas fa-bullhorn mr-2"></i> <!-- 아이콘 추가 -->
-    <a href="/notice" th:text="'최신 부트캠프 공지사항을 확인하세요!'"></a>
-</div>
-
-<!-- main 섹션 -->
-<div class="flex flex-col h-auto mt-4 px-4 gap-y-6">
-    <!-- Course 정보 -->
-    <div class="w-full p-4 rounded-lg shadow-lg mb-6 h-1/2 bg-gray-100">
-        <h2 class="text-xl font-bold mb-4"> 지금 <span class="text-orange-500">모집중</span>인 프로그램에 신청해보세요!</h2>
-        <div class="grid grid-cols-2 gap-4 pb-4">
-            <!-- 코스 카드-->
-            <div th:each="course : ${courseDtos}" class="flex flex-col bg-white p-4 rounded-lg shadow-md">
-                <div th:text="'[' + ${course.bootcampName} + ']'" class="ml-4 text-orange-600 font-bold">[멋쟁이 사자처럼]</div>
-                <img src="https://via.placeholder.com/150" alt="Course 1" class="w-[50px] h-[50px] ml-auto rounded-md">
-                <div class="flex flex-col ml-4">
-                    <a th:text="${course.name}" th:href="@{'/courses/' + ${course.id}}" class="font-bold">GPT-풀스택·AI 6기</a>
-                    <p th:text="${course.summary}">GPT활용 풀스택 교육 🔥전액무료 취업연계과정</p>
-                    <p th:text="${course.startDate} + ' 개강 · ' + ${course.tuitionType == '무료' ? '무료' : course.tuitionType + '만원'}"
-                       class="text-orange-500">8/27 개강 · 무료</p>
-                </div>
+    <div class="content-sections-wrap flex flex-col h-auto mt-4 px-4 gap-y-6">
+        <section class="course-section-wrap w-full p-4 rounded-lg shadow-lg mb-6 h-1/2 bg-gray-100">
+            <h2 class="text-xl font-bold mb-4">지금 <span class="text-orange-500">모집중</span>인 프로그램에 신청해보세요!</h2>
+            <div class="course-cards-wrap grid grid-cols-2 gap-4 pb-4">
+                <article th:each="course : ${courseDtos}" class="course-card-wrap flex flex-col bg-white p-4 rounded-lg shadow-md">
+                    <div th:text="'[' + ${course.bootcampName} + ']'" class="bootcamp-name ml-4 text-orange-600 font-bold"></div>
+                    <img th:src="${course.imageUrl}" th:alt="${course.name + ' 이미지'}" class="course-image w-[50px] h-[50px] ml-auto rounded-md">
+                    <div class="course-details-wrap flex flex-col ml-4">
+                        <a th:text="${course.name}" th:href="@{'/courses/' + ${course.id}}" class="course-name font-bold"></a>
+                        <p th:text="${course.summary}" class="course-summary"></p>
+                        <p th:text="${course.startDate} + ' 개강 · ' + ${course.tuitionType == '무료' ? '무료' : course.tuitionType + '만원'}"
+                           class="course-info text-orange-500"></p>
+                    </div>
+                </article>
             </div>
-        </div>
-    </div>
+        </section>
 
-    <!-- Review 섹션 -->
-    <div class="w-full bg-gray-900 text-white p-4 rounded-lg shadow-lg">
-        <h2 class="text-xl font-bold mb-4"> 관심있는 프로그램 리뷰를 살펴보세요! </h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-4">
-            <!-- 리뷰 카드 -->
-            <div th:each="review : ${reviewDtos}" class="flex-shrink-0 w-[250px] bg-gray-800 p-4 rounded-lg shadow-md">
-                <img src="https://via.placeholder.com/150" alt="리뷰 1 이미지" class="w-full rounded-md mb-2">
-                <a th:text="${review.username} +'님의 후기'" th:href="@{'/reviews/' + ${review.id}}"
-                    class="font-bold text-white">홍길동의 후기</a>
-                <p th:text="|&quot;${review.oneLineReview}&quot;|" class="text-gray-400">"이 과정 덕분에 개발자로 취업했습니다! 감사합니다."</p>
+        <section class="review-section-wrap w-full bg-gray-900 text-white p-4 rounded-lg shadow-lg">
+            <h2 class="text-xl font-bold mb-4">관심있는 프로그램 리뷰를 살펴보세요!</h2>
+            <div class="review-cards-wrap grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-4">
+                <article th:each="review : ${reviewDtos}" class="review-card-wrap flex-shrink-0 w-[250px] bg-gray-800 p-4 rounded-lg shadow-md">
+                    <img th:src="${review.imageUrl}" th:alt="${review.username + '의 리뷰 이미지'}" class="review-image w-full rounded-md mb-2">
+                    <a th:text="${review.username} +'님의 후기'" th:href="@{'/reviews/' + ${review.id}}"
+                       class="review-author font-bold text-white"></a>
+                    <p th:text="|&quot;${review.oneLineReview}&quot;|" class="review-summary text-gray-400"></p>
+                </article>
             </div>
-        </div>
+        </section>
     </div>
-</div>
-
+</main>
 </body>
 </html>
