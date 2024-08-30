@@ -21,8 +21,8 @@ public class CourseSpecification {
         return (root, query, criteriaBuilder) -> {
 
             // query.getResultType()을 통해 현재 쿼리가 count 쿼리인지 확인
-            if (CourseEntity.class.equals(query.getResultType())) {
-                // count 쿼리가 아닐 때만 fetch join 적용
+            if (CourseEntity.class.equals(query.getResultType())) { // count 쿼리가 아닐 때만 fetch join 적용
+                // root.fetch()로 필요한 조인데이터
                 root.fetch("bootcampEntity", JoinType.LEFT);
                 root.fetch("categoryEntity", JoinType.LEFT);
                 root.fetch("subCourseEntity", JoinType.LEFT);
@@ -107,17 +107,28 @@ public class CourseSpecification {
                         query.orderBy(criteriaBuilder.desc(root.get("tuitionType")));
                         break;
                     case "shortDuration":
-                        query.orderBy(criteriaBuilder.asc(criteriaBuilder.diff(root.get("endDate"), root.get("startDate"))));
+                        query.orderBy(
+                                criteriaBuilder.asc(criteriaBuilder.diff(root.get("endDate"), root.get("startDate")))
+                        );
                         break;
                     case "longDuration":
-                        query.orderBy(criteriaBuilder.desc(criteriaBuilder.diff(root.get("endDate"), root.get("startDate"))));
+                        query.orderBy(criteriaBuilder.desc(criteriaBuilder.diff(root.get("endDate"), root.get("startDate")))
+                        );
+                        break;
+                    default:
+                        // 기본 정렬: 기한 기준으로 정렬
+                        query.orderBy(criteriaBuilder.asc(root.get("closingDate")));
                         break;
                 }
+            } else {
+                // 기본 정렬: 기한 기준으로 정렬
+                query.orderBy(criteriaBuilder.asc(root.get("closingDate")));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
+
 
     // html 값 - DB 값 매핑함수
     private static String mapLocation(String location) {

@@ -3,6 +3,7 @@ package likelion.eight.domain.course.infra;
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import likelion.eight.course.CourseEntity;
 import likelion.eight.course.ifs.CourseJpaRepository;
+import likelion.eight.domain.course.controller.model.CourseDto;
 import likelion.eight.domain.course.controller.model.CourseFilter;
 import likelion.eight.domain.course.converter.CourseConverter;
 import likelion.eight.domain.course.model.Course;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CourseRepositoryImpl implements CourseRepository {
     private final CourseJpaRepository courseJpaRepository;
+    private final CourseQueryDSLRepositoryImpl courseQueryDSLRepository;
 
     // 모집중인 코스만 반환
     @Override
@@ -81,5 +83,14 @@ public class CourseRepositoryImpl implements CourseRepository {
         return AllCourse.stream()
                 .map(CourseConverter::toCourse)
                 .collect(Collectors.toList());
+      
+    // QueryDSL로 필요한 칼럼 개수의 Course만 반환
+    @Override
+    public Page<CourseDto> findCoursesByFiltersQueryDSL(Long categoryId,
+                                                        CourseFilter courseFilter,
+                                                        String sort,
+                                                        String search,
+                                                        Pageable pageable) {
+        return courseQueryDSLRepository.findCoursesByFiltersQueryDSL(categoryId, courseFilter, sort, search, pageable);
     }
 }

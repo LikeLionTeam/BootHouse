@@ -1,6 +1,7 @@
 package likelion.eight.domain.bootcamp.converter;
 
 import likelion.eight.bootcamp.BootCampEntity;
+import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import likelion.eight.domain.bootcamp.model.Bootcamp;
 
 public class BootcampConverter {
@@ -16,6 +17,10 @@ public class BootcampConverter {
     }
 
     public static Bootcamp toBootcamp(BootCampEntity bootCampEntity){
+        if (bootCampEntity == null){
+            throw new ResourceNotFoundException("BootCampEntity는 null입니다.");
+        }
+
         return Bootcamp.builder()
                 .id(bootCampEntity.getId())
                 .name(bootCampEntity.getName())
