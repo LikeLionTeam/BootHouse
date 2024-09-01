@@ -42,13 +42,14 @@ public class ChatController {
         return "chat/messages";
     }
 
+
     /**
      * 특정 채팅방을 조회합니다.
      *
      * @param id 채팅방 ID
      * @param model Model 객체
      * @param loginUser 로그인한 사용자 정보
-     * @return 채팅방 페이지
+     * @return 채팅방 페이지 또는 리다이렉트 URL
      */
     @GetMapping("/{id}")
     public String chatRoom(@PathVariable Long id, Model model, @Login LoginUser loginUser) {
@@ -71,7 +72,7 @@ public class ChatController {
      *
      * @param userIds 채팅방에 포함될 사용자 ID 목록
      * @param loginUser 로그인한 사용자 정보
-     * @return 생성된 채팅방 정보
+     * @return 생성된 채팅방 정보 또는 에러 메시지
      */
     @PostMapping("/new")
     public ResponseEntity<?> newChat(@RequestBody List<Long> userIds, @Login LoginUser loginUser) {
@@ -92,7 +93,7 @@ public class ChatController {
      *
      * @param loginUser 로그인한 사용자 정보
      * @param targetName 대화 상대방 이름
-     * @return 채팅방 정보
+     * @return 채팅방 정보 또는 에러 메시지
      */
     @PostMapping("/startChat")
     @ResponseBody

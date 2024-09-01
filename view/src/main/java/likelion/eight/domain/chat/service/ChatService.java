@@ -18,8 +18,12 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -164,6 +168,7 @@ public class ChatService {
 
     /**
      * 채팅방의 메시지 목록을 조회합니다.
+     * Redis 에서 최근 1주일 메시지를 가져오고, 그 이전 메시지는 DB 에서 가져옵니다.
      *
      * @param chatroomId 채팅방 ID
      * @return 메시지 엔티티 목록
@@ -172,13 +177,29 @@ public class ChatService {
     public List<MessageEntity> getChatroomMessages(Long chatroomId) {
         log.info("Getting messages for chatroom: {}", chatroomId);
         ChatroomEntity chatroom = getChatroom(chatroomId);
-        List<MessageEntity> messages = messageRepository.findByChatroomOrderByIdAsc(chatroom);
-        log.info("Retrieved {} messages for chatroom: {}", messages.size(), chatroomId);
-        return messages;
+
+        LocalDateTime oneWeekAgo = LocalDateTime.now().minus(7, ChronoUnit.DAYS);
+
+        // Redis에서 최근 1주일 메시지 가져오기
+        List<ChatMessage> recentMessages = getRecentMessagesFromRedis(chatroomId, oneWeekAgo);
+
+        // DB에서 1주일 이전 메시지 가져오기
+        List<MessageEntity> olderMessages = messageRepository.findByChatroomAndRegistrationDateBeforeOrderByIdAsc(chatroom, oneWeekAgo);
+
+        // Redis 메시지를 MessageEntity로 변환
+        List<MessageEntity> recentMessageEntities = convertChatMessagesToEntities(recentMessages, chatroom);
+
+        // 두 리스트 합치기
+        List<MessageEntity> allMessages = new ArrayList<>(recentMessageEntities);
+        allMessages.addAll(olderMessages);
+
+        log.info("Retrieved {} messages for chatroom: {}", allMessages.size(), chatroomId);
+        return allMessages;
     }
 
     /**
      * 새로운 메시지를 저장합니다.
+     * 메시지를 Redis와 DB에 모두 저장합니다.
      *
      * @param chatMessage 채팅 메시지 객체
      * @return 저장된 메시지 엔티티
@@ -195,12 +216,14 @@ public class ChatService {
                 .chatroom(chatroom)
                 .sender(sender)
                 .message(chatMessage.getMessage())
+                .registrationDate(LocalDateTime.ofInstant(Instant.ofEpochMilli(chatMessage.getTimestamp()), ZoneId.systemDefault()))
                 .build();
 
         String redisKey = "chat:room:" + chatMessage.getChatroomId();
         try {
-            redisTemplate.opsForList().rightPush(redisKey, chatMessage);
-            log.info("Message saved to Redis. Key: {}", redisKey);
+            redisTemplate.opsForList().leftPush(redisKey, chatMessage);
+            redisTemplate.expire(redisKey, 7, TimeUnit.DAYS);  // 7일 후 만료 설정
+            log.info("Message saved to Redis with 7 days expiration. Key: {}", redisKey);
         } catch (Exception e) {
             log.error("Failed to save message to Redis", e);
         }
@@ -213,6 +236,11 @@ public class ChatService {
         return savedMessage;
     }
 
+    /**
+     * 채팅 목록을 업데이트합니다.
+     *
+     * @param chatroom 채팅방 엔티티
+     */
     private void updateChatLists(ChatroomEntity chatroom) {
         List<ChatListEntity> chatLists = chatListRepository.findByChatroom(chatroom);
         for (ChatListEntity chatList : chatLists) {
@@ -226,14 +254,36 @@ public class ChatService {
      * Redis에서 최근 메시지를 조회합니다.
      *
      * @param chatroomId 채팅방 ID
-     * @param count 조회할 메시지 수
+     * @param since 조회 시작 시간
      * @return 채팅 메시지 목록
      */
-    public List<ChatMessage> getRecentMessagesFromRedis(Long chatroomId, int count) {
+    private List<ChatMessage> getRecentMessagesFromRedis(Long chatroomId, LocalDateTime since) {
         String redisKey = "chat:room:" + chatroomId;
-        List<ChatMessage> messages = redisTemplate.opsForList().range(redisKey, -count, -1);
-        log.info("Retrieved {} recent messages from Redis for chatroom: {}", messages.size(), chatroomId);
-        return messages;
+        List<ChatMessage> allMessages = redisTemplate.opsForList().range(redisKey, 0, -1);
+        long sinceTimestamp = since.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        return allMessages.stream()
+                .filter(msg -> msg.getTimestamp() > sinceTimestamp)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * ChatMessage 객체를 MessageEntity로 변환합니다.
+     *
+     * @param chatMessages 채팅 메시지 목록
+     * @param chatroom 채팅방 엔티티
+     * @return MessageEntity 목록
+     */
+    private List<MessageEntity> convertChatMessagesToEntities(List<ChatMessage> chatMessages, ChatroomEntity chatroom) {
+        return chatMessages.stream().map(msg -> {
+            UserEntity sender = userRepository.findByName(msg.getSender())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            return MessageEntity.builder()
+                    .chatroom(chatroom)
+                    .sender(sender)
+                    .message(msg.getMessage())
+                    .registrationDate(LocalDateTime.ofInstant(Instant.ofEpochMilli(msg.getTimestamp()), ZoneId.systemDefault()))
+                    .build();
+        }).collect(Collectors.toList());
     }
 
     /**
@@ -317,7 +367,12 @@ public class ChatService {
         return result;
     }
 
-
+    /**
+     * 주어진 사용자 ID 목록으로 새로운 채팅방을 생성합니다.
+     *
+     * @param userIds 채팅방에 포함될 사용자 ID 목록
+     * @return 생성된 채팅방 엔티티
+     */
     @Transactional
     public ChatroomEntity createChatroomWithUserIds(List<Long> userIds) {
         log.info("Creating chatroom for user IDs: {}", userIds);
