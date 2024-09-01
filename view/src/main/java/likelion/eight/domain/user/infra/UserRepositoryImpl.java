@@ -9,7 +9,9 @@ import likelion.eight.user.ifs.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -44,4 +46,14 @@ public class UserRepositoryImpl implements UserRepository {
     public Optional<User> findByPhoneAndName(String phoneNumber, String name) {
         return userRepository.findByPhoneNumberAndName(phoneNumber, name).map(UserConverter::toUser);
     }
+
+//    ---
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll().stream()
+                .map(UserConverter::toUser)
+                .collect(Collectors.toList());
+    }
+
 }

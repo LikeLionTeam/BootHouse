@@ -11,4 +11,9 @@ public interface ChatListJpaRepository extends JpaRepository<ChatListEntity, Lon
     List<ChatListEntity> findByUser(UserEntity user);
     boolean existsByUserAndChatroom(UserEntity user, ChatroomEntity chatroom);
     List<ChatListEntity> findByUserOrderByIdDesc(UserEntity user);
+
+    // 새로 추가된 메서드
+    List<ChatListEntity> findByChatroom(ChatroomEntity chatroom);
+    // 새로 추가된 메서드
+    ChatListEntity findByUserAndChatroom(UserEntity user, ChatroomEntity chatroom);
 }

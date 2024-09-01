@@ -1,8 +1,9 @@
 import { initNewChatButton } from './newChatButton.js';
+import { initUserList } from './userList.js';
+import { initSearchInput } from './searchInput.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    const $newChatBtn = document.getElementById('newChatBtn');
-    const $currentUsername = document.getElementById('currentUsername');
-
-    initNewChatButton($newChatBtn, $currentUsername);
+    initNewChatButton();
+    initUserList();
+    initSearchInput();
 });
