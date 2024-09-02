@@ -1,5 +1,6 @@
 package likelion.eight.domain.chat.controller;
 
+import likelion.eight.chatroom.ChatroomEntity;
 import likelion.eight.common.annotation.Login;
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import likelion.eight.domain.chat.service.ChatService;
@@ -45,7 +46,8 @@ public class ChatRestController {
     public ResponseEntity<?> inviteUsers(@RequestParam Long chatroomId, @RequestBody List<Long> userIds, @Login LoginUser loginUser) {
         try {
             chatService.inviteUsers(chatroomId, userIds);
-            return ResponseEntity.ok().body(Map.of("message", "Users invited successfully"));
+            ChatroomEntity updatedChatroom = chatService.getChatroom(chatroomId);
+            return ResponseEntity.ok().body(Map.of("message", "Users invited successfully", "chatroomName", updatedChatroom.getName()));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
         } catch (Exception e) {
@@ -71,7 +73,8 @@ public class ChatRestController {
     public ResponseEntity<?> leaveChat(@PathVariable Long chatroomId, @Login LoginUser loginUser) {
         try {
             chatService.leaveChat(chatroomId, loginUser.getId());
-            return ResponseEntity.ok().body(Map.of("success", true, "message", "Successfully left the chat"));
+            ChatroomEntity updatedChatroom = chatService.getChatroom(chatroomId);
+            return ResponseEntity.ok().body(Map.of("success", true, "message", "Successfully left the chat", "chatroomName", updatedChatroom.getName()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "An unexpected error occurred: " + e.getMessage()));
         }

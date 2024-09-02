@@ -341,6 +341,7 @@ public class ChatService {
             }
         }
 
+        updateChatroomName(chatroom);
         chatroomRepository.save(chatroom);
         log.info("Users successfully invited to chatroom {}", chatroomId);
     }
@@ -368,7 +369,17 @@ public class ChatService {
             log.info("ChatList entry deleted for user: {} in chatroom: {}", userId, chatroomId);
         }
 
+        updateChatroomName(chatroom);
+        chatroomRepository.save(chatroom);
         log.info("User: {} successfully left chatroom: {}", userId, chatroomId);
+    }
+
+    private void updateChatroomName(ChatroomEntity chatroom) {
+        String newName = chatroom.getUsers().stream()
+                .map(UserEntity::getName)
+                .sorted()
+                .collect(Collectors.joining(", "));
+        chatroom.setName(newName);
     }
 
     /**

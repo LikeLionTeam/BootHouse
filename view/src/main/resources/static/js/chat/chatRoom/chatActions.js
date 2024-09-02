@@ -18,6 +18,7 @@ export function inviteUsers(chatroomId, selectedUserIds) {
         .then(result => {
             console.log('Invitation result:', result);
             alert('새로운 유저가 초대되었습니다!');
+            document.querySelector('.chat-title').textContent = result.chatroomName;
             window.location.reload(); // 페이지 새로고침
         })
         .catch(error => {
