@@ -1,5 +1,3 @@
-import { showMessage } from './messageHandling.js';
-
 export function inviteUsers(chatroomId, selectedUserIds) {
     console.log('Inviting users to chatroom:', chatroomId, 'Selected users:', selectedUserIds);
     fetch(`/api/chat/invite?chatroomId=${chatroomId}`, {

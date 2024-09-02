@@ -21,6 +21,13 @@ export function initChatOptions() {
         e.preventDefault();
         leaveChat(chatroomId);
     });
+
+    // 메뉴 외의 영역 클릭 시 메뉴 닫기
+    document.addEventListener('click', function(e) {
+        if (!chatOptionsMenu.contains(e.target) && !chatOptionsBtn.contains(e.target)) {
+            chatOptionsMenu.classList.add('hidden');
+        }
+    });
 }
 
 function openInviteUsersModal() {
