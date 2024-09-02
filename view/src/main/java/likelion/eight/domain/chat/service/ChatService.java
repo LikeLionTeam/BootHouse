@@ -335,7 +335,6 @@ public class ChatService {
                         .chatroom(chatroom)
                         .build();
                 chatListRepository.save(chatList);
-                sendSystemMessage(chatroomId, user.getName() + " 님이 채팅방에 참여하셨습니다.");
                 log.info("User {} added to chatroom {}", user.getId(), chatroomId);
             } else {
                 log.info("User {} is already in chatroom {}", user.getId(), chatroomId);
@@ -368,8 +367,6 @@ public class ChatService {
             chatListRepository.delete(chatList);
             log.info("ChatList entry deleted for user: {} in chatroom: {}", userId, chatroomId);
         }
-
-        sendSystemMessage(chatroomId, user.getName() + " 님이 채팅방을 나가셨습니다.");
 
         log.info("User: {} successfully left chatroom: {}", userId, chatroomId);
     }

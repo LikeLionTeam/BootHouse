@@ -19,12 +19,11 @@ export function initChatOptions() {
 
     leaveChatBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        leaveChat();
+        leaveChat(chatroomId);
     });
 }
 
 function openInviteUsersModal() {
-    // 모달 창을 열고 사용자 목록을 가져오는 API 호출
     fetch('/api/chat/users')
         .then(response => response.json())
         .then(users => {
@@ -60,8 +59,8 @@ function showUsersInModal(users) {
 
     document.getElementById('inviteSelectedBtn').addEventListener('click', () => {
         const selectedUsers = Array.from(document.querySelectorAll('#userList input:checked'))
-            .map(checkbox => parseInt(checkbox.value, 10));  // 문자열을 숫자로 변환
-        console.log('Selected user IDs:', selectedUsers);  // 로그 추가
+            .map(checkbox => parseInt(checkbox.value, 10));
+        console.log('Selected user IDs:', selectedUsers);
         if (selectedUsers.length > 0) {
             inviteUsers(chatroomId, selectedUsers);
             closeModal('inviteUsersModal');

@@ -28,7 +28,7 @@ export function inviteUsers(chatroomId, selectedUserIds) {
         });
 }
 
-export function leaveChat(chatroomId, username, stompClient) {
+export function leaveChat(chatroomId) {
     if (confirm('정말로 이 채팅방을 나가시겠습니까?')) {
         fetch(`/api/chat/${chatroomId}/leave`, {
             method: 'POST',
@@ -36,16 +36,15 @@ export function leaveChat(chatroomId, username, stompClient) {
             .then(response => response.json())
             .then(result => {
                 if (result.success) {
-                    // 서버에 사용자가 채팅방을 나갔다는 메시지를 보냅니다.
-                    stompClient.send("/app/chat.leaveUser", {}, JSON.stringify({
-                        chatroomId: chatroomId,
-                        sender: username,
-                        type: 'LEAVE'
-                    }));
+                    alert('채팅방을 나갔습니다.');
                     window.location.href = '/messages';  // 채팅 목록 페이지로 리다이렉트
                 } else {
                     alert('채팅방을 나가는데 실패했습니다.');
                 }
+            })
+            .catch(error => {
+                console.error('Error leaving chat:', error);
+                alert('채팅방을 나가는 중 오류가 발생했습니다.');
             });
     }
 }

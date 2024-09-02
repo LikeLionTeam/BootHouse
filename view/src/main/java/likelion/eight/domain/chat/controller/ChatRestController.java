@@ -53,6 +53,7 @@ public class ChatRestController {
         }
     }
 
+
     @GetMapping("/{chatroomId}/messages")
     public ResponseEntity<List<MessageEntity>> getChatroomMessages(@PathVariable Long chatroomId, @Login LoginUser loginUser) {
         List<MessageEntity> messages = chatService.getChatroomMessages(chatroomId);
@@ -68,8 +69,12 @@ public class ChatRestController {
      */
     @PostMapping("/{chatroomId}/leave")
     public ResponseEntity<?> leaveChat(@PathVariable Long chatroomId, @Login LoginUser loginUser) {
-        chatService.leaveChat(chatroomId, loginUser.getId());
-        return ResponseEntity.ok().body(Map.of("success", true, "message", "Successfully left the chat"));
+        try {
+            chatService.leaveChat(chatroomId, loginUser.getId());
+            return ResponseEntity.ok().body(Map.of("success", true, "message", "Successfully left the chat"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "An unexpected error occurred: " + e.getMessage()));
+        }
     }
 
     /**
