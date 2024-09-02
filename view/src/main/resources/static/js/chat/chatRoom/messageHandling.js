@@ -17,12 +17,18 @@ export function showMessage(message) {
         return;
     }
 
-    const messageDate = new Date(message.registrationDate || new Date()); // 현재 시간을 기본값으로 사용
+    const messageDate = new Date(message.registrationDate || new Date());
     const formattedDate = formatDate(messageDate);
     const formattedTime = formatTime(messageDate);
 
     addDateSeparator($messageContainer, messageDate, formattedDate);
-    addMessageElement($messageContainer, message, formattedTime);
+
+    if (message.type === 'system') {
+        addSystemMessage($messageContainer, message.message);
+    } else {
+        addMessageElement($messageContainer, message, formattedTime);
+    }
+
     scrollToBottom();
 }
 
@@ -69,6 +75,19 @@ function scrollToBottom() {
     const $chatMessages = document.getElementById('chatMessages');
     if ($chatMessages) {
         $chatMessages.scrollTop = $chatMessages.scrollHeight;
+    }
+}
+
+
+function addSystemMessage($messageContainer, messageText) {
+    const $systemMessageTemplate = document.getElementById('systemMessageTemplate');
+    if ($systemMessageTemplate) {
+        const $systemMessageElement = $systemMessageTemplate.content.cloneNode(true);
+        const $systemMessageText = $systemMessageElement.querySelector('.system-message-text');
+        if ($systemMessageText) {
+            $systemMessageText.textContent = messageText;
+            $messageContainer.appendChild($systemMessageElement);
+        }
     }
 }
 

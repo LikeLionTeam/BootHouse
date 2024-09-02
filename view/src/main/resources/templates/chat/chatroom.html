@@ -59,6 +59,12 @@
     </article>
 </template>
 
+<template id="systemMessageTemplate">
+    <div class="system-message-wrap text-center my-2">
+        <span class="system-message-text bg-gray-200 text-gray-600 px-2 py-1 rounded-full text-sm"></span>
+    </div>
+</template>
+
 <script th:inline="javascript">
     /*<![CDATA[*/
     var chatroomId = [[${chatroom.id}]];
