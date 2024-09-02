@@ -27,7 +27,8 @@
             </button>
             <div id="chatOptionsMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg">
                 <a href="#" id="inviteUsersBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">유저 초대</a>
-                <a href="#" id="leaveChatBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">채팅방 나가기</a>
+<!--                <a href="#" id="leaveChatBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">채팅방 나가기</a>-->
+                <button onclick="leaveChat(chatroomId, username, stompClient)">채팅방 나가기</button>
             </div>
         </header>
 
@@ -60,8 +61,8 @@
 </template>
 
 <template id="systemMessageTemplate">
-    <div class="system-message-wrap text-center my-2">
-        <span class="system-message-text bg-gray-200 text-gray-600 px-2 py-1 rounded-full text-sm"></span>
+    <div class="message-date-wrap text-center text-gray-500 text-sm my-2">
+        <span class="system-message-text bg-gray-200 px-2 py-1 rounded-full"></span>
     </div>
 </template>
 

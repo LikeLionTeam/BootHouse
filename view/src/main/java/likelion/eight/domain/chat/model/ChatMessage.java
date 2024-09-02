@@ -14,8 +14,14 @@ public class ChatMessage {
     private String sender;
     private String message;
     private long timestamp;
+    private MessageType type;
 
-    // getters and setters
+    public enum MessageType {
+        CHAT,
+        JOIN,
+        LEAVE,
+        SYSTEM
+    }
 
     public long getTimestamp() {
         return timestamp;
@@ -24,6 +30,4 @@ public class ChatMessage {
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
-
-    // other methods...
 }

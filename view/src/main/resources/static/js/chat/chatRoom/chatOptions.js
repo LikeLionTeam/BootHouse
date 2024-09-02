@@ -61,8 +61,13 @@ function showUsersInModal(users) {
     document.getElementById('inviteSelectedBtn').addEventListener('click', () => {
         const selectedUsers = Array.from(document.querySelectorAll('#userList input:checked'))
             .map(checkbox => parseInt(checkbox.value, 10));  // 문자열을 숫자로 변환
-        inviteUsers(chatroomId, selectedUsers);
-        closeModal('inviteUsersModal');
+        console.log('Selected user IDs:', selectedUsers);  // 로그 추가
+        if (selectedUsers.length > 0) {
+            inviteUsers(chatroomId, selectedUsers);
+            closeModal('inviteUsersModal');
+        } else {
+            alert('초대할 사용자를 선택해주세요.');
+        }
     });
 
     document.getElementById('closeModalBtn').addEventListener('click', () => {

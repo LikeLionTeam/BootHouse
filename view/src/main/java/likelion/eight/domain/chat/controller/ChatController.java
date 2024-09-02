@@ -61,6 +61,7 @@ public class ChatController {
         }
         List<MessageEntity> messages = chatService.getChatroomMessages(id);
         model.addAttribute("chatroom", chatroom);
+        model.addAttribute("chatroomId", id);
         model.addAttribute("messages", messages);
         model.addAttribute("username", loginUser.getName());
         log.info("Chatroom {} accessed successfully by user: {}", id, loginUser.getName());

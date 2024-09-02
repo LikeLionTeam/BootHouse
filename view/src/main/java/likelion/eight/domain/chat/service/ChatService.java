@@ -15,6 +15,7 @@ import likelion.eight.user.ifs.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +36,17 @@ public class ChatService {
     private final MessageJpaRepository messageRepository;
     private final UserJpaRepository userRepository;
     private final RedisTemplate<String, ChatMessage> redisTemplate;
+    private final SimpMessagingTemplate messagingTemplate;
     private final ChatRoomRedisRepository chatRoomRedisRepository;
+
+    // DB를 초기화 한다면 redis 또한 초기화 해야합니다..
+    public void clearRedisData() {
+        Set<String> keys = redisTemplate.keys("chat:room:*");
+        if (keys != null) {
+            redisTemplate.delete(keys);
+        }
+        log.info("Cleared all chat data from Redis");
+    }
 
     /**
      * 사용자의 채팅 목록을 조회합니다.
@@ -190,8 +201,11 @@ public class ChatService {
         List<MessageEntity> recentMessageEntities = convertChatMessagesToEntities(recentMessages, chatroom);
 
         // 두 리스트 합치기
-        List<MessageEntity> allMessages = new ArrayList<>(recentMessageEntities);
-        allMessages.addAll(olderMessages);
+        List<MessageEntity> allMessages = new ArrayList<>(olderMessages);
+        allMessages.addAll(recentMessageEntities);
+
+        // 시간순으로 정렬
+        allMessages.sort(Comparator.comparing(MessageEntity::getRegistrationDate));
 
         log.info("Retrieved {} messages for chatroom: {}", allMessages.size(), chatroomId);
         return allMessages;
@@ -276,7 +290,14 @@ public class ChatService {
     private List<MessageEntity> convertChatMessagesToEntities(List<ChatMessage> chatMessages, ChatroomEntity chatroom) {
         return chatMessages.stream().map(msg -> {
             UserEntity sender = userRepository.findByName(msg.getSender())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+                    .orElseGet(() -> {
+                        log.warn("User not found for message: {}, creating placeholder user", msg.getSender());
+                        return UserEntity.builder()
+                                .name(msg.getSender())
+                                .email("placeholder@example.com")
+                                .build();
+                    });
+
             return MessageEntity.builder()
                     .chatroom(chatroom)
                     .sender(sender)
@@ -294,12 +315,16 @@ public class ChatService {
      */
     @Transactional
     public void inviteUsers(Long chatroomId, List<Long> userIds) {
+        log.info("Inviting users to chatroom: {}, User IDs: {}", chatroomId, userIds);
+
         ChatroomEntity chatroom = chatroomRepository.findById(chatroomId)
-                .orElseThrow(() -> new RuntimeException("Chatroom not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Chatroom not found"));
+
         List<UserEntity> users = userRepository.findAllById(userIds);
 
         if (users.size() != userIds.size()) {
-            throw new RuntimeException("One or more users not found");
+            log.error("Not all users found. Requested: {}, Found: {}", userIds.size(), users.size());
+            throw new ResourceNotFoundException("One or more users not found");
         }
 
         for (UserEntity user : users) {
@@ -310,10 +335,15 @@ public class ChatService {
                         .chatroom(chatroom)
                         .build();
                 chatListRepository.save(chatList);
+                sendSystemMessage(chatroomId, user.getName() + " 님이 채팅방에 참여하셨습니다.");
+                log.info("User {} added to chatroom {}", user.getId(), chatroomId);
+            } else {
+                log.info("User {} is already in chatroom {}", user.getId(), chatroomId);
             }
         }
 
         chatroomRepository.save(chatroom);
+        log.info("Users successfully invited to chatroom {}", chatroomId);
     }
 
     /**
@@ -338,6 +368,8 @@ public class ChatService {
             chatListRepository.delete(chatList);
             log.info("ChatList entry deleted for user: {} in chatroom: {}", userId, chatroomId);
         }
+
+        sendSystemMessage(chatroomId, user.getName() + " 님이 채팅방을 나가셨습니다.");
 
         log.info("User: {} successfully left chatroom: {}", userId, chatroomId);
     }
@@ -400,6 +432,19 @@ public class ChatService {
         });
 
         return chatroom;
+    }
+
+    @Transactional
+    public void sendSystemMessage(Long chatroomId, String message) {
+        ChatMessage systemMessage = new ChatMessage();
+        systemMessage.setChatroomId(chatroomId);
+        systemMessage.setSender("System");
+        systemMessage.setMessage(message);
+        systemMessage.setTimestamp(System.currentTimeMillis());
+        systemMessage.setType(ChatMessage.MessageType.SYSTEM);
+
+        messagingTemplate.convertAndSend("/topic/messages/" + chatroomId, systemMessage);
+        saveMessage(systemMessage);
     }
 
 }

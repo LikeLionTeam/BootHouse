@@ -1,11 +1,14 @@
 package likelion.eight.domain.chat.controller;
 
 import likelion.eight.common.annotation.Login;
+import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import likelion.eight.domain.chat.service.ChatService;
 import likelion.eight.domain.user.controller.model.LoginUser;
 import likelion.eight.domain.user.model.User;
 import likelion.eight.domain.user.service.UserService;
+import likelion.eight.message.MessageEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,9 +46,17 @@ public class ChatRestController {
         try {
             chatService.inviteUsers(chatroomId, userIds);
             return ResponseEntity.ok().body(Map.of("message", "Users invited successfully"));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "An unexpected error occurred: " + e.getMessage()));
         }
+    }
+
+    @GetMapping("/{chatroomId}/messages")
+    public ResponseEntity<List<MessageEntity>> getChatroomMessages(@PathVariable Long chatroomId, @Login LoginUser loginUser) {
+        List<MessageEntity> messages = chatService.getChatroomMessages(chatroomId);
+        return ResponseEntity.ok(messages);
     }
 
     /**
@@ -58,7 +69,7 @@ public class ChatRestController {
     @PostMapping("/{chatroomId}/leave")
     public ResponseEntity<?> leaveChat(@PathVariable Long chatroomId, @Login LoginUser loginUser) {
         chatService.leaveChat(chatroomId, loginUser.getId());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(Map.of("success", true, "message", "Successfully left the chat"));
     }
 
     /**
@@ -71,4 +82,7 @@ public class ChatRestController {
     public ResponseEntity<Map<String, Object>> getLastMessageInfo(@PathVariable Long chatroomId) {
         return ResponseEntity.ok(chatService.getLastMessageInfo(chatroomId));
     }
+
+
+
 }

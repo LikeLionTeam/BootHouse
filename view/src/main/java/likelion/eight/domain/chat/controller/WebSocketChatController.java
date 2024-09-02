@@ -1,6 +1,5 @@
 package likelion.eight.domain.chat.controller;
 
-
 import likelion.eight.domain.chat.model.ChatMessage;
 import likelion.eight.domain.chat.service.ChatService;
 import lombok.RequiredArgsConstructor;
@@ -25,5 +24,19 @@ public class WebSocketChatController {
         chatService.saveMessage(chatMessage);
         messagingTemplate.convertAndSend("/topic/messages/" + chatMessage.getChatroomId(), chatMessage);
         log.info("Message sent to topic: /topic/messages/{}", chatMessage.getChatroomId());
+    }
+
+    @MessageMapping("/chat.addUser")
+    public void addUser(@Payload ChatMessage chatMessage) {
+        log.info("User added to chat: {}", chatMessage.getSender());
+        chatMessage.setType(ChatMessage.MessageType.JOIN);
+        messagingTemplate.convertAndSend("/topic/messages/" + chatMessage.getChatroomId(), chatMessage);
+    }
+
+    @MessageMapping("/chat.leaveUser")
+    public void removeUser(@Payload ChatMessage chatMessage) {
+        log.info("User left chat: {}", chatMessage.getSender());
+        chatMessage.setType(ChatMessage.MessageType.LEAVE);
+        messagingTemplate.convertAndSend("/topic/messages/" + chatMessage.getChatroomId(), chatMessage);
     }
 }
