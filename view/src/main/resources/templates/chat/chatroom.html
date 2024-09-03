@@ -51,10 +51,13 @@
 </template>
 
 <template id="messageTemplate">
-    <article class="message-wrap flex">
-        <div class="message-bubble-wrap rounded-lg p-3 max-w-xs">
-            <p class="message-text text-sm"></p>
-            <time class="message-time text-xs text-gray-500 block mt-1"></time>
+    <article class="message-wrap flex mb-4"> <!-- 메시지 간 간격을 위해 mb-4 추가 -->
+        <div class="message-content-wrap flex flex-col max-w-xs">
+            <span class="message-sender text-xs text-gray-500 mb-1"></span> <!-- 메시지 작성자 표시 -->
+            <div class="message-bubble-wrap rounded-lg p-3">
+                <p class="message-text text-sm"></p>
+                <time class="message-time text-xs text-gray-500 block mt-1"></time>
+            </div>
         </div>
     </article>
 </template>

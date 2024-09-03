@@ -1,4 +1,6 @@
 export function initUserList($userList) {
+    if (!$userList) return;
+
     $userList.addEventListener('change', (event) => {
         if (event.target.type === 'checkbox') {
             const li = event.target.closest('li');

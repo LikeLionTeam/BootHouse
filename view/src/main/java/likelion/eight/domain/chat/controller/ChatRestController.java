@@ -55,7 +55,6 @@ public class ChatRestController {
         }
     }
 
-
     @GetMapping("/{chatroomId}/messages")
     public ResponseEntity<List<MessageEntity>> getChatroomMessages(@PathVariable Long chatroomId, @Login LoginUser loginUser) {
         List<MessageEntity> messages = chatService.getChatroomMessages(chatroomId);
