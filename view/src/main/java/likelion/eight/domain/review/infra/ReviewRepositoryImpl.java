@@ -7,6 +7,7 @@ import likelion.eight.domain.review.controller.model.ReviewSortCondition;
 import likelion.eight.domain.review.converter.ReviewConverter;
 import likelion.eight.domain.review.model.Review;
 import likelion.eight.domain.review.service.port.ReviewRepository;
+import likelion.eight.domain.user.model.User;
 import likelion.eight.review.ReviewEntity;
 import likelion.eight.review.ifs.ReviewJpaRepository;
 import likelion.eight.user.UserEntity;
@@ -96,4 +97,10 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     public Optional<ReviewEntity> findNextReview(Long reviewId) {
         return reviewJpaRepository.findTopByIdGreaterThanOrderByIdAsc(reviewId);
     }
+
+    @Override
+    public List<ReviewEntity> findByUserEntityByUser(User user) {
+        return reviewJpaRepository.findByUserEntity_Id(user.getId());
+    }
+
 }

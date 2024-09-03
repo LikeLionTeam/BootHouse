@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import likelion.eight.BaseTimeEntity;
 import likelion.eight.certificationirequest.enums.AuthRequestStatus;
 import likelion.eight.certificationirequest.enums.AuthRequestType;
+import likelion.eight.course.CourseEntity;
 import likelion.eight.user.UserEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -27,6 +28,10 @@ public class UserAuthEntity extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id")
+    private CourseEntity courseEntity;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

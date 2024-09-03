@@ -6,6 +6,7 @@ import likelion.eight.domain.review.controller.model.ReviewSearchCondition;
 import likelion.eight.domain.review.controller.model.ReviewSortCondition;
 import likelion.eight.domain.review.controller.model.ReviewUpdateRequest;
 import likelion.eight.domain.review.model.Review;
+import likelion.eight.domain.user.model.User;
 import likelion.eight.review.ReviewEntity;
 import likelion.eight.user.UserEntity;
 import org.springframework.data.domain.Page;
@@ -42,6 +43,8 @@ public interface ReviewRepository {
     Optional<ReviewEntity> findPreviousReview(Long reviewId);
 
     Optional<ReviewEntity> findNextReview(Long reviewId);
+
+    List<ReviewEntity> findByUserEntityByUser(User user);
 
 }
 

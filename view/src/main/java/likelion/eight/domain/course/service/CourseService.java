@@ -3,6 +3,7 @@ package likelion.eight.domain.course.service;
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import likelion.eight.course.CourseEntity;
 import likelion.eight.domain.course.controller.CourseController;
+import likelion.eight.domain.course.controller.model.CourseDto;
 import likelion.eight.domain.course.controller.model.CourseFilter;
 import likelion.eight.domain.course.converter.CourseConverter;
 import likelion.eight.domain.course.model.Course;
@@ -40,6 +41,10 @@ public class CourseService {
                 .orElseThrow(() -> new ResourceNotFoundException("No open courses found."));
     }
 
+    public List<Course> getAllCourse() {
+        return courseRepository.getAllCourse();
+    }
+
     public List<Course> findByOpenCoursesByCategory(Long categoryId){
         List<Course> courses = courseRepository.findByOpenCoursesByCategory(categoryId);
         return Optional.ofNullable(courses)
@@ -55,6 +60,15 @@ public class CourseService {
             Pageable pageable
     ){
         return courseRepository.findCoursesByFilters(categoryId, courseFilter, sort, search, pageable);
+    }
+
+    // QueryDSL로 필요한 칼럼 개수의 Course만 반환
+    public Page<CourseDto> findCoursesByFiltersQueryDSL(Long categoryId,
+                                                        CourseFilter courseFilter,
+                                                        String sort,
+                                                        String search,
+                                                        Pageable pageable) {
+        return courseRepository.findCoursesByFiltersQueryDSL(categoryId, courseFilter, sort, search, pageable);
     }
 
     public Course findCourseById(Long courseId){

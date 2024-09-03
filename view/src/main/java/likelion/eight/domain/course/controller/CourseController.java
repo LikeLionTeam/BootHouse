@@ -18,6 +18,9 @@ import likelion.eight.domain.review.model.Review;
 import likelion.eight.domain.review.service.port.ReviewRepository;
 import likelion.eight.domain.subcourse.model.SubCourse;
 import likelion.eight.domain.subcourse.service.SubCourseService;
+import likelion.eight.domain.user.controller.model.LoginUser;
+import likelion.eight.domain.userCourse.model.UserCourse;
+import likelion.eight.domain.userCourse.service.UserCourseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -33,7 +36,6 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
-@Slf4j
 public class CourseController  {
     private final CourseService courseService;
     private final CategoryService categoryService;
@@ -41,6 +43,7 @@ public class CourseController  {
     private final ReviewRepository reviewRepository;
     private final CookieService cookieService;
     private final NaverMapService naverMapService;
+    private final UserCourseService userCourseService;
 
     // 모집중인 캠프 조회
     @GetMapping("/boothouse/camps")
@@ -52,17 +55,19 @@ public class CourseController  {
             @RequestParam(required = false, name = "search") String search,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size){
-
         List<Category> categories = categoryService.findAll();
 
         Pageable pageable = PageRequest.of(page, size);
 
         // 모집중인 코스를 기준으로 필터링 (모집중 고려 O, 카테고리 고려 전, 필터링 기준 고려 O)
-        Page<Course> coursePage = courseService.findCoursesByFilters(categoryId, courseFilter, sort, search, pageable);
+//        Page<Course> coursePage = courseService.findCoursesByFilters(categoryId, courseFilter, sort, search, pageable);
+//        // 도메인을 dto로 변환
+//        List<CourseDto> courseDtos = coursePage.getContent().stream()
+//                .map(course -> new CourseDto(course))
+//                .collect(Collectors.toList());
 
-        // 도메인을 dto로 변환
-        List<CourseDto> courseDtos = coursePage.getContent().stream()
-                .map(course -> new CourseDto(course))
+        Page<CourseDto> courseQueryDSLPage = courseService.findCoursesByFiltersQueryDSL(categoryId, courseFilter, sort, search, pageable);
+        List<CourseDto> courseDtos = courseQueryDSLPage.stream()
                 .collect(Collectors.toList());
 
         // 카테고리 조건 추가 (모집중 고려 O, 카테고리 고려 O, 필터링 기준 고려 O)
@@ -76,10 +81,10 @@ public class CourseController  {
         }
 
         model.addAttribute("courses", courseDtos);
-        model.addAttribute("count", coursePage.getTotalElements()); // 총 코스 개수
+        model.addAttribute("count", courseQueryDSLPage.getTotalElements()); // 총 코스 개수
         model.addAttribute("categories", categories);
 
-        model.addAttribute("totalPages", coursePage.getTotalPages()); // 총 페이지수
+        model.addAttribute("totalPages", courseQueryDSLPage.getTotalPages()); // 총 페이지수
         model.addAttribute("currentPage", page); // 현재 페이지
         model.addAttribute("size", size); // 페이지 사이즈
 
@@ -88,12 +93,25 @@ public class CourseController  {
 
     // course 자세히보기
     @GetMapping("/courses/{id}")
-    public String getCourseDetail(@PathVariable(name = "id")Long courseId,
+    public String getCourseDetail(@PathVariable(name = "id") Long courseId,
                                   Model model,
-                                  HttpServletRequest request){
+                                  HttpServletRequest request,
+                                  @Login(required = false) LoginUser loginUser) {
+
         Course course = courseService.findCourseById(courseId);
         List<Review> reviews = reviewRepository.findByCourseId(courseId);
         boolean isUserLoggedIn = cookieService.isUserLoggedIn(request);
+        boolean isCourseAuth = false;
+
+        if (isUserLoggedIn == true) {
+            List<Long> courseIdsByUserId = userCourseService.findCourseIdsByUserId(loginUser.getId());
+
+            for (Long userCourseId : courseIdsByUserId) {
+                if (userCourseId.equals(courseId)) {
+                    isCourseAuth = true;
+                }
+            }
+        }
 
         NaverMapRes geocode = null;
         try {
@@ -115,7 +133,8 @@ public class CourseController  {
         model.addAttribute("course", courseDto);
         model.addAttribute("reviews", reviewDtos);
         model.addAttribute("isUserLoggedIn", isUserLoggedIn);
-        model.addAttribute("geocode",geocode);
+        model.addAttribute("geocode", geocode);
+        model.addAttribute("isCourseAuth", isCourseAuth);
 
         return "course/courseDetail";
     }

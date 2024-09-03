@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit User Info</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-100 p-6">
+
+<div class="container mx-auto bg-white shadow-md rounded-lg p-6">
+  <h1 class="text-3xl font-bold mb-6">Edit User Information</h1>
+
+  <!-- EditError 메시지 표시 -->
+  <div th:if="${EditError != null}" class="bg-red-100 text-red-700 border border-red-400 rounded-md p-4">
+    <p th:text="${EditError}"></p>
+    <button onclick="window.history.back()" class="mt-4 bg-gray-300 text-gray-700 font-semibold px-4 py-2 rounded-md shadow hover:bg-gray-400 transition duration-150">
+      돌아가기
+    </button>
+  </div>
+
+  <form th:if="${loginUser != null}" th:action="@{/users/{userId}/edit(userId=${loginUser.id})}" method="post" th:object="${request}">
+
+    <div class="mb-4">
+      <label class="block text-lg font-medium text-gray-700">Address</label>
+      <input type="text" th:field="*{address}" class="w-full p-3 border border-gray-300 rounded-md"
+             placeholder="수정할 주소를 입력하세요.">
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-lg font-medium text-gray-700">Phone Number</label>
+      <input type="text" th:field="*{phoneNumber}" class="w-full p-3 border border-gray-300 rounded-md"
+             placeholder="수정할 핸드폰 번호를 입력하세요.">
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-lg font-medium text-gray-700">Password</label>
+      <input type="password" th:field="*{password}" class="w-full p-3 border border-gray-300 rounded-md"
+             placeholder="현재 비밀번호를 입력하세요.">
+    </div>
+
+    <div class="flex space-x-4">
+      <button type="submit"
+              class="w-full bg-blue-500 text-white font-semibold px-6 py-3 rounded-md shadow hover:bg-blue-600 transition duration-150">
+        Save Changes
+      </button>
+      <button type="button"
+              class="w-full bg-gray-300 text-gray-700 font-semibold px-6 py-3 rounded-md shadow hover:bg-gray-400 transition duration-150"
+              onclick="window.history.back()">Cancel
+      </button>
+    </div>
+  </form>
+</div>
+
+</body>
+</html>

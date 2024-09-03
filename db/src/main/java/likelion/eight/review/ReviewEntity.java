@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import likelion.eight.BaseTimeEntity;
 import likelion.eight.course.CourseEntity;
 import likelion.eight.user.UserEntity;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table(name = "reviews")
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 // BaseTimeEntity 등록일, 수정일 정보를 담고 있음
@@ -34,7 +35,7 @@ public class ReviewEntity extends BaseTimeEntity {
     @Column(nullable = false, length = 50)
     private String title; //제목
 
-    @Column(nullable = false,length = 50)
+    @Column(nullable = false, length = 50)
     private String oneLineReview; //한 줄 리뷰
 
     @Column(nullable = false)

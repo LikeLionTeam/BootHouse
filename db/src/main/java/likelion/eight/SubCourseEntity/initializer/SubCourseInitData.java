@@ -8,16 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-@Component
-public class SubCourseInitData implements CommandLineRunner {
-    @Autowired
-    SubCourseJpaRepository subCourseRepository;
-
-    @Autowired
-    CategoryJpaRepository categoryRepository;
-    @Override
-    public void run(String... args) throws Exception {
-        // 웹개발
+//@Component
+//public class SubCourseInitData implements CommandLineRunner {
+//    @Autowired
+//    SubCourseJpaRepository subCourseRepository;
+//
+//    @Autowired
+//    CategoryJpaRepository categoryRepository;
+//    @Override
+//    public void run(String... args) throws Exception {
+//        // 웹개발
 //        CategoryEntity webCategory = categoryRepository.findByName("웹개발");
 //        SubCourseEntity webSubCourse1 = SubCourseEntity.builder()
 //                .name("웹 풀스택")
@@ -35,224 +35,179 @@ public class SubCourseInitData implements CommandLineRunner {
 //                .name("퍼블리싱")
 //                .categoryEntity(webCategory)
 //                .build();
-//
 //        subCourseRepository.save(webSubCourse1);
 //        subCourseRepository.save(webSubCourse2);
 //        subCourseRepository.save(webSubCourse3);
 //        subCourseRepository.save(webSubCourse4);
-
-//         모바일
-
-//        CategoryEntity mobileCategory = categoryRepository.findByName("모바일");
 //
+//// 모바일
+//        CategoryEntity mobileCategory = categoryRepository.findByName("모바일");
 //        SubCourseEntity mobileSubCourse1 = SubCourseEntity.builder()
 //                .name("안드로이드")
 //                .categoryEntity(mobileCategory)
 //                .build();
-//
 //        SubCourseEntity mobileSubCourse2 = SubCourseEntity.builder()
 //                .name("iOS")
 //                .categoryEntity(mobileCategory)
 //                .build();
-//
 //        SubCourseEntity mobileSubCourse3 = SubCourseEntity.builder()
 //                .name("앱개발")
 //                .categoryEntity(mobileCategory)
 //                .build();
-//
 //        subCourseRepository.save(mobileSubCourse1);
 //        subCourseRepository.save(mobileSubCourse2);
 //        subCourseRepository.save(mobileSubCourse3);
 //
-//        // 데이터·AI
-//        CategoryEntity DataAICategory = categoryRepository.findByName("데이터·AI");
-//
-//        SubCourseEntity DataAISubCourse1 = SubCourseEntity.builder()
+//// 데이터·AI
+//        CategoryEntity dataAICategory = categoryRepository.findByName("데이터·AI");
+//        SubCourseEntity dataAISubCourse1 = SubCourseEntity.builder()
 //                .name("DBA")
-//                .categoryEntity(DataAICategory)
+//                .categoryEntity(dataAICategory)
 //                .build();
-//
-//        SubCourseEntity DataAISubCourse2 = SubCourseEntity.builder()
+//        SubCourseEntity dataAISubCourse2 = SubCourseEntity.builder()
 //                .name("데이터분석")
-//                .categoryEntity(DataAICategory)
+//                .categoryEntity(dataAICategory)
 //                .build();
-//
-//        SubCourseEntity DataAISubCourse3 = SubCourseEntity.builder()
+//        SubCourseEntity dataAISubCourse3 = SubCourseEntity.builder()
 //                .name("데이터엔지니어링")
-//                .categoryEntity(DataAICategory)
+//                .categoryEntity(dataAICategory)
 //                .build();
-//
-//        SubCourseEntity DataAISubCourse4 = SubCourseEntity.builder()
+//        SubCourseEntity dataAISubCourse4 = SubCourseEntity.builder()
 //                .name("AI/ML")
-//                .categoryEntity(DataAICategory)
+//                .categoryEntity(dataAICategory)
 //                .build();
+//        subCourseRepository.save(dataAISubCourse1);
+//        subCourseRepository.save(dataAISubCourse2);
+//        subCourseRepository.save(dataAISubCourse3);
+//        subCourseRepository.save(dataAISubCourse4);
 //
-//        subCourseRepository.save(DataAISubCourse1);
-//        subCourseRepository.save(DataAISubCourse2);
-//        subCourseRepository.save(DataAISubCourse3);
-//        subCourseRepository.save(DataAISubCourse4);
-
-        // 클라우드·보안
-
-//        CategoryEntity CloudCategory = categoryRepository.findByName("클라우드·보안");
-//
-//        SubCourseEntity subCourseEntity1 = SubCourseEntity.builder()
+//// 클라우드·보안
+//        CategoryEntity cloudCategory = categoryRepository.findByName("클라우드·보안");
+//        SubCourseEntity cloudSubCourse1 = SubCourseEntity.builder()
 //                .name("클라우드")
-//                .categoryEntity(CloudCategory)
+//                .categoryEntity(cloudCategory)
 //                .build();
-//
-//        SubCourseEntity subCourseEntity2 = SubCourseEntity.builder()
+//        SubCourseEntity cloudSubCourse2 = SubCourseEntity.builder()
 //                .name("데브옵스")
-//                .categoryEntity(CloudCategory)
+//                .categoryEntity(cloudCategory)
 //                .build();
-//
-//        SubCourseEntity subCourseEntity3 = SubCourseEntity.builder()
+//        SubCourseEntity cloudSubCourse3 = SubCourseEntity.builder()
 //                .name("인프라")
-//                .categoryEntity(CloudCategory)
+//                .categoryEntity(cloudCategory)
 //                .build();
-//
-//        SubCourseEntity subCourseEntity4 = SubCourseEntity.builder()
+//        SubCourseEntity cloudSubCourse4 = SubCourseEntity.builder()
 //                .name("보안")
-//                .categoryEntity(CloudCategory)
+//                .categoryEntity(cloudCategory)
 //                .build();
+//        subCourseRepository.save(cloudSubCourse1);
+//        subCourseRepository.save(cloudSubCourse2);
+//        subCourseRepository.save(cloudSubCourse3);
+//        subCourseRepository.save(cloudSubCourse4);
 //
-//        subCourseRepository.save(subCourseEntity1);
-//        subCourseRepository.save(subCourseEntity2);
-//        subCourseRepository.save(subCourseEntity3);
-//        subCourseRepository.save(subCourseEntity4);
-
-//         IoT·임베디드·반도체
-
-
-//        CategoryEntity category = categoryRepository.findByName("IoT·임베디드·반도체");
-//
-//        SubCourseEntity subCourseEntity1 = SubCourseEntity.builder()
+//// IoT·임베디드·반도체
+//        CategoryEntity iotCategory = categoryRepository.findByName("IoT·임베디드·반도체");
+//        SubCourseEntity iotSubCourse1 = SubCourseEntity.builder()
 //                .name("로보틱스")
-//                .categoryEntity(category)
+//                .categoryEntity(iotCategory)
 //                .build();
-//
-//        SubCourseEntity subCourseEntity2 = SubCourseEntity.builder()
+//        SubCourseEntity iotSubCourse2 = SubCourseEntity.builder()
 //                .name("임베디드")
-//                .categoryEntity(category)
+//                .categoryEntity(iotCategory)
 //                .build();
-//
-//        SubCourseEntity subCourseEntity3 = SubCourseEntity.builder()
+//        SubCourseEntity iotSubCourse3 = SubCourseEntity.builder()
 //                .name("IoT")
-//                .categoryEntity(category)
+//                .categoryEntity(iotCategory)
 //                .build();
-//
-//        SubCourseEntity subCourseEntity4 = SubCourseEntity.builder()
+//        SubCourseEntity iotSubCourse4 = SubCourseEntity.builder()
 //                .name("반도체")
-//                .categoryEntity(category)
+//                .categoryEntity(iotCategory)
 //                .build();
+//        subCourseRepository.save(iotSubCourse1);
+//        subCourseRepository.save(iotSubCourse2);
+//        subCourseRepository.save(iotSubCourse3);
+//        subCourseRepository.save(iotSubCourse4);
 //
-//        subCourseRepository.save(subCourseEntity1);
-//        subCourseRepository.save(subCourseEntity2);
-//        subCourseRepository.save(subCourseEntity3);
-//        subCourseRepository.save(subCourseEntity4);
-//
-//        // 게임·블록체인
-//        CategoryEntity category = categoryRepository.findByName("게임·블록체인");
-//
-//        SubCourseEntity subCourseEntity1 = SubCourseEntity.builder()
+//// 게임·블록체인
+//        CategoryEntity gameCategory = categoryRepository.findByName("게임·블록체인");
+//        SubCourseEntity gameSubCourse1 = SubCourseEntity.builder()
 //                .name("메타버스")
-//                .categoryEntity(category)
+//                .categoryEntity(gameCategory)
 //                .build();
-//
-//        SubCourseEntity subCourseEntity2 = SubCourseEntity.builder()
+//        SubCourseEntity gameSubCourse2 = SubCourseEntity.builder()
 //                .name("게임")
-//                .categoryEntity(category)
+//                .categoryEntity(gameCategory)
 //                .build();
-//
-//        SubCourseEntity subCourseEntity3 = SubCourseEntity.builder()
+//        SubCourseEntity gameSubCourse3 = SubCourseEntity.builder()
 //                .name("블록체인")
-//                .categoryEntity(category)
+//                .categoryEntity(gameCategory)
 //                .build();
-//
-//        SubCourseEntity subCourseEntity4 = SubCourseEntity.builder()
+//        SubCourseEntity gameSubCourse4 = SubCourseEntity.builder()
 //                .name("AR/VR")
-//                .categoryEntity(category)
+//                .categoryEntity(gameCategory)
 //                .build();
+//        subCourseRepository.save(gameSubCourse1);
+//        subCourseRepository.save(gameSubCourse2);
+//        subCourseRepository.save(gameSubCourse3);
+//        subCourseRepository.save(gameSubCourse4);
 //
-//        subCourseRepository.save(subCourseEntity1);
-//        subCourseRepository.save(subCourseEntity2);
-//        subCourseRepository.save(subCourseEntity3);
-//        subCourseRepository.save(subCourseEntity4);
-
-        // 기획·마케팅·기타
-
-//        CategoryEntity category = categoryRepository.findByName("기획·마케팅·기타");
-//
-//        SubCourseEntity subCourseEntity1 = SubCourseEntity.builder()
+//// 기획·마케팅·기타
+//        CategoryEntity planCategory = categoryRepository.findByName("기획·마케팅·기타");
+//        SubCourseEntity planSubCourse1 = SubCourseEntity.builder()
 //                .name("RPA")
-//                .categoryEntity(category)
+//                .categoryEntity(planCategory)
 //                .build();
-//
-//        SubCourseEntity subCourseEntity2 = SubCourseEntity.builder()
+//        SubCourseEntity planSubCourse2 = SubCourseEntity.builder()
 //                .name("PM/기획")
-//                .categoryEntity(category)
+//                .categoryEntity(planCategory)
 //                .build();
-//
-//        SubCourseEntity subCourseEntity3 = SubCourseEntity.builder()
+//        SubCourseEntity planSubCourse3 = SubCourseEntity.builder()
 //                .name("마케팅")
-//                .categoryEntity(category)
+//                .categoryEntity(planCategory)
 //                .build();
+//        subCourseRepository.save(planSubCourse1);
+//        subCourseRepository.save(planSubCourse2);
+//        subCourseRepository.save(planSubCourse3);
 //
-//        subCourseRepository.save(subCourseEntity1);
-//        subCourseRepository.save(subCourseEntity2);
-//        subCourseRepository.save(subCourseEntity3);
-
-       //  디자인·3D
-
-//        CategoryEntity category = categoryRepository.findByName("디자인·3D");
-//
-//        SubCourseEntity subCourseEntity1 = SubCourseEntity.builder()
+//// 디자인·3D
+//        CategoryEntity designCategory = categoryRepository.findByName("디자인·3D");
+//        SubCourseEntity designSubCourse1 = SubCourseEntity.builder()
 //                .name("UXUI/디자인")
-//                .categoryEntity(category)
+//                .categoryEntity(designCategory)
 //                .build();
-//
-//        SubCourseEntity subCourseEntity2 = SubCourseEntity.builder()
+//        SubCourseEntity designSubCourse2 = SubCourseEntity.builder()
 //                .name("영상")
-//                .categoryEntity(category)
+//                .categoryEntity(designCategory)
 //                .build();
-//
-//        SubCourseEntity subCourseEntity3 = SubCourseEntity.builder()
+//        SubCourseEntity designSubCourse3 = SubCourseEntity.builder()
 //                .name("3D")
-//                .categoryEntity(category)
+//                .categoryEntity(designCategory)
 //                .build();
+//        subCourseRepository.save(designSubCourse1);
+//        subCourseRepository.save(designSubCourse2);
+//        subCourseRepository.save(designSubCourse3);
 //
-//        subCourseRepository.save(subCourseEntity1);
-//        subCourseRepository.save(subCourseEntity2);
-//        subCourseRepository.save(subCourseEntity3);
-//
-//        // 프로젝트·취준·창업
-//
-//        CategoryEntity category = categoryRepository.findByName("프로젝트·취준·창업");
-//
-//        SubCourseEntity subCourseEntity1 = SubCourseEntity.builder()
+//// 프로젝트·취준·창업
+//        CategoryEntity projectCategory = categoryRepository.findByName("프로젝트·취준·창업");
+//        SubCourseEntity projectSubCourse1 = SubCourseEntity.builder()
 //                .name("창업")
-//                .categoryEntity(category)
+//                .categoryEntity(projectCategory)
 //                .build();
-//
-//        SubCourseEntity subCourseEntity2 = SubCourseEntity.builder()
+//        SubCourseEntity projectSubCourse2 = SubCourseEntity.builder()
 //                .name("노코드")
-//                .categoryEntity(category)
+//                .categoryEntity(projectCategory)
 //                .build();
-//
-//        SubCourseEntity subCourseEntity3 = SubCourseEntity.builder()
+//        SubCourseEntity projectSubCourse3 = SubCourseEntity.builder()
 //                .name("프로젝트")
-//                .categoryEntity(category)
+//                .categoryEntity(projectCategory)
 //                .build();
-//
-//        SubCourseEntity subCourseEntity4 = SubCourseEntity.builder()
+//        SubCourseEntity projectSubCourse4 = SubCourseEntity.builder()
 //                .name("취준멘토링")
-//                .categoryEntity(category)
+//                .categoryEntity(projectCategory)
 //                .build();
+//        subCourseRepository.save(projectSubCourse1);
+//        subCourseRepository.save(projectSubCourse2);
+//        subCourseRepository.save(projectSubCourse3);
+//        subCourseRepository.save(projectSubCourse4);
 //
-//        subCourseRepository.save(subCourseEntity1);
-//        subCourseRepository.save(subCourseEntity2);
-//        subCourseRepository.save(subCourseEntity3);
-//        subCourseRepository.save(subCourseEntity4);
-
-    }
-}
+//    }
+//}

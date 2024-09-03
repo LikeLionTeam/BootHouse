@@ -1,63 +1,135 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Auth List</title>
-    <link rel="stylesheet" href="/css/user/images.css">
-</head>
-<body>
-<main class="user-auth-list-wrap">
-    <h1 class="page-title">User Auth List</h1>
 
-    <table class="user-auth-table">
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>UserAuth List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* 모달 스타일 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 p-6">
+<div class="container mx-auto">
+    <h1 class="text-3xl font-bold mb-6">User Auth List</h1>
+
+    <table class="min-w-full bg-white shadow-md rounded-lg">
         <thead>
-        <tr>
-            <th>ID</th>
-            <th>User ID</th>
-            <th>Auth Request Type</th>
-            <th>Image</th>
-            <th>Actions</th>
+        <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+            <th class="py-3 px-6 text-left">요청 번호</th>
+            <th class="py-3 px-6 text-left">User ID</th>
+            <th class="py-3 px-6 text-left">코스명</th>
+            <th class="py-3 px-6 text-left">인증 요청 타입</th>
+            <th class="py-3 px-6 text-left">Image</th>
+            <th class="py-3 px-6 text-left">Actions</th>
         </tr>
         </thead>
-        <tbody>
-        <tr th:each="userAuth : ${userAuthPage.content}" class="user-auth-item">
-            <td th:text="${userAuth.id}"></td>
-            <td th:text="${userAuth.user.id}"></td>
-            <td th:text="${userAuth.authRequestType}"></td>
-            <td>
-                <img th:src="${userAuth.imageUrl}" alt="User Image" width="100" class="user-auth-image"/>
+        <tbody class="text-gray-600 text-sm font-light">
+        <tr th:each="userAuth : ${userAuthPage.content}" class="border-b border-gray-200 hover:bg-gray-100">
+            <td class="py-3 px-6 text-left" th:text="${userAuth.id}"></td>
+            <td class="py-3 px-6 text-left" th:text="${userAuth.user.id}"></td>
+            <td class="py-3 px-6 text-left" th:text="${userAuth.course.name}"></td>
+            <td class="py-3 px-6 text-left" th:text="${userAuth.authRequestType}"></td>
+            <td class="py-3 px-6 text-left">
+                <img th:src="${userAuth.imageUrl}" alt="User Image" class="w-20 h-20 object-cover image cursor-pointer rounded-md" />
             </td>
-            <td class="action-buttons-wrap">
-                <form th:action="@{/userauth/{id}/approve(id=${userAuth.id})}" method="post">
-                    <button type="submit" class="approve-btn">수락</button>
-                </form>
-                <form th:action="@{/userauth/{id}/deny(id=${userAuth.id})}" method="post">
-                    <button type="submit" class="deny-btn">거절</button>
-                </form>
-                <form th:action="@{/userauth/{id}/delete(id=${userAuth.id})}" method="post">
-                    <button type="submit" class="delete-btn">삭제</button>
-                </form>
+            <td class="py-3 px-6 text-left">
+                <div class="flex space-x-2">
+                    <form th:action="@{/userAuth/{id}/approve(id=${userAuth.id})}" method="post">
+                        <!-- courseId 값을 포함시키기 위한 숨겨진 필드 -->
+                        <input type="hidden" name="courseId" th:value="${userAuth.course.id}" />
+                        <button type="submit"
+                                class="bg-green-500 text-white py-1 px-4 rounded-md hover:bg-green-600 transition duration-150">수락</button>
+                    </form>
+                    <form th:action="@{/userAuth/{id}/deny(id=${userAuth.id})}" method="post">
+                        <button type="submit"
+                                class="bg-red-500 text-white py-1 px-4 rounded-md hover:bg-red-600 transition duration-150">거절</button>
+                    </form>
+                    <form th:action="@{/userAuth/{id}/delete(id=${userAuth.id})}" method="post">
+                        <button type="submit"
+                                class="bg-gray-500 text-white py-1 px-4 rounded-md hover:bg-gray-600 transition duration-150">삭제</button>
+                    </form>
+                </div>
+
             </td>
         </tr>
         </tbody>
     </table>
 
-    <nav class="pagination-wrap" th:if="${pageNumbers != null}">
-        <ul class="pagination-list">
-            <li th:each="pageNumber : ${pageNumbers}" class="pagination-item">
-                <a th:href="@{/userauth/list(page=${pageNumber - 1}, size=${userAuthPage.size})}"
-                   th:text="${pageNumber}" class="pagination-link"></a>
-            </li>
-        </ul>
-    </nav>
-</main>
-
-<div id="imageModal" class="modal">
-    <span class="close">&times;</span>
-    <img class="modal-content" id="modalImage" alt="Enlarged user image">
+    <!-- 페이지 네비게이션 -->
+    <div class="pagination-wrap mt-4">
+        <div th:if="${pageNumbers != null}" class="pagination-list flex space-x-2">
+                <span th:each="pageNumber : ${pageNumbers}" class="pagination-item">
+                    <a th:href="@{/userauth/list(page=${pageNumber - 1}, size=${userAuthPage.size})}"
+                       th:text="${pageNumber}"
+                       class="pagination-link bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600 transition duration-150"></a>
+                </span>
+        </div>
+    </div>
+  
+    <!-- 이미지 확대를 위한 모달 -->
+    <div id="myModal" class="modal-wrap">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="img01">
+    </div>
 </div>
 
-<script type="module" src="/js/user/images/index.js"></script>
+<script>
+    // 이미지 클릭 시 모달을 여는 스크립트
+    var modal = document.getElementById("myModal");
+    var modalImg = document.getElementById("img01");
+
+    document.querySelectorAll('.image').forEach(img => {
+        img.onclick = function () {
+            modal.style.display = "block";
+            modalImg.src = this.src;
+        }
+    });
+
+    var span = document.getElementsByClassName("close")[0];
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+</script>
+
 </body>
+
 </html>

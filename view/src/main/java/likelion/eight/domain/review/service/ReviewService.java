@@ -13,6 +13,7 @@ import likelion.eight.domain.review.service.port.ReviewRepository;
 import likelion.eight.domain.user.controller.model.LoginUser;
 import likelion.eight.domain.user.converter.UserConverter;
 import likelion.eight.domain.user.model.User;
+import likelion.eight.domain.user.service.UserService;
 import likelion.eight.domain.user.service.port.UserRepository;
 import likelion.eight.likeReview.LikeReviewEntity;
 import likelion.eight.likeReview.LikeReviewJpaRepository;
@@ -24,7 +25,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -167,6 +170,16 @@ public class ReviewService {
         }
         return false;
 
+    }
+
+    public List<Review> findByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User Not Found "));
+
+        List<ReviewEntity> reviewEntities = reviewRepository.findByUserEntityByUser(user);
+
+        return reviewEntities.stream().map(ReviewConverter::toDto)
+                .collect(Collectors.toList());
     }
 
     // 중복 함수 빼 놓음
