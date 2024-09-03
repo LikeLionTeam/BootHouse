@@ -30,6 +30,7 @@ public class WebSocketChatController {
     public void addUser(@Payload ChatMessage chatMessage) {
         log.info("User added to chat: {}", chatMessage.getSender());
         chatMessage.setType(ChatMessage.MessageType.JOIN);
+        chatMessage.setMessage(chatMessage.getSender() + " 님이 채팅방에 입장했습니다.");
         messagingTemplate.convertAndSend("/topic/messages/" + chatMessage.getChatroomId(), chatMessage);
     }
 
@@ -37,6 +38,7 @@ public class WebSocketChatController {
     public void removeUser(@Payload ChatMessage chatMessage) {
         log.info("User left chat: {}", chatMessage.getSender());
         chatMessage.setType(ChatMessage.MessageType.LEAVE);
+        chatMessage.setMessage(chatMessage.getSender() + " 님이 채팅방을 나갔습니다.");
         messagingTemplate.convertAndSend("/topic/messages/" + chatMessage.getChatroomId(), chatMessage);
     }
 }

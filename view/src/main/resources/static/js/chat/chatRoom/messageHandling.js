@@ -17,13 +17,13 @@ export function showMessage(message) {
         return;
     }
 
-    const messageDate = new Date(message.registrationDate || new Date());
+    const messageDate = new Date(message.timestamp || new Date());
     const formattedDate = formatDate(messageDate);
     const formattedTime = formatTime(messageDate);
 
     addDateSeparator($messageContainer, messageDate, formattedDate);
 
-    if (message.type === 'system') {
+    if (message.type === 'JOIN' || message.type === 'LEAVE') {
         addSystemMessage($messageContainer, message.message);
     } else {
         addMessageElement($messageContainer, message, formattedTime);
