@@ -25,10 +25,16 @@
             <button id="chatOptionsBtn" class="chat-options-btn text-gray-500 hover:text-gray-700" aria-label="Chat options">
                 <i class="fas fa-ellipsis-v"></i>
             </button>
+            <div id="chatOptionsMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg">
+                <a href="#" id="inviteUsersBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">유저 초대</a>
+                <a href="#" id="leaveChatBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">채팅방 나가기</a>
+            </div>
         </header>
+
         <div id="chatMessages" class="chat-messages-wrap h-96 overflow-y-auto p-4 space-y-4">
             <div id="messageContainer" class="message-container-wrap"></div>
         </div>
+
         <footer class="chat-input-wrap p-4 border-t">
             <div class="chat-input-container-wrap flex items-center">
                 <input type="text" id="messageInput" class="chat-input flex-grow p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-purple-300" placeholder="메시지를 입력하세요.">
@@ -45,12 +51,22 @@
 </template>
 
 <template id="messageTemplate">
-    <article class="message-wrap flex">
-        <div class="message-bubble-wrap rounded-lg p-3 max-w-xs">
-            <p class="message-text text-sm"></p>
-            <time class="message-time text-xs text-gray-500 block mt-1"></time>
+    <article class="message-wrap flex mb-4"> <!-- 메시지 간 간격을 위해 mb-4 추가 -->
+        <div class="message-content-wrap flex flex-col max-w-xs">
+            <span class="message-sender text-xs text-gray-500 mb-1"></span> <!-- 메시지 작성자 표시 -->
+            <div class="message-bubble-wrap rounded-lg p-3">
+                <p class="message-text text-sm"></p>
+                <time class="message-time text-xs text-gray-500 block mt-1"></time>
+            </div>
         </div>
     </article>
+</template>
+
+<template id="systemMessageTemplate">
+    <div class="flex justify-center my-2">
+        <span class="system-message-text bg-gray-200 text-gray-600 text-sm px-3 py-1 rounded-full">
+        </span>
+    </div>
 </template>
 
 <script th:inline="javascript">
@@ -60,7 +76,6 @@
     var initialMessages = /*[[${messages}]]*/ [];
     /*]]>*/
 </script>
-<!--<script type="module" src="/js/chat/chatroom.js"></script>-->
 <script type="module" src="/js/chat/chatRoom/index.js"></script>
 </body>
 </html>

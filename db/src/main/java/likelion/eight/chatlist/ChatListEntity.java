@@ -8,6 +8,8 @@ import likelion.eight.user.UserEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "chat_lists")
 @Getter @Setter
@@ -28,4 +30,8 @@ public class ChatListEntity extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chatroom_id", nullable = false)
     private ChatroomEntity chatroom;
+
+
+    @Column(name = "last_message_time")
+    private LocalDateTime lastMessageTime;
 }

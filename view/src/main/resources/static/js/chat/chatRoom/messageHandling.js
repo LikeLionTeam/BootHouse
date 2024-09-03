@@ -17,12 +17,18 @@ export function showMessage(message) {
         return;
     }
 
-    const messageDate = new Date(message.registrationDate || new Date()); // 현재 시간을 기본값으로 사용
+    const messageDate = new Date(message.timestamp || new Date());
     const formattedDate = formatDate(messageDate);
     const formattedTime = formatTime(messageDate);
 
     addDateSeparator($messageContainer, messageDate, formattedDate);
-    addMessageElement($messageContainer, message, formattedTime);
+
+    if (message.type === 'JOIN' || message.type === 'LEAVE') {
+        addSystemMessage($messageContainer, message.message);
+    } else {
+        addMessageElement($messageContainer, message, formattedTime);
+    }
+
     scrollToBottom();
 }
 
@@ -47,12 +53,19 @@ function addMessageElement($messageContainer, message, formattedTime) {
     if ($messageTemplate) {
         const $messageElement = $messageTemplate.content.cloneNode(true);
         const $messageWrap = $messageElement.querySelector('.message-wrap');
+        const $messageContentWrap = $messageElement.querySelector('.message-content-wrap');
         const $messageBubble = $messageElement.querySelector('.message-bubble-wrap');
+        const $messageSender = $messageElement.querySelector('.message-sender');
 
-        if ($messageWrap && $messageBubble) {
+        if ($messageWrap && $messageContentWrap && $messageBubble && $messageSender) {
             const isSentByCurrentUser = message.sender === username || message.sender.name === username;
             $messageWrap.classList.add(isSentByCurrentUser ? 'justify-end' : 'justify-start');
+            $messageContentWrap.classList.add(isSentByCurrentUser ? 'items-end' : 'items-start');
             $messageBubble.classList.add(isSentByCurrentUser ? 'bg-purple-100' : 'bg-gray-100');
+
+            // 메시지 작성자 표시
+            $messageSender.textContent = isSentByCurrentUser ? 'You' : (message.sender.name || message.sender);
+            $messageSender.classList.add(isSentByCurrentUser ? 'text-right' : 'text-left');
 
             const $messageText = $messageElement.querySelector('.message-text');
             const $messageTime = $messageElement.querySelector('.message-time');
@@ -69,6 +82,19 @@ function scrollToBottom() {
     const $chatMessages = document.getElementById('chatMessages');
     if ($chatMessages) {
         $chatMessages.scrollTop = $chatMessages.scrollHeight;
+    }
+}
+
+
+function addSystemMessage($messageContainer, messageText) {
+    const $systemMessageTemplate = document.getElementById('systemMessageTemplate');
+    if ($systemMessageTemplate) {
+        const $systemMessageElement = $systemMessageTemplate.content.cloneNode(true);
+        const $systemMessageText = $systemMessageElement.querySelector('.system-message-text');
+        if ($systemMessageText) {
+            $systemMessageText.textContent = messageText;
+            $messageContainer.appendChild($systemMessageElement);
+        }
     }
 }
 

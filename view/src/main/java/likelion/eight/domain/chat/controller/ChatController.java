@@ -14,7 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -23,15 +25,32 @@ import java.util.List;
 public class ChatController {
     private final ChatService chatService;
 
+    /**
+     * 사용자의 채팅 목록을 조회합니다.
+     *
+     * @param model Model 객체
+     * @param loginUser 로그인한 사용자 정보
+     * @return 채팅 목록 페이지
+     */
     @GetMapping
     public String chatList(Model model, @Login LoginUser loginUser) {
         log.info("Fetching chat list for user: {}", loginUser.getName());
         List<ChatListEntity> chatList = chatService.getChatList(loginUser.getName());
         model.addAttribute("recentChats", chatList);
         model.addAttribute("username", loginUser.getName());
+        log.info("Chat list fetched successfully for user: {}", loginUser.getName());
         return "chat/messages";
     }
 
+
+    /**
+     * 특정 채팅방을 조회합니다.
+     *
+     * @param id 채팅방 ID
+     * @param model Model 객체
+     * @param loginUser 로그인한 사용자 정보
+     * @return 채팅방 페이지 또는 리다이렉트 URL
+     */
     @GetMapping("/{id}")
     public String chatRoom(@PathVariable Long id, Model model, @Login LoginUser loginUser) {
         log.info("Accessing chatroom: {} for user: {}", id, loginUser.getName());
@@ -42,18 +61,41 @@ public class ChatController {
         }
         List<MessageEntity> messages = chatService.getChatroomMessages(id);
         model.addAttribute("chatroom", chatroom);
+        model.addAttribute("chatroomId", id);
         model.addAttribute("messages", messages);
         model.addAttribute("username", loginUser.getName());
+        log.info("Chatroom {} accessed successfully by user: {}", id, loginUser.getName());
         return "chat/chatroom";
     }
 
+    /**
+     * 새로운 채팅방을 생성합니다.
+     *
+     * @param userIds 채팅방에 포함될 사용자 ID 목록
+     * @param loginUser 로그인한 사용자 정보
+     * @return 생성된 채팅방 정보 또는 에러 메시지
+     */
     @PostMapping("/new")
-    public String newChat(@RequestParam String username, @Login LoginUser loginUser) {
-        log.info("Creating new chat between: {} and {}", loginUser.getName(), username);
-        var chatroom = chatService.createChatroom(loginUser.getName(), username);
-        return "redirect:/messages/" + chatroom.getId();
+    public ResponseEntity<?> newChat(@RequestBody List<Long> userIds, @Login LoginUser loginUser) {
+        log.info("Creating new chat for users: {}", userIds);
+        userIds.add(loginUser.getId()); // 현재 로그인한 사용자도 포함
+        try {
+            var chatroom = chatService.createChatroomWithUserIds(userIds);
+            log.info("Chatroom created successfully. ID: {}", chatroom.getId());
+            return ResponseEntity.ok(Map.of("chatroomId", chatroom.getId()));
+        } catch (Exception e) {
+            log.error("Error creating chatroom", e);
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
     }
 
+    /**
+     * 채팅을 시작하거나 기존 채팅방을 조회합니다.
+     *
+     * @param loginUser 로그인한 사용자 정보
+     * @param targetName 대화 상대방 이름
+     * @return 채팅방 정보 또는 에러 메시지
+     */
     @PostMapping("/startChat")
     @ResponseBody
     public ResponseEntity<?> startChat(@Login LoginUser loginUser, @RequestParam String targetName) {
@@ -64,7 +106,7 @@ public class ChatController {
         }
 
         try {
-            Long chatroomId = chatService.getOrCreateChatroom(loginUser.getName(), targetName);
+            Long chatroomId = chatService.getOrCreateChatroom(Arrays.asList(loginUser.getName(), targetName));
             log.info("Chat started/resumed in chatroom: {}", chatroomId);
             return ResponseEntity.ok(new ChatroomResponse(chatroomId));
         } catch (RuntimeException e) {

@@ -26,7 +26,7 @@
             <div class="course-cards-wrap grid grid-cols-2 gap-4 pb-4">
                 <article th:each="course : ${courseDtos}" class="course-card-wrap flex flex-col bg-white p-4 rounded-lg shadow-md">
                     <div th:text="'[' + ${course.bootcampName} + ']'" class="bootcamp-name ml-4 text-orange-600 font-bold"></div>
-                    <img th:src="${course.imageUrl}" th:alt="${course.name + ' 이미지'}" class="course-image w-[50px] h-[50px] ml-auto rounded-md">
+                    <img src="https://via.placeholder.com/150" alt="Course 1" class="course-image w-[50px] h-[50px] ml-auto rounded-md">
                     <div class="course-details-wrap flex flex-col ml-4">
                         <a th:text="${course.name}" th:href="@{'/courses/' + ${course.id}}" class="course-name font-bold"></a>
                         <p th:text="${course.summary}" class="course-summary"></p>
@@ -41,7 +41,7 @@
             <h2 class="text-xl font-bold mb-4">관심있는 프로그램 리뷰를 살펴보세요!</h2>
             <div class="review-cards-wrap grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-4">
                 <article th:each="review : ${reviewDtos}" class="review-card-wrap flex-shrink-0 w-[250px] bg-gray-800 p-4 rounded-lg shadow-md">
-                    <img th:src="${review.imageUrl}" th:alt="${review.username + '의 리뷰 이미지'}" class="review-image w-full rounded-md mb-2">
+                    <img src="https://via.placeholder.com/150" th:alt="${review.username + '의 리뷰 이미지'}" class="review-image w-full rounded-md mb-2">
                     <a th:text="${review.username} +'님의 후기'" th:href="@{'/reviews/' + ${review.id}}"
                        class="review-author font-bold text-white"></a>
                     <p th:text="|&quot;${review.oneLineReview}&quot;|" class="review-summary text-gray-400"></p>
@@ -52,3 +52,7 @@
 </main>
 </body>
 </html>
+
+
+
+
