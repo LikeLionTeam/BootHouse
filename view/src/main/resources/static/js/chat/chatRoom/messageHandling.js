@@ -53,12 +53,19 @@ function addMessageElement($messageContainer, message, formattedTime) {
     if ($messageTemplate) {
         const $messageElement = $messageTemplate.content.cloneNode(true);
         const $messageWrap = $messageElement.querySelector('.message-wrap');
+        const $messageContentWrap = $messageElement.querySelector('.message-content-wrap');
         const $messageBubble = $messageElement.querySelector('.message-bubble-wrap');
+        const $messageSender = $messageElement.querySelector('.message-sender');
 
-        if ($messageWrap && $messageBubble) {
+        if ($messageWrap && $messageContentWrap && $messageBubble && $messageSender) {
             const isSentByCurrentUser = message.sender === username || message.sender.name === username;
             $messageWrap.classList.add(isSentByCurrentUser ? 'justify-end' : 'justify-start');
+            $messageContentWrap.classList.add(isSentByCurrentUser ? 'items-end' : 'items-start');
             $messageBubble.classList.add(isSentByCurrentUser ? 'bg-purple-100' : 'bg-gray-100');
+
+            // 메시지 작성자 표시
+            $messageSender.textContent = isSentByCurrentUser ? 'You' : (message.sender.name || message.sender);
+            $messageSender.classList.add(isSentByCurrentUser ? 'text-right' : 'text-left');
 
             const $messageText = $messageElement.querySelector('.message-text');
             const $messageTime = $messageElement.querySelector('.message-time');
