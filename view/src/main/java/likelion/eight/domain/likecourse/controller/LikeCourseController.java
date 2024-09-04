@@ -26,7 +26,7 @@ public class LikeCourseController {
         Pageable pageable = PageRequest.of(page, 10);
         Page<LikeCourseRes> allCourseLikes = likeCourseService.getAllCourseLikes(loginUser,pageable);
         model.addAttribute("courses",allCourseLikes);
-        return "/likes/likeAllCourse";
+        return "likes/likeAllCourse";
     }
 }
 

@@ -37,7 +37,7 @@ public class LikeReviewController {
         Pageable pageable = PageRequest.of(page, 10);  // 10개씩 페이징 처리
         Page<LikeReviewRes> allLikeReviews = likeReviewService.getAllLikeReviews(loginUser,pageable);
         model.addAttribute("allLikeReviews",allLikeReviews);
-        return "/likes/likeAllReviews";
+        return "likes/likeAllReviews";
     }
 
 }

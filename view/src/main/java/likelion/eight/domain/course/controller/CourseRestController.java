@@ -1,7 +1,7 @@
 package likelion.eight.domain.course.controller;
 
 import likelion.eight.common.annotation.Login;
-import likelion.eight.domain.course.service.CourseCrawlingService;
+//import likelion.eight.domain.course.service.CourseCrawlingService;
 import likelion.eight.domain.course.service.CourseService;
 import likelion.eight.domain.user.controller.model.LoginUser;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ import java.util.Map;
 @Slf4j
 public class CourseRestController {
     private final CourseService courseService;
-    private final CourseCrawlingService courseCrawlingService;
+    //private final CourseCrawlingService courseCrawlingService;
 
     @Value("${naver.client.id}")
     private String clientId;
@@ -49,9 +49,9 @@ public class CourseRestController {
         return ResponseEntity.ok(url);  // 단순히 URL 문자열만 반환
     }
 
-    //크롤링을 위한 컨트롤러
-    @GetMapping("/crawling")
-    public void crawling() throws InterruptedException {
-        courseCrawlingService.crawling();
-    }
+//    //크롤링을 위한 컨트롤러
+//    @GetMapping("/crawling")
+//    public void crawling() throws InterruptedException {
+//        courseCrawlingService.crawling();
+//    }
 }

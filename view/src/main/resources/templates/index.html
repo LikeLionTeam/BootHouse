@@ -41,7 +41,7 @@
             <h2 class="text-xl font-bold mb-4">관심있는 프로그램 리뷰를 살펴보세요!</h2>
             <div class="review-cards-wrap grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-4">
                 <article th:each="review : ${reviewDtos}" class="review-card-wrap flex-shrink-0 w-[250px] bg-gray-800 p-4 rounded-lg shadow-md">
-                    <img src="https://via.placeholder.com/150" th:alt="${review.username + '의 리뷰 이미지'}" class="review-image w-full rounded-md mb-2">
+                    <img src="https://via.placeholder.com/150" alt="리뷰 1 이미지" class="review-image w-full rounded-md mb-2">
                     <a th:text="${review.username} +'님의 후기'" th:href="@{'/reviews/' + ${review.id}}"
                        class="review-author font-bold text-white"></a>
                     <p th:text="|&quot;${review.oneLineReview}&quot;|" class="review-summary text-gray-400"></p>
@@ -52,6 +52,8 @@
 </main>
 </body>
 </html>
+
+
 
 
 

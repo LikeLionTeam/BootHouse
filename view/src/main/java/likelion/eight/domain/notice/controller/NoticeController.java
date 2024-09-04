@@ -35,7 +35,7 @@ public class NoticeController {
     @GetMapping("/new")
     public String newPost(Model model) {
         model.addAttribute("notice", new NoticeReq());
-        return "/notice/noticeForm";
+        return "notice/noticeForm";
     }
 
 
@@ -99,7 +99,7 @@ public class NoticeController {
             boolean isAdmin = loginUser != null && RoleType.ADMIN.equals(loginUser.getRoleType());
             model.addAttribute("isAdmin", isAdmin);
 
-            return "/notice/viewNotice";
+            return "notice/viewNotice";
         }catch (ResourceNotFoundException e){
             return "redirect:/notice";
         }
@@ -118,7 +118,7 @@ public class NoticeController {
         model.addAttribute("notices",allNotices);
         model.addAttribute("isAdmin", isAdmin);
 //        model.addAttribute("isAdmin",loginUser.getRoleType().equals(RoleType.ADMIN));
-        return "/notice/viewAllNotice";
+        return "notice/viewAllNotice";
     }
 
 }
