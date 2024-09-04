@@ -1,9 +1,9 @@
-package likelion.eight.domain.likeReview.controller;
+package likelion.eight.domain.likereview.controller;
 
 import likelion.eight.common.annotation.Login;
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
-import likelion.eight.domain.likeReview.model.LikeReviewRes;
-import likelion.eight.domain.likeReview.service.LikeReviewService;
+import likelion.eight.domain.likereview.model.LikeReviewRes;
+import likelion.eight.domain.likereview.service.LikeReviewService;
 import likelion.eight.domain.user.controller.model.LoginUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package likelion.eight.domain.likeReview.model;
+package likelion.eight.domain.likereview.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

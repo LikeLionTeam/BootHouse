@@ -1,7 +1,5 @@
 package likelion.eight.domain.token.service;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import likelion.eight.domain.token.helper.ifs.TokenHelperIfs;
 import likelion.eight.domain.token.model.Token;
@@ -14,9 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-
-import static likelion.eight.common.service.CookieService.ADMIN_TOKEN_CODE;
-import static likelion.eight.common.service.CookieService.USER_TOKEN_CODE;
 
 @Service
 @RequiredArgsConstructor

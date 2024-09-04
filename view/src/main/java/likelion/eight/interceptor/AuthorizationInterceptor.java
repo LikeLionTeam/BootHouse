@@ -17,8 +17,8 @@ import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import java.util.Objects;
 
-import static likelion.eight.common.service.CookieService.ADMIN_TOKEN_CODE;
-import static likelion.eight.common.service.CookieService.USER_TOKEN_CODE;
+import static likelion.eight.domain.token.service.TokenCookieService.ADMIN_TOKEN_CODE;
+import static likelion.eight.domain.token.service.TokenCookieService.USER_TOKEN_CODE;
 import static likelion.eight.domain.token.service.TokenService.USER_ID;
 
 @Component

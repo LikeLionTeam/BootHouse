@@ -1,7 +1,7 @@
-package likelion.eight.domain.likeCourse.service;
+package likelion.eight.domain.likecourse.service;
 
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
-import likelion.eight.domain.likeCourse.model.LikeCourseRes;
+import likelion.eight.domain.likecourse.model.LikeCourseRes;
 import likelion.eight.domain.user.controller.model.LoginUser;
 import likelion.eight.likeCourse.LikeCourseEntity;
 import likelion.eight.likeCourse.LikeCourseJpaRepository;
@@ -11,9 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

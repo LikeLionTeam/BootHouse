@@ -1,12 +1,11 @@
-package likelion.eight.domain.userCourse.service;
+package likelion.eight.domain.usercourse.service;
 
 import likelion.eight.course.CourseEntity;
 import likelion.eight.domain.course.converter.CourseConverter;
 import likelion.eight.domain.course.model.Course;
 import likelion.eight.domain.user.converter.UserConverter;
 import likelion.eight.domain.user.model.User;
-import likelion.eight.domain.userCourse.model.UserCourse;
-import likelion.eight.domain.userCourse.service.port.UserCourseRepository;
+import likelion.eight.domain.usercourse.service.port.UserCourseRepository;
 import likelion.eight.user.UserEntity;
 import likelion.eight.userCourse.UserCourseEntity;
 import lombok.RequiredArgsConstructor;

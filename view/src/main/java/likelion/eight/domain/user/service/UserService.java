@@ -3,7 +3,7 @@ package likelion.eight.domain.user.service;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
-import likelion.eight.common.service.CookieService;
+import likelion.eight.domain.token.service.TokenCookieService;
 import likelion.eight.common.service.port.ClockHolder;
 import likelion.eight.common.service.port.UuidHolder;
 import likelion.eight.domain.user.controller.model.*;
@@ -12,13 +12,11 @@ import likelion.eight.domain.user.model.User;
 import likelion.eight.domain.user.service.port.UserRepository;
 import likelion.eight.user.enums.RoleType;
 import lombok.RequiredArgsConstructor;
-import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -28,7 +26,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UuidHolder uuidHolder;
     private final CertificationService certificationService;
-    private final CookieService cookieService;
+    private final TokenCookieService tokenCookieService;
     private final ClockHolder clockHolder;
 
 
@@ -72,16 +70,16 @@ public class UserService {
         userRepository.save(user);
 
         if(Objects.equals(user.getRoleType(), RoleType.ADMIN)){
-            cookieService.createAdminCookie(response, user);
+            tokenCookieService.createAdminCookie(response, user);
         }else{
-            cookieService.createUserCookie(response, user);
+            tokenCookieService.createUserCookie(response, user);
         }
 
         return UserConverter.toResponse(user);
     }
 
     public void logout(HttpServletRequest request, HttpServletResponse response){
-        cookieService.expiredCookie(request, response);
+        tokenCookieService.expiredCookie(request, response);
     }
 
     public void verifyEmail(long id, String certificationCode){
