@@ -5,7 +5,7 @@ Boothouse는 IT 부트캠프 정보를 한 눈에 볼 수 있고, 수강생들�
 ---
 
 ## 📅 개발 기간
-2023.07.29 ~ 2023.08.13
+2024.07.29 ~ 2024.09.05
 
 ---
 
@@ -46,12 +46,13 @@ Boothouse는 IT 부트캠프 정보를 한 눈에 볼 수 있고, 수강생들�
 
 - Backend: Spring Boot 2.7.13, Java 17
 - Frontend: Thymeleaf, TailwindCSS
-- Database: PostgreSQL
+- Database: PostgreSQL, Redis
 - ORM: Spring Data JPA, Querydsl
 - Authentication: JWT
 - Websocket: STOMP
 - Build Tool: Gradle
 - Version Control: Git, GitHub
+- Containerization: Docker
 
 ---
 
@@ -84,7 +85,7 @@ Boothouse는 IT 부트캠프 정보를 한 눈에 볼 수 있고, 수강생들�
 
 5. **실시간 통신**
    - WebSocket과 STOMP를 이용한 실시간 채팅 기능 구현
-   - 사용자 간 즉각적인 메시지 교환 가능
+   - 날짜별 채팅 내용 최적화로 대화 이력 관리 효율성 증대
 
 6. **반응형 웹 디자인**
    - Thymeleaf를 이용한 서버 사이드 렌더링 구현
@@ -93,3 +94,21 @@ Boothouse는 IT 부트캠프 정보를 한 눈에 볼 수 있고, 수강생들�
 7. **빌드 및 버전 관리**
    - Gradle을 사용한 효율적인 빌드 및 의존성 관리
    - Git과 GitHub를 활용한 협업 및 버전 관리
+
+8. **컨테이너화**
+   - Docker를 활용한 애플리케이션 컴포넌트(JWT, PostgreSQL 등)의 컨테이너화
+   - 개발, 테스트, 배포 환경의 일관성 확보 및 확장성 개선
+  
+9. **성능 최적화**
+   - Redis 캐싱을 활용한 채팅 시스템 및 자주 조회되는 데이터의 응답 시간 단축
+   - 날짜별 메시지 그룹화를 통한 효율적인 채팅 이력 관리 및 조회 성능 향상
+   - QueryDSL을 활용한 동적 쿼리 최적화 및 성능 개선 (처리 시간 84.2% ~ 92.9% 감소, 처리량 67.4% ~ 416.4% 증가)
+
+10. **데이터 크롤링**
+      - 부트캠프 정보 자동 수집을 위한 크롤링 기능 구현
+      - 최신 부트캠프 정보의 주기적 업데이트 지원
+
+11. **모니터링**
+      - JMeter를 활용한 정기적인 성능 테스트 실시
+      - 부하 수준별 (낮음, 중간, 높음) 성능 메트릭 추적 및 분석
+      - 성능 테스트 결과를 바탕으로 한 지속적인 쿼리 및 애플리케이션 최적화
