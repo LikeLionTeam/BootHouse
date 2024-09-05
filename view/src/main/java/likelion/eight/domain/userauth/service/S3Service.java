@@ -1,4 +1,4 @@
-package likelion.eight.common.service.port;
+package likelion.eight.domain.userauth.service;
 
 import org.springframework.web.multipart.MultipartFile;
 

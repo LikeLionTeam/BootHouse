@@ -1,18 +1,17 @@
 package likelion.eight.common.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import likelion.eight.common.service.CookieService;
-import org.springframework.stereotype.Controller;
+import likelion.eight.domain.token.service.TokenCookieService;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 //@Controller
 public class HomeController {
-    private final CookieService cookieservice;
+    private final TokenCookieService cookieservice;
 
     // will fix asap.
-    public HomeController(CookieService cookieService) {
-        this.cookieservice = cookieService;
+    public HomeController(TokenCookieService tokenCookieService) {
+        this.cookieservice = tokenCookieService;
     }
 
     @GetMapping("/")

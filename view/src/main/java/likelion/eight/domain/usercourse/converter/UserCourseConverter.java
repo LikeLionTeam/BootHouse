@@ -1,10 +1,10 @@
-package likelion.eight.domain.userCourse.converter;
+package likelion.eight.domain.usercourse.converter;
 
 import likelion.eight.domain.course.converter.CourseConverter;
 import likelion.eight.domain.course.model.Course;
 import likelion.eight.domain.user.converter.UserConverter;
 import likelion.eight.domain.user.model.User;
-import likelion.eight.domain.userCourse.model.UserCourse;
+import likelion.eight.domain.usercourse.model.UserCourse;
 import likelion.eight.userCourse.UserCourseEntity;
 
 public class UserCourseConverter {

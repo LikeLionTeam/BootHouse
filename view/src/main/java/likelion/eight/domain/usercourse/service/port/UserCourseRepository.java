@@ -1,9 +1,7 @@
-package likelion.eight.domain.userCourse.service.port;
+package likelion.eight.domain.usercourse.service.port;
 
 import likelion.eight.course.CourseEntity;
-import likelion.eight.domain.course.model.Course;
-import likelion.eight.domain.user.model.User;
-import likelion.eight.domain.userCourse.model.UserCourse;
+import likelion.eight.domain.usercourse.model.UserCourse;
 import likelion.eight.user.UserEntity;
 import likelion.eight.userCourse.UserCourseEntity;
 

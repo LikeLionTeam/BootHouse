@@ -1,7 +1,7 @@
-package likelion.eight.domain.likeReview.service;
+package likelion.eight.domain.likereview.service;
 
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
-import likelion.eight.domain.likeReview.model.LikeReviewRes;
+import likelion.eight.domain.likereview.model.LikeReviewRes;
 import likelion.eight.domain.user.controller.model.LoginUser;
 import likelion.eight.likeReview.LikeReviewEntity;
 import likelion.eight.likeReview.LikeReviewJpaRepository;
@@ -14,9 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

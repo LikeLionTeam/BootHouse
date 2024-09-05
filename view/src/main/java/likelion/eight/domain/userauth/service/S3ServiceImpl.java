@@ -1,13 +1,11 @@
-package likelion.eight.common.service;
+package likelion.eight.domain.userauth.service;
 
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
-import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import likelion.eight.common.domain.exception.CertificationFailedException;
 import likelion.eight.common.domain.exception.FileStorageException;
-import likelion.eight.common.service.port.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +37,7 @@ public class S3ServiceImpl implements S3Service {
         for (MultipartFile multipartFile : multipartFiles) {
 
             if(isDuplicate(multipartFile)){
-                throw new CertificationFailedException("추후 전용 예외 생성"); //TODO 400error
+                throw new CertificationFailedException("이미 요청한 파일 입니다.");
             }
 
             String uploadedUrl = saveFile(multipartFile);
@@ -64,13 +62,13 @@ public class S3ServiceImpl implements S3Service {
             amazonS3.putObject(bucket, randomFileName, file.getInputStream(), metadata);
         }catch(AmazonS3Exception e){
             log.error("Amazon S3 error while uploading file: " + e.getMessage());
-            throw new FileStorageException("이미지 파일 S3 저장실패", e);
+            throw new FileStorageException("Amazon S3 error while uploading file", e);
         }catch (SdkClientException e){
             log.error("AWS SDK client error while uploading file: " + e.getMessage());
-            throw new FileStorageException("이미지 파일 S3 저장실패", e);
+            throw new FileStorageException("AWS SDK client error while uploading file", e);
         }catch (IOException e){
             log.error("IO error while uploading file: " + e.getMessage());
-            throw new FileStorageException("이미지 파일 S3 저장실패", e);
+            throw new FileStorageException("IO error while uploading file", e);
         }
 
         log.info("File upload completed: " + randomFileName);
@@ -131,7 +129,7 @@ public class S3ServiceImpl implements S3Service {
         List<String> allowedExtensions = Arrays.asList("jpg", "png", "jpeg");
 
         if(!allowedExtensions.contains(fileExtension)){
-            throw new CertificationFailedException("업로드 파일확장자 jpg, png, jpeg 만 가능 합니다."); //TODO 400error
+            throw new CertificationFailedException("업로드 파일확장자 jpg, png, jpeg 만 가능 합니다.");
         }
 
         return fileExtension;

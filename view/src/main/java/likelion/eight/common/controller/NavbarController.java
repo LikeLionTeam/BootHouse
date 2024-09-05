@@ -1,8 +1,6 @@
 package likelion.eight.common.controller;
 
-import likelion.eight.common.service.CookieService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
+import likelion.eight.domain.token.service.TokenCookieService;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -11,10 +9,10 @@ import jakarta.servlet.http.HttpServletRequest;
 @ControllerAdvice
 public class NavbarController {
 
-    private final CookieService cookieservice;
+    private final TokenCookieService cookieservice;
 
-    public NavbarController(CookieService cookieService) {
-        this.cookieservice = cookieService;
+    public NavbarController(TokenCookieService tokenCookieService) {
+        this.cookieservice = tokenCookieService;
     }
 
     @ModelAttribute("isLoggedIn")

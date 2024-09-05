@@ -1,4 +1,4 @@
-package likelion.eight.domain.userCourse.model;
+package likelion.eight.domain.usercourse.model;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package likelion.eight.common.service;
+package likelion.eight.domain.token.service;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CookieService {
+public class TokenCookieService {
 
     public static final String USER_TOKEN_CODE = "userTokenCode";
     public static final String ADMIN_TOKEN_CODE = "adminTokenCode";

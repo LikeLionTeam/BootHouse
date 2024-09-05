@@ -2,15 +2,11 @@ package likelion.eight.domain.course.service;
 
 import likelion.eight.common.domain.exception.ResourceNotFoundException;
 import likelion.eight.course.CourseEntity;
-import likelion.eight.domain.course.controller.CourseController;
 import likelion.eight.domain.course.controller.model.CourseDto;
 import likelion.eight.domain.course.controller.model.CourseFilter;
-import likelion.eight.domain.course.converter.CourseConverter;
 import likelion.eight.domain.course.model.Course;
 import likelion.eight.domain.course.service.port.CourseRepository;
-import likelion.eight.domain.user.controller.model.LoginUser;
 import likelion.eight.domain.user.converter.UserConverter;
-import likelion.eight.domain.user.model.User;
 import likelion.eight.domain.user.service.port.UserRepository;
 import likelion.eight.likeCourse.LikeCourseEntity;
 import likelion.eight.likeCourse.LikeCourseJpaRepository;

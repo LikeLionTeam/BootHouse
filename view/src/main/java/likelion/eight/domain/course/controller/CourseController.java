@@ -2,8 +2,7 @@ package likelion.eight.domain.course.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import likelion.eight.common.annotation.Login;
-import likelion.eight.common.service.CookieService;
-import likelion.eight.course.ifs.CourseJpaRepository;
+import likelion.eight.domain.token.service.TokenCookieService;
 import likelion.eight.domain.category.model.Category;
 import likelion.eight.domain.category.service.CategoryService;
 import likelion.eight.domain.course.controller.model.CourseDetailDto;
@@ -19,10 +18,8 @@ import likelion.eight.domain.review.service.port.ReviewRepository;
 import likelion.eight.domain.subcourse.model.SubCourse;
 import likelion.eight.domain.subcourse.service.SubCourseService;
 import likelion.eight.domain.user.controller.model.LoginUser;
-import likelion.eight.domain.userCourse.model.UserCourse;
-import likelion.eight.domain.userCourse.service.UserCourseService;
+import likelion.eight.domain.usercourse.service.UserCourseService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,7 +38,7 @@ public class CourseController  {
     private final CategoryService categoryService;
     private final SubCourseService subCourseService;
     private final ReviewRepository reviewRepository;
-    private final CookieService cookieService;
+    private final TokenCookieService tokenCookieService;
     private final NaverMapService naverMapService;
     private final UserCourseService userCourseService;
 
@@ -100,7 +97,7 @@ public class CourseController  {
 
         Course course = courseService.findCourseById(courseId);
         List<Review> reviews = reviewRepository.findByCourseId(courseId);
-        boolean isUserLoggedIn = cookieService.isUserLoggedIn(request);
+        boolean isUserLoggedIn = tokenCookieService.isUserLoggedIn(request);
         boolean isCourseAuth = false;
 
         if (isUserLoggedIn == true) {

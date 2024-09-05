@@ -2,17 +2,14 @@ package likelion.eight.log;
 
 import jakarta.persistence.*;
 import likelion.eight.BaseTimeEntity;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter @Setter
 @Table(name = "logs")
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
 public class LogEntity extends BaseTimeEntity {
 

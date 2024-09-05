@@ -8,7 +8,7 @@ import likelion.eight.domain.review.service.ReviewService;
 import likelion.eight.domain.user.controller.model.LoginUser;
 import likelion.eight.domain.user.controller.model.UserResponse;
 import likelion.eight.domain.user.service.UserService;
-import likelion.eight.domain.userCourse.service.UserCourseService;
+import likelion.eight.domain.usercourse.service.UserCourseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
