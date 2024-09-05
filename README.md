@@ -1,4 +1,4 @@
-# 🏠 Boothouse - 부트캠프 정보 및 리뷰 플랫폼 1차 readme
+# 🏠 Boothouse - 부트캠프 정보 및 리뷰 플랫폼 readme
 
 Boothouse는 IT 부트캠프 정보를 한 눈에 볼 수 있고, 수강생들의 솔직한 리뷰를 공유할 수 있는 플랫폼입니다.
 
