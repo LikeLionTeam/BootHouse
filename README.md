@@ -20,6 +20,19 @@ Boothouse는 IT 부트캠프 정보를 한 눈에 볼 수 있고, 수강생들�
 | 임희진 | Backend, Frontend, Document Management | Review, Frontend(Layout) |
 
 ---
+### 시스템 아키텍처
+프로젝트의 시스템 아키텍처는 [여기](https://github.com/LikeLionTeam/BootHouse/wiki/2.-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98)에서 확인할 수 있습니다.
+
+### ERD
+ERD는 [여기](https://github.com/LikeLionTeam/BootHouse/wiki/3.-ERD)에서 확인할 수 있습니다.
+
+### API 문서
+API 관련 문서는 [여기](https://github.com/LikeLionTeam/BootHouse/wiki/4.-API)에서 확인 가능합니다.
+
+## 더 자세한 사항
+더 많은 정보와 프로젝트의 세부 사항은 [깃 위키](https://github.com/LikeLionTeam/BootHouse/wiki)를 참고해주시길 바랍니다.
+
+---
 
 ## 🚀 주요 기능
 
@@ -107,6 +120,7 @@ Boothouse는 IT 부트캠프 정보를 한 눈에 볼 수 있고, 수강생들�
 10. **데이터 크롤링**
       - 부트캠프 정보 자동 수집을 위한 크롤링 기능 구현
       - 최신 부트캠프 정보의 주기적 업데이트 지원
+
 
 11. **모니터링**
       - JMeter를 활용한 정기적인 성능 테스트 실시
