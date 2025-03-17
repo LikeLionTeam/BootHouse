@@ -15,7 +15,7 @@ Boothouse는 IT 부트캠프 정보를 한 눈에 볼 수 있고, 수강생들�
 |------|------|----------|
 | 김민지 | Backend, Frontend | Bootcamp, Course, Frontend(Layout, Event) |
 | 장세창 | Backend, Frontend, Document Management | Chatting, Frontend(Layout, Event) |
-| 서재필 | Backend, PR Reviewer | Admin, User, Project module design & director  |
+| 서재필 | Backend, PR Reviewer | Admin, User, Project module, DataBase design & director  |
 | 이예지 | Backend | Notice, like, API |
 | 임희진 | Backend, Frontend, Document Management | Review, Frontend(Layout) |
 
